@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "42224426476",
+    "firebase_url": "https://shoppy-bdfb4.firebaseio.com",
+    "project_id": "shoppy-bdfb4",
+    "storage_bucket": "shoppy-bdfb4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:42224426476:android:9100ad7e4dc6322ccff4c9",
+        "android_client_info": {
+          "package_name": "com.annikadietz.shoppy_shoppingbuddy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "42224426476-56hingu689rdnd79seimc49go4stvn9p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQxeECVhcVuTzno1BQ2HGE8_kxwWHGQA4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "42224426476-56hingu689rdnd79seimc49go4stvn9p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
