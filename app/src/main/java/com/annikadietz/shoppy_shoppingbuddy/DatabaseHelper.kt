@@ -2,137 +2,130 @@ package com.annikadietz.shoppy_shoppingbuddy
 
 import android.content.Context
 import android.util.Log
-import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
-import com.google.android.gms.tasks.Tasks
-import com.google.firebase.database.*
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import org.w3c.dom.Text
-import java.time.LocalDate
-import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
 import java.util.*
-import android.content.Intent
 import com.google.firebase.firestore.*
-import com.google.firebase.firestore.local.ReferenceSet
-import com.google.firebase.firestore.model.DocumentKey
-import com.google.firebase.firestore.model.ResourcePath
-import com.google.firebase.storage.FirebaseStorage
-import java.lang.ref.Reference
 
 
 object DatabaseHelper {
     var db = Firebase.firestore
-    private var shops: MutableList<Shop> = mutableListOf()
-    private var products: MutableList<Product> = mutableListOf()
+    lateinit private var shops: MutableList<DocumentSnapshot>
+    lateinit private var products: MutableList<DocumentSnapshot>
+    lateinit private var categories: MutableList<DocumentSnapshot>
 
-    fun writeNewProduct(name: String, category: String, price: Double, lastConfirmed: Date, shop: String, context: Context) {
-            db.collection("Shop")
-                .whereEqualTo("Address", shop)
-                .get()
-                .addOnSuccessListener {
-                    val product = hashMapOf(
-                        "Name" to name,
-                        "Price" to price,
-                        "Category" to category,
-                        "LastConfirmed" to lastConfirmed,
-                        "ShopReference" to it.documents.first().reference
-                    )
+    fun writeNewProduct(name: String, category: DocumentSnapshot, price: Double, lastConfirmed: Date, shop: DocumentSnapshot, context: Context) {
+        val product = hashMapOf(
+            "Name" to name,
+            "Price" to price,
+            "Category" to category.reference,
+            "LastConfirmed" to lastConfirmed,
+            "ShopReference" to shop.reference
+        )
 
-                    db.collection("Product")
-                        .add(product)
-                        .addOnSuccessListener {
-                            Log.d("ProductAdding", "DocumentSnapshot added with ID: ${it.id}")
-                            Toast.makeText(context, "Product was added.", Toast.LENGTH_LONG).show()
-                        }
-                        .addOnFailureListener {
-                            Log.d("ProductAdding", "DocumentSnapshot added with ID: ${it.message}")
-                            Toast.makeText(context, "There was a problem adding your product. Please try again later.", Toast.LENGTH_LONG).show()
-                        }
-                }
-
-
+        db.collection("Product")
+            .add(product)
+            .addOnSuccessListener {
+                Log.d("ProductAdding", "DocumentSnapshot added with ID: ${it.id}")
+                Toast.makeText(context, "Product was added.", Toast.LENGTH_LONG).show()
+            }
+            .addOnFailureListener {
+                Log.d("ProductAdding", "DocumentSnapshot added with ID: ${it.message}")
+                Toast.makeText(context, "There was a problem adding your product. Please try again later.", Toast.LENGTH_LONG).show()
+            }
     }
 
     fun subscribeShops() {
-        shops = mutableListOf()
         db.collection("Shop")
             .get()
             .addOnSuccessListener { result ->
-                for (document in result) {
-                    shops.add(document.toObject(Shop::class.java))
-                }
+                shops = result.documents
             }
             .addOnFailureListener { exception ->
-                println("shops exception: " + exception)
                 Log.w("shops", "Error getting documents.", exception)
             }
     }
 
     fun subscribeProducts() {
-        products = mutableListOf()
         db.collection("Product")
             .get()
             .addOnSuccessListener { result ->
-                for (document in result) {
-                    var product = Product()
-                    product.Category = document["Category"].toString()
-                    product.Name = document["Name"].toString()
-                    product.Price = document["Price"].toString().toDouble()
-                    product.ShopReference = document["ShopReference"] as DocumentReference
-                    products.add(product)
-                    println("products: " + products)
-                    println("product: " + product.ShopReference.id)
-
-                }
+                products = result.documents
             }
             .addOnFailureListener { exception ->
                 Log.w("shops", "Error getting documents.", exception)
             }
     }
 
-    fun getShops(): MutableList<Shop> {
+    fun subscribeCategories() {
+        db.collection("Category")
+            .get()
+            .addOnSuccessListener { result ->
+                categories = result.documents
+            }
+            .addOnFailureListener { exception ->
+                Log.w("categories", "Error getting documents.", exception)
+            }
+    }
+
+    fun getShops(): MutableList<DocumentSnapshot> {
         return shops
     }
 
-    fun getProducts(): MutableList<Product> {
+    fun getProducts(): MutableList<DocumentSnapshot> {
         return products
+    }
+
+    fun getCategories(): MutableList<DocumentSnapshot> {
+        return categories
     }
 
     fun search(searchTerm: String, view: LinearLayout) {
         view.removeAllViews()
-        var productResultsUnsorted: MutableList<Product> = mutableListOf()
-        var productResults: List<Product> = mutableListOf()
+        var productResultsUnsorted: MutableList<DocumentSnapshot> = mutableListOf()
+        var productResults: List<DocumentSnapshot> = mutableListOf()
 
         products.forEach {
-            if(it.Name?.toLowerCase()?.contains(searchTerm.toLowerCase())!!) {
+            var shop = it.toObject(Shop::class.java)
+            if(shop?.Name?.toLowerCase()?.contains(searchTerm.toLowerCase())!!) {
                 productResultsUnsorted.add(it)
             }
         }
 
-        productResults = productResultsUnsorted.sortedBy { it.Price}
+        productResults = productResultsUnsorted.sortedBy { it["Price"] as Double }
 
         productResults.forEach {
-            val product = it
-            db.collection("Shop")
-                .document(it.ShopReference.id)
-                .get()
-                .addOnSuccessListener {
-                    val shop = it.toObject(Shop::class.java)
-                    if (shop != null) {
-                        writeLine(view, product, shop)
-                    }
+            val productDocument = it
+            val shopReference = it["ShopReference"] as DocumentReference
+            val categoryReference = it["Category"] as DocumentReference
+
+            var product = Product()
+            product.Category = productDocument["Category"] as DocumentReference
+            product.Name = productDocument["Name"].toString()
+            product.Price = productDocument["Price"].toString().toDouble()
+            product.ShopReference = productDocument["ShopReference"] as DocumentReference
+            var shop: Shop? = Shop()
+            var category: Category? = Category()
+            shops.forEach {
+                if (it.id == shopReference.id) {
+                    shop = it.toObject(Shop::class.java)
                 }
-                .addOnFailureListener {
-                    writeLine(view, product, Shop())
+            }
+
+            categories.forEach {
+                if (it.id == categoryReference.id) {
+                    category = it.toObject(Category::class.java)
                 }
+            }
+
+            writeLine(view, product!!, shop!!, category!!)
         }
     }
 
-    private fun writeLine(view: LinearLayout, product: Product, shop: Shop) {
+    private fun writeLine(view: LinearLayout, product: Product, shop: Shop, category: Category) {
         val firstRowLayout = LinearLayout(view.context)
         firstRowLayout.setHorizontalGravity(LinearLayout.HORIZONTAL)
         val secondRowLayout = LinearLayout(view.context)
@@ -147,7 +140,7 @@ object DatabaseHelper {
         val shopNameLabel = TextView(view.context)
         val shopAddressLabel = TextView(view.context)
 
-        productNameLabel.text = product.Name
+        productNameLabel.text = product.Name + " (" + category.Name + ")"
         productPriceLabel.text = product.Price.toString() + "€"
         shopNameLabel.text = shop.Name
         shopAddressLabel.text = shop.Address
@@ -170,7 +163,7 @@ object DatabaseHelper {
 
 class Product {
     var Name: String? = ""
-    var Category: String? = ""
+    lateinit var Category: DocumentReference
     var Price: Double? = -1.0
     // var LastConfirmed: Date = Date("01-01-2000"),
     lateinit var ShopReference: DocumentReference
@@ -181,6 +174,12 @@ class Product {
 class Shop {
     var Name: String? = ""
     var Address: String? = ""
+
+    constructor() {}
+}
+
+class Category {
+    var Name: String? = ""
 
     constructor() {}
 }
