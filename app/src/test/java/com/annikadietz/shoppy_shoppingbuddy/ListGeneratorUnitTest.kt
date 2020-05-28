@@ -1,14 +1,18 @@
 package com.annikadietz.shoppy_shoppingbuddy
 
+import android.content.Context
 import android.util.Log
-import com.annikadietz.shoppy_shoppingbuddy.Model.Product
-import com.annikadietz.shoppy_shoppingbuddy.Model.ProductInShop
+import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.Volley
+import com.annikadietz.shoppy_shoppingbuddy.Model.*
 import com.annikadietz.shoppy_shoppingbuddy.Model.Shop
-import com.annikadietz.shoppy_shoppingbuddy.Model.Type
+import com.google.android.gms.common.api.Response
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import org.json.JSONObject
 import org.junit.Assert
 import org.junit.Test
+import org.junit.runner.Request
 import java.sql.Array
 
 class ListGeneratorUnitTest {
@@ -69,9 +73,8 @@ class ListGeneratorUnitTest {
         eggsInAldi = ProductInShop(eggs, aldi, 2.5)
         eggsInLidl = ProductInShop(eggs, lidl, 2.5)
     }
+
     fun setup() {
-
-
         shops.add(jumbo)
         shops.add(aldi)
         shops.add(lidl)
@@ -94,6 +97,7 @@ class ListGeneratorUnitTest {
         productsInShops.add(eggsInLidl)
 
     }
+
     fun findCheapestStore(shops: ArrayList<Shop>, shoppingList: ArrayList<Product>): ArrayList<ProductInShop> {
         var cheapestShop: Shop
         var finalShoppingList = arrayListOf<ProductInShop>()
@@ -118,6 +122,7 @@ class ListGeneratorUnitTest {
         }
         return finalShoppingList
     }
+
     @Test
     fun findsCheapestStore_Test() {
         createObjects()
@@ -134,5 +139,4 @@ class ListGeneratorUnitTest {
         var shoppingList = findCheapestStore(shops, listOfProducts)
         Assert.assertEquals(4, 2 + 2)
     }
-
 }

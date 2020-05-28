@@ -1,5 +1,6 @@
 package com.annikadietz.shoppy_shoppingbuddy.ui.product_search
 
+import android.app.DownloadManager
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,11 +12,16 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.android.volley.Request
+import com.android.volley.Response
+import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.Volley
 import com.annikadietz.shoppy_shoppingbuddy.DatabaseHelper
 import com.annikadietz.shoppy_shoppingbuddy.Model.Product
 import com.annikadietz.shoppy_shoppingbuddy.Model.ProductInShop
 import com.annikadietz.shoppy_shoppingbuddy.Model.Shop
 import com.annikadietz.shoppy_shoppingbuddy.R
+import org.json.JSONObject
 import kotlin.random.Random
 import kotlin.random.nextInt
 
@@ -43,19 +49,41 @@ class ProductSearchFragment : Fragment() {
         searchProductButton.setOnClickListener {
             DatabaseHelper.search(searchTermTextField.text.toString(), searchResultLayout)
         }
-//        var products = arrayListOf<Product>()
-//        var shops = arrayListOf<Shop>()
-//        DatabaseHelper.db.collection("products").get().addOnSuccessListener {
-//            Log.w("product", it.count().toString())
-//            it.forEach {
-//                products.add(it.toObject(Product::class.java))
-//            }
-//            Log.w("Objects", products.count().toString())
-//        }.addOnCompleteListener {
-//            DatabaseHelper.db.collection("shops").get().addOnSuccessListener {
-//                it.forEach {
-//                    shops.add(it.toObject(Shop::class.java))
-//                }
+        var products = arrayListOf<Product>()
+        var shops = arrayListOf<Shop>()
+        DatabaseHelper.db.collection("products").get().addOnSuccessListener {
+            Log.w("product", it.count().toString())
+            it.forEach {
+                products.add(it.toObject(Product::class.java))
+            }
+            Log.w("Objects", products.count().toString())
+        }.addOnCompleteListener {
+            DatabaseHelper.db.collection("shops").get().addOnSuccessListener {
+                it.forEach {
+                    shops.add(it.toObject(Shop::class.java))
+                }
+
+                val urlDirections = "https://maps.googleapis.com/maps/api/directions/json?origin=${shops.get(1).streetAddress + " " + shops.get(1).postCode}&destination=${shops.get(2).streetAddress + " " + shops.get(2).postCode}&waypoints=${shops.get(4).streetAddress + " " + shops.get(4).postCode + "|" + shops.get(3).streetAddress + " " + shops.get(3).postCode}&key=AIzaSyAvarQW1FBGHIf3Sr22AQva-J-1dPGHGOI"
+                val directionsRequest = object : StringRequest(Request.Method.GET, urlDirections, Response.Listener<String> {
+                        response ->
+                    val jsonResponse = JSONObject(response)
+                    val routes = jsonResponse.getJSONArray("routes")
+                    val legs = routes.getJSONObject(0).getJSONArray("legs")
+                    var totalDistance = 0;
+                    for (i in 0 until legs.length()) {
+                        val distanceValue = legs.getJSONObject(i).getJSONObject("distance").getString("value")
+                        Log.w("Distance", distanceValue)
+                        totalDistance += distanceValue.toInt()
+                    }
+                    Log.w("Total Distance", totalDistance.toString())
+                    Log.w("JSON Response", jsonResponse.toString())
+                }, Response.ErrorListener {
+                        _ ->
+                }){}
+                val requestQueue = Volley.newRequestQueue(this.context)
+                requestQueue.add(directionsRequest)
+
+
 //                products.forEach{
 //                    var product = it
 //                    shops.forEach{
@@ -66,8 +94,13 @@ class ProductSearchFragment : Fragment() {
 //                        DatabaseHelper.db.collection("productsInShops").add(productInShop);
 //                    }
 //                }
-//            }
-//        }
+            }
+        }
+
+        //https://maps.googleapis.com/maps/api/directions/json?origin=Fichtenweg 18 53340 meckenheim&destination=Kerspellaan 9 7824JA Emmen&key=AIzaSyAvarQW1FBGHIf3Sr22AQva-J-1dPGHGOI&units=metric
+
+
+
         return root
     }
 }
