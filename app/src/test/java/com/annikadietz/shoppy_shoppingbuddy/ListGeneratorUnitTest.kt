@@ -14,6 +14,7 @@ import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.Request
 import java.sql.Array
+import org.mockito.Mockito.*
 
 class ListGeneratorUnitTest {
     var shops = arrayListOf<Shop>()
@@ -236,6 +237,21 @@ class ListGeneratorUnitTest {
         Assert.assertTrue(combination?.prices!!.contains(bananasInAldi))
         Assert.assertTrue(combination?.prices!!.contains(potatoesInJumbo))
         Assert.assertTrue(combination?.prices!!.contains(eggsInAldi))
+    }
+
+    @Test
+    fun findBestRoute_Test() {
+        createObjects()
+        setup()
+
+        var shoppingList = arrayListOf<Product>().apply {
+            add(pizza)
+            add(bananas)
+            add(potatoes)
+            add(eggs)
+        }
+
+        var result = ListGenerator.findBestRoute(shops, shoppingList, productsInShops, "Hoitingeslag 29, 7824 KG", mock(Context.class))
     }
 
 }

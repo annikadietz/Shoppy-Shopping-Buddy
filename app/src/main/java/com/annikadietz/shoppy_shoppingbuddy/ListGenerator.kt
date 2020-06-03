@@ -1,7 +1,14 @@
 package com.annikadietz.shoppy_shoppingbuddy
 
+import android.content.Context
+import android.util.Log
+import com.android.volley.Request
+import com.android.volley.Response
+import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.Volley
 import com.annikadietz.shoppy_shoppingbuddy.Model.*
 import com.annikadietz.shoppy_shoppingbuddy.Model.Shop
+import org.json.JSONObject
 
 object ListGenerator {
 
@@ -117,5 +124,44 @@ object ListGenerator {
     fun sortedCombination(unsortedCombination: ArrayList<Combination>) : List<Combination> {
         var sorted = unsortedCombination.sortedBy { c -> c.prices?.sumByDouble { p -> p.price } }
         return sorted
+    }
+
+    fun findBestRoute(shops: ArrayList<Shop>, shoppingList: ArrayList<Product>, products: ArrayList<ProductInShop>, currentPosition: String, context: Context)  {
+        var cheapestCombinations = findCheapestStoreCombinations(shops, shoppingList, products)
+
+        cheapestCombinations.forEach {
+            var combinationShops = it.shops
+            var origin = currentPosition
+            var destination = currentPosition
+            var waypoints = ""
+
+            combinationShops?.forEachIndexed { index, it ->
+                waypoints += it.streetAddress + " " + it.postCode
+                if(index != combinationShops.lastIndex) {
+                    waypoints += " | "
+                }
+            }
+
+            val urlDirections = "https://maps.googleapis.com/maps/api/directions/json?origin=${origin}&destination=${destination}&waypoints=${waypoints}&key=AIzaSyAvarQW1FBGHIf3Sr22AQva-J-1dPGHGOI"
+            Log.w("URL", urlDirections)
+            val directionsRequest = object : StringRequest(Request.Method.GET, urlDirections, Response.Listener<String> {
+                    response ->
+                val jsonResponse = JSONObject(response)
+                val routes = jsonResponse.getJSONArray("routes")
+                val legs = routes.getJSONObject(0).getJSONArray("legs")
+                var totalDistance = 0;
+                for (i in 0 until legs.length()) {
+                    val distanceValue = legs.getJSONObject(i).getJSONObject("distance").getString("value")
+                    Log.w("Distance", distanceValue)
+                    totalDistance += distanceValue.toInt()
+                }
+                Log.w("Total Distance", totalDistance.toString())
+                Log.w("JSON Response", jsonResponse.toString())
+            }, Response.ErrorListener {
+                    _ ->
+            }){}
+            val requestQueue = Volley.newRequestQueue(context)
+            requestQueue.add(directionsRequest)
+        }
     }
 }

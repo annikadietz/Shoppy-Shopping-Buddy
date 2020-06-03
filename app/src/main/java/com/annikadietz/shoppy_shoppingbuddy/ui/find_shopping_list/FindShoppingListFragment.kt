@@ -50,6 +50,9 @@ class FindShoppingListFragment : Fragment() {
         oneShopButton.setOnClickListener {
             var results = ListGenerator.findCheapestStore(shops, shoppingList, productsInShops)
             writeLine(linearLayout, results)
+
+            var testResult = ListGenerator.findBestRoute(shops, shoppingList, productsInShops, "Hoitingeslag 29, 7824 KG", this.requireContext())
+            print("test")
         }
 
         shopCombinationButton.setOnClickListener {
