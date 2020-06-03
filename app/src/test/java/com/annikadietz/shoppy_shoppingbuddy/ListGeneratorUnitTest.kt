@@ -18,6 +18,7 @@ import java.sql.Array
 class ListGeneratorUnitTest {
     var shops = arrayListOf<Shop>()
     var productsInShops = arrayListOf<ProductInShop>()
+    var combos = arrayListOf<Combination>()
 
     var potatoes = Product("Potatoes - 1kg", Type("Vegetables"))
     var pizza = Product("Pizza - Italia", Type("Frozen"))
@@ -44,6 +45,14 @@ class ListGeneratorUnitTest {
     var eggsInAldi = ProductInShop(eggs, aldi, 2.5)
     var eggsInLidl = ProductInShop(eggs, lidl, 2.5)
 
+    var combo1 = Combination(arrayListOf(jumbo), arrayListOf())
+    var combo2 = Combination(arrayListOf(aldi), arrayListOf())
+    var combo3 = Combination(arrayListOf(lidl), arrayListOf())
+    var combo4 = Combination(arrayListOf(jumbo, aldi), arrayListOf())
+    var combo5 = Combination(arrayListOf(jumbo, lidl), arrayListOf())
+    var combo6 = Combination(arrayListOf(aldi, lidl), arrayListOf())
+    var combo7 = Combination(arrayListOf(jumbo, aldi, lidl), arrayListOf())
+
     fun createObjects() {
         shops = arrayListOf<Shop>()
         productsInShops = arrayListOf<ProductInShop>()
@@ -56,6 +65,8 @@ class ListGeneratorUnitTest {
         jumbo = Shop("Jumbo", "7824JA", "Kerspellaan 9")
         aldi = Shop("Aldi", "7824CP", "Peyserhof 2")
         lidl = Shop("Lidl", "7823PH", "Houtweg 151")
+
+        combo4 = Combination(arrayListOf(jumbo, aldi), arrayListOf())
 
         potatoesInJumbo = ProductInShop(potatoes, jumbo, 2.5)
         potatoesInAldi = ProductInShop(potatoes, aldi, 2.5)
@@ -79,7 +90,6 @@ class ListGeneratorUnitTest {
         shops.add(aldi)
         shops.add(lidl)
 
-
         productsInShops.add(potatoesInJumbo)
         productsInShops.add(potatoesInAldi)
         productsInShops.add(potatoesInLidl)
@@ -96,6 +106,13 @@ class ListGeneratorUnitTest {
         productsInShops.add(eggsInAldi)
         productsInShops.add(eggsInLidl)
 
+//        combos.add(combo1)
+//        combos.add(combo2)
+//        combos.add(combo3)
+        combos.add(combo4)
+//        combos.add(combo5)
+//        combos.add(combo6)
+//        combos.add(combo7)
     }
 
     fun findCheapestStore(shops: ArrayList<Shop>, shoppingList: ArrayList<Product>): ArrayList<ProductInShop> {
@@ -128,7 +145,7 @@ class ListGeneratorUnitTest {
         createObjects()
         pizzaInAldi.price = 0.5
         setup()
-        var listOfProducts = arrayListOf<Product>().apply {
+        var shoppingList = arrayListOf<Product>().apply {
             add(pizza)
             add(bananas)
             add(potatoes)
@@ -136,7 +153,89 @@ class ListGeneratorUnitTest {
         }
         //Find the store where to buy all items for cheapest price.
 
-        var shoppingList = findCheapestStore(shops, listOfProducts)
-        Assert.assertEquals(4, 2 + 2)
+        var result = ListGenerator.findCheapestStore(shops, shoppingList, productsInShops)
+
+        Assert.assertTrue(result.contains(pizzaInAldi))
+        Assert.assertTrue(result.contains(bananasInAldi))
+        Assert.assertTrue(result.contains(potatoesInAldi))
+        Assert.assertTrue(result.contains(eggsInAldi))
     }
+
+    @Test
+    fun findAllPossibleStoreCombinations_Test() {
+        createObjects()
+        setup()
+
+        var result = ListGenerator.findAllPossibleStoreCombinations(shops)
+        var foundCombo1 = result.find { c -> c.shops!!.contains(jumbo) }
+        var foundCombo2 = result.find { c -> c.shops!!.contains(aldi) }
+        var foundCombo3 = result.find { c -> c.shops!!.contains(lidl) }
+        var foundCombo4 = result.find { c -> c.shops!!.contains(jumbo) && c.shops!!.contains(aldi) }
+        var foundCombo5 = result.find { c -> c.shops!!.contains(jumbo) && c.shops!!.contains(lidl) }
+        var foundCombo6 = result.find { c -> c.shops!!.contains(lidl) && c.shops!!.contains(aldi) }
+        var foundCombo7 = result.find { c -> c.shops!!.contains(jumbo) && c.shops!!.contains(aldi) && c.shops!!.contains(lidl)}
+
+        Assert.assertTrue(foundCombo1 != null)
+        Assert.assertTrue(foundCombo2 != null)
+        Assert.assertTrue(foundCombo3 != null)
+        Assert.assertTrue(foundCombo4 != null)
+        Assert.assertTrue(foundCombo5 != null)
+        Assert.assertTrue(foundCombo6 != null)
+        Assert.assertTrue(foundCombo7 != null)
+    }
+
+    @Test
+    fun findsPriceInShop_Test() {
+        createObjects()
+        setup()
+        var result = ListGenerator.findPriceInShop(lidl, eggs, productsInShops)
+        Assert.assertEquals(eggsInLidl, result)
+        result = ListGenerator.findPriceInShop(aldi, eggs, productsInShops)
+        Assert.assertEquals(eggsInAldi, result)
+        result = ListGenerator.findPriceInShop(jumbo, pizza, productsInShops)
+        Assert.assertEquals(pizzaInJumbo, result)
+    }
+
+    @Test
+    fun findBestPriceInShopCombination_Test() {
+        createObjects()
+        eggsInAldi.price = 10.0
+        eggsInJumbo.price = 5.0
+        eggsInLidl.price = 1.0
+        setup()
+        var combination = Combination(arrayListOf(jumbo, aldi), arrayListOf())
+        var result = ListGenerator.findBestPriceInShopCombination(eggs, combination, productsInShops)
+        Assert.assertEquals(eggsInJumbo, result)
+
+        combination = Combination(arrayListOf(jumbo, lidl, aldi), arrayListOf())
+        result = ListGenerator.findBestPriceInShopCombination(eggs, combination, productsInShops)
+        Assert.assertEquals(eggsInLidl, result)
+    }
+
+    @Test
+    fun findCheapestStoreCombinations_Test() {
+        createObjects()
+        pizzaInJumbo.price = 1.0
+        bananasInAldi.price = 1.0
+        potatoesInJumbo.price = 1.0
+        eggsInAldi.price = 1.0
+        setup()
+
+        var shoppingList = arrayListOf<Product>().apply {
+            add(pizza)
+            add(bananas)
+            add(potatoes)
+            add(eggs)
+        }
+
+        var result = ListGenerator.findCheapestStoreCombinations(shops, shoppingList, productsInShops)
+        var combination = result.find { c -> c.shops!!.contains(jumbo) && c.shops!!.contains(aldi) }
+
+        print(result)
+        Assert.assertTrue(combination?.prices!!.contains(pizzaInJumbo))
+        Assert.assertTrue(combination?.prices!!.contains(bananasInAldi))
+        Assert.assertTrue(combination?.prices!!.contains(potatoesInJumbo))
+        Assert.assertTrue(combination?.prices!!.contains(eggsInAldi))
+    }
+
 }

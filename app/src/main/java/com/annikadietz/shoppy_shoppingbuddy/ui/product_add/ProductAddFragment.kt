@@ -11,11 +11,8 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.annikadietz.shoppy_shoppingbuddy.Category
 import com.annikadietz.shoppy_shoppingbuddy.DatabaseHelper
 import com.annikadietz.shoppy_shoppingbuddy.R
-import com.annikadietz.shoppy_shoppingbuddy.Shop
-import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
 import java.util.*
 import kotlin.collections.HashMap

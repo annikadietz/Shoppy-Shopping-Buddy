@@ -87,9 +87,9 @@ class ProductSearchFragment : Fragment() {
 //                products.forEach{
 //                    var product = it
 //                    shops.forEach{
-//                        var shop = it
+//                        var shops = it
 //                        var price = Random.nextInt(IntRange(3,10)).toDouble()
-//                        var productInShop = ProductInShop(product, shop, price)
+//                        var productInShop = ProductInShop(product, shops, price)
 //                        Log.w("pprice", price.toString())
 //                        DatabaseHelper.db.collection("productsInShops").add(productInShop);
 //                    }
