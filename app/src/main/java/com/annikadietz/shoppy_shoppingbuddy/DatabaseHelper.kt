@@ -102,7 +102,7 @@ object DatabaseHelper {
             val shopReference = it["ShopReference"] as DocumentReference
             val categoryReference = it["Category"] as DocumentReference
 
-            var product = Product()
+            var product = ProductOld()
             product.Category = productDocument["Category"] as DocumentReference
             product.Name = productDocument["Name"].toString()
             product.Price = productDocument["Price"].toString().toDouble()
@@ -125,7 +125,7 @@ object DatabaseHelper {
         }
     }
 
-    private fun writeLine(view: LinearLayout, product: Product, shop: Shop, category: Category) {
+    private fun writeLine(view: LinearLayout, product: ProductOld, shop: Shop, category: Category) {
         val firstRowLayout = LinearLayout(view.context)
         firstRowLayout.setHorizontalGravity(LinearLayout.HORIZONTAL)
         val secondRowLayout = LinearLayout(view.context)
@@ -161,7 +161,7 @@ object DatabaseHelper {
     }
 }
 
-class Product {
+class ProductOld {
     var Name: String? = ""
     lateinit var Category: DocumentReference
     var Price: Double? = -1.0
