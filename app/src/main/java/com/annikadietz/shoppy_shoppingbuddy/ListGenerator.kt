@@ -160,10 +160,17 @@ class ListGenerator {
         oneShopCombination = getCombinationWithBestPrice(combinations, 1)
         twoShopCombination = getCombinationWithBestPrice(combinations, 2)
         threeShopCombination = getCombinationWithBestPrice(combinations, 3)
-        getDirections(oneShopCombination)
-        getDirections(twoShopCombination)
-        getDirections(threeShopCombination)
-        print("done")
+        
+        val apiCallThread = Thread(Runnable {
+            try {
+                getDirections(oneShopCombination)
+                getDirections(twoShopCombination)
+                getDirections(threeShopCombination)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        })
+        apiCallThread.start()
     }
 
     // Takes a combination and adds directions to it
