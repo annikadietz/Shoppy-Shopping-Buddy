@@ -1,22 +1,20 @@
 package com.annikadietz.shoppy_shoppingbuddy
 
 import android.content.Context
-import android.util.Log
-import com.android.volley.toolbox.StringRequest
-import com.android.volley.toolbox.Volley
 import com.annikadietz.shoppy_shoppingbuddy.Model.*
 import com.annikadietz.shoppy_shoppingbuddy.Model.Shop
-import com.google.android.gms.common.api.Response
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
-import org.json.JSONObject
 import org.junit.Assert
 import org.junit.Test
-import org.junit.runner.Request
-import java.sql.Array
-import org.mockito.Mockito.*
 
+import org.mockito.Mockito.*
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config
+
+@RunWith(RobolectricTestRunner::class)
+@Config(sdk = [Config.OLDEST_SDK])
 class ListGeneratorUnitTest {
+    var listGenerator = ListGenerator(mock(Context::class.java), "Hoitingeslag%2029,%207824%20KG")
     var shops = arrayListOf<Shop>()
     var productsInShops = arrayListOf<ProductInShop>()
     var combos = arrayListOf<Combination>()
@@ -63,9 +61,9 @@ class ListGeneratorUnitTest {
         bananas = Product("Bananas - 1kg", Type("Fruits"))
         eggs = Product("Large eggs", Type("Dairy, eggs, and butter"))
 
-        jumbo = Shop("Jumbo", "7824JA", "Kerspellaan 9")
-        aldi = Shop("Aldi", "7824CP", "Peyserhof 2")
-        lidl = Shop("Lidl", "7823PH", "Houtweg 151")
+        jumbo = Shop("Jumbo", "7824JA", "Kerspellaan%209")
+        aldi = Shop("Aldi", "7824CP", "Peyserhof%202")
+        lidl = Shop("Lidl", "7823PH", "Houtweg%20151")
 
         combo4 = Combination(arrayListOf(jumbo, aldi), arrayListOf())
 
@@ -154,7 +152,7 @@ class ListGeneratorUnitTest {
         }
         //Find the store where to buy all items for cheapest price.
 
-        var result = ListGenerator.findCheapestStore(shops, shoppingList, productsInShops)
+        var result = listGenerator.findCheapestStore(shops, shoppingList, productsInShops)
 
         Assert.assertTrue(result.contains(pizzaInAldi))
         Assert.assertTrue(result.contains(bananasInAldi))
@@ -167,7 +165,7 @@ class ListGeneratorUnitTest {
         createObjects()
         setup()
 
-        var result = ListGenerator.findAllPossibleStoreCombinations(shops)
+        var result = listGenerator.findAllPossibleStoreCombinations(shops)
         var foundCombo1 = result.find { c -> c.shops!!.contains(jumbo) }
         var foundCombo2 = result.find { c -> c.shops!!.contains(aldi) }
         var foundCombo3 = result.find { c -> c.shops!!.contains(lidl) }
@@ -189,11 +187,11 @@ class ListGeneratorUnitTest {
     fun findsPriceInShop_Test() {
         createObjects()
         setup()
-        var result = ListGenerator.findPriceInShop(lidl, eggs, productsInShops)
+        var result = listGenerator.findPriceInShop(lidl, eggs, productsInShops)
         Assert.assertEquals(eggsInLidl, result)
-        result = ListGenerator.findPriceInShop(aldi, eggs, productsInShops)
+        result = listGenerator.findPriceInShop(aldi, eggs, productsInShops)
         Assert.assertEquals(eggsInAldi, result)
-        result = ListGenerator.findPriceInShop(jumbo, pizza, productsInShops)
+        result = listGenerator.findPriceInShop(jumbo, pizza, productsInShops)
         Assert.assertEquals(pizzaInJumbo, result)
     }
 
@@ -205,11 +203,11 @@ class ListGeneratorUnitTest {
         eggsInLidl.price = 1.0
         setup()
         var combination = Combination(arrayListOf(jumbo, aldi), arrayListOf())
-        var result = ListGenerator.findBestPriceInShopCombination(eggs, combination, productsInShops)
+        var result = listGenerator.findBestPriceInShopCombination(eggs, combination, productsInShops)
         Assert.assertEquals(eggsInJumbo, result)
 
         combination = Combination(arrayListOf(jumbo, lidl, aldi), arrayListOf())
-        result = ListGenerator.findBestPriceInShopCombination(eggs, combination, productsInShops)
+        result = listGenerator.findBestPriceInShopCombination(eggs, combination, productsInShops)
         Assert.assertEquals(eggsInLidl, result)
     }
 
@@ -229,14 +227,14 @@ class ListGeneratorUnitTest {
             add(eggs)
         }
 
-        var result = ListGenerator.findCheapestStoreCombinations(shops, shoppingList, productsInShops)
+        var result = listGenerator.getCombinationsWithProductsInShops(shops, shoppingList, productsInShops)
         var combination = result.find { c -> c.shops!!.contains(jumbo) && c.shops!!.contains(aldi) }
 
         print(result)
-        Assert.assertTrue(combination?.prices!!.contains(pizzaInJumbo))
-        Assert.assertTrue(combination?.prices!!.contains(bananasInAldi))
-        Assert.assertTrue(combination?.prices!!.contains(potatoesInJumbo))
-        Assert.assertTrue(combination?.prices!!.contains(eggsInAldi))
+        Assert.assertTrue(combination?.productsInShops!!.contains(pizzaInJumbo))
+        Assert.assertTrue(combination?.productsInShops!!.contains(bananasInAldi))
+        Assert.assertTrue(combination?.productsInShops!!.contains(potatoesInJumbo))
+        Assert.assertTrue(combination?.productsInShops!!.contains(eggsInAldi))
     }
 
     @Test
@@ -244,14 +242,17 @@ class ListGeneratorUnitTest {
         createObjects()
         setup()
 
+        listGenerator.GoogleDirectionsService = MockGoogleDirectionsService()
         var shoppingList = arrayListOf<Product>().apply {
             add(pizza)
             add(bananas)
             add(potatoes)
             add(eggs)
         }
+        val context: Context = mock(Context::class.java)
 
-        var result = ListGenerator.findBestRoute(shops, shoppingList, productsInShops, "Hoitingeslag 29, 7824 KG", mock(Context.class))
+        //var result = listGenerator.getDirections(shops, shoppingList, productsInShops, "Hoitingeslag%2029,%207824%20KG", context)
+        print("goof")
     }
 
 }

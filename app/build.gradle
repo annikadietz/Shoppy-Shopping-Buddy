@@ -9,6 +9,11 @@ apply plugin: 'com.google.gms.google-services'
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.3"
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
+    }
     defaultConfig {
         applicationId "com.annikadietz.shoppy_shoppingbuddy"
         minSdkVersion 21
@@ -49,5 +54,6 @@ dependencies {
     implementation 'com.google.android.gms:play-services-maps:15.0.1'
     implementation 'com.google.maps.android:android-maps-utils:0.5'
     implementation 'com.android.volley:volley:1.1.1'
-    testImplementation 'org.mockito:mockito-core:2.7.22'
+    testImplementation 'com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0'
+    testImplementation 'org.robolectric:robolectric:4.3.1'
 }

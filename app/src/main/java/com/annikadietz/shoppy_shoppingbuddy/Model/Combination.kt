@@ -2,14 +2,14 @@ package com.annikadietz.shoppy_shoppingbuddy.Model
 
 class Combination {
     var shops: ArrayList<Shop>?
-    var prices: ArrayList<ProductInShop>?
-
+    var productsInShops: ArrayList<ProductInShop>?
+    var directions: Directions? = null
     constructor(shop: ArrayList<Shop>, price: ArrayList<ProductInShop>?){
         this.shops = shop
-        this.prices = price
+        this.productsInShops = price
     }
     constructor(){
         this.shops = null
-        this.prices = null
+        this.productsInShops = null
     }
 }

@@ -1,11 +1,13 @@
 package com.annikadietz.shoppy_shoppingbuddy.ui.find_shopping_list
 
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.annikadietz.shoppy_shoppingbuddy.*
@@ -19,7 +21,8 @@ import java.util.*
 class FindShoppingListFragment : Fragment() {
 
     private lateinit var findShoppingListViewModel: FindShoppingListViewModel
-
+    private lateinit var listGenerator: ListGenerator
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -28,7 +31,7 @@ class FindShoppingListFragment : Fragment() {
         findShoppingListViewModel =
             ViewModelProviders.of(this).get(FindShoppingListViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_find_shopping_list, container, false)
-
+        listGenerator = ListGenerator(root.context, "Hoitingeslag%2029,%207824%20KG")
         // TODO: Get the right shopping list and not all Products.
         var shoppingList = ArrayList<Product>(NewDatabaseHelper.getProducts())
         var shops = ArrayList<Shop>(NewDatabaseHelper.getShops())
@@ -48,20 +51,20 @@ class FindShoppingListFragment : Fragment() {
         var linearLayout = root.findViewById<LinearLayout>(R.id.results_layout)
 
         oneShopButton.setOnClickListener {
-            var results = ListGenerator.findCheapestStore(shops, shoppingList, productsInShops)
+            var results = listGenerator.findCheapestStore(shops, shoppingList, productsInShops)
             writeLine(linearLayout, results)
 
-            var testResult = ListGenerator.findBestRoute(shops, shoppingList, productsInShops, "Hoitingeslag 29, 7824 KG", this.requireContext())
+            //var testResult = listGenerator.findBestRoute(shops, shoppingList, productsInShops, "Hoitingeslag 29, 7824 KG", this.requireContext())
             print("test")
         }
 
         shopCombinationButton.setOnClickListener {
-            var result = ListGenerator.findCheapestStoreCombinations(shops, shoppingList, productsInShops)
-            var sortedResult = ListGenerator.sortedCombination(result)
+            var result = listGenerator.getCombinationsWithProductsInShops(shops, shoppingList, productsInShops)
+            var sortedResult = listGenerator.sortedCombination(result)
 
             linearLayout.removeAllViews()
             sortedResult.forEach {
-                Log.w("Test", it.prices?.first()?.price.toString())
+                Log.w("Test", it.productsInShops?.first()?.price.toString())
                 writeLine(linearLayout, it)
             }
         }
@@ -91,7 +94,7 @@ class FindShoppingListFragment : Fragment() {
             shopNames += it.name + " " + "(${it.streetAddress}) "
         }
 
-        combination.prices?.forEach {
+        combination.productsInShops?.forEach {
             priceSum += it.price
         }
 
