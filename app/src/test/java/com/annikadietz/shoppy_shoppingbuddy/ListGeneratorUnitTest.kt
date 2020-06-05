@@ -3,6 +3,7 @@ package com.annikadietz.shoppy_shoppingbuddy
 import android.content.Context
 import com.annikadietz.shoppy_shoppingbuddy.Model.*
 import com.annikadietz.shoppy_shoppingbuddy.Model.Shop
+import org.json.JSONObject
 import org.junit.Assert
 import org.junit.Test
 
@@ -65,7 +66,9 @@ class ListGeneratorUnitTest {
         aldi = Shop("Aldi", "7824CP", "Peyserhof%202")
         lidl = Shop("Lidl", "7823PH", "Houtweg%20151")
 
+        combo1 = Combination(arrayListOf(aldi), arrayListOf())
         combo4 = Combination(arrayListOf(jumbo, aldi), arrayListOf())
+        combo7 = Combination(arrayListOf(jumbo, aldi, lidl), arrayListOf())
 
         potatoesInJumbo = ProductInShop(potatoes, jumbo, 2.5)
         potatoesInAldi = ProductInShop(potatoes, aldi, 2.5)
@@ -105,13 +108,13 @@ class ListGeneratorUnitTest {
         productsInShops.add(eggsInAldi)
         productsInShops.add(eggsInLidl)
 
-//        combos.add(combo1)
+        combos.add(combo1)
 //        combos.add(combo2)
 //        combos.add(combo3)
         combos.add(combo4)
 //        combos.add(combo5)
 //        combos.add(combo6)
-//        combos.add(combo7)
+        combos.add(combo7)
     }
 
     fun findCheapestStore(shops: ArrayList<Shop>, shoppingList: ArrayList<Product>): ArrayList<ProductInShop> {
@@ -212,7 +215,7 @@ class ListGeneratorUnitTest {
     }
 
     @Test
-    fun findCheapestStoreCombinations_Test() {
+    fun getCombinationsWithProductsInShops_Test() {
         createObjects()
         pizzaInJumbo.price = 1.0
         bananasInAldi.price = 1.0
@@ -254,5 +257,185 @@ class ListGeneratorUnitTest {
         //var result = listGenerator.getDirections(shops, shoppingList, productsInShops, "Hoitingeslag%2029,%207824%20KG", context)
         print("goof")
     }
+
+    @Test
+    fun getPriceFromCombination_Test() {
+        createObjects()
+        setup()
+        potatoesInJumbo.price = 1.00
+        eggsInJumbo.price = 2.00
+        pizzaInJumbo.price = 2.00
+        bananasInJumbo.price = 1.00
+
+        combo4.productsInShops?.add(potatoesInJumbo)
+        combo4.productsInShops?.add(eggsInJumbo)
+        combo4.productsInShops?.add(pizzaInJumbo)
+        combo4.productsInShops?.add(bananasInJumbo)
+        val ans = listGenerator.getPriceFromCombination(combo4)
+        Assert.assertEquals(ans, 6.00, 0.0001)
+    }
+
+    // TODO("Create 3 different testing")
+    @Test
+    fun getCombinationWithBestPrice_Test() {
+        createObjects()
+        setup()
+
+        var comboOne = Combination(arrayListOf(aldi), arrayListOf(ProductInShop(Product(), Shop(), 1.00), ProductInShop(Product(), Shop(), 0.50), ProductInShop(Product(), Shop(), 1.00)))
+        var comboOne_2 = Combination(arrayListOf(aldi), arrayListOf(ProductInShop(Product(), Shop(), 1.00), ProductInShop(Product(), Shop(), 0.40), ProductInShop(Product(), Shop(), 1.00)))
+        var comboTwo = Combination(arrayListOf(aldi, jumbo), arrayListOf(ProductInShop(Product(), Shop(), 1.00), ProductInShop(Product(), Shop(), 1.00), ProductInShop(Product(), Shop(), 1.00)))
+        var comboThree = Combination(arrayListOf(aldi, jumbo, lidl), arrayListOf(ProductInShop(Product(), Shop(), 1.00), ProductInShop(Product(), Shop(), 1.00), ProductInShop(Product(), Shop(), 1.00)))
+        var cheapestCombo = listGenerator.getCombinationWithBestPrice(arrayListOf(comboOne, comboTwo, comboThree, comboOne_2), 1)
+
+        Assert.assertEquals(cheapestCombo, comboOne_2)
+
+        comboOne = Combination(arrayListOf(aldi), arrayListOf(ProductInShop(Product(), Shop(), 1.00), ProductInShop(Product(), Shop(), 1.00), ProductInShop(Product(), Shop(), 1.00)))
+        comboTwo = Combination(arrayListOf(aldi, jumbo), arrayListOf(ProductInShop(Product(), Shop(), 1.00), ProductInShop(Product(), Shop(), 0.50), ProductInShop(Product(), Shop(), 1.00)))
+        var comboTwo_2 = Combination(arrayListOf(aldi, jumbo), arrayListOf(ProductInShop(Product(), Shop(), 1.00), ProductInShop(Product(), Shop(), 0.40), ProductInShop(Product(), Shop(), 1.00)))
+        comboThree = Combination(arrayListOf(aldi, jumbo, lidl), arrayListOf(ProductInShop(Product(), Shop(), 1.00), ProductInShop(Product(), Shop(), 1.00), ProductInShop(Product(), Shop(), 1.00)))
+        cheapestCombo = listGenerator.getCombinationWithBestPrice(arrayListOf(comboOne, comboTwo, comboThree, comboTwo_2), 2)
+
+        Assert.assertEquals(cheapestCombo, comboTwo_2)
+
+        comboOne = Combination(arrayListOf(aldi), arrayListOf(ProductInShop(Product(), Shop(), 1.00), ProductInShop(Product(), Shop(), 1.00), ProductInShop(Product(), Shop(), 1.00)))
+        comboTwo = Combination(arrayListOf(aldi, jumbo), arrayListOf(ProductInShop(Product(), Shop(), 1.00), ProductInShop(Product(), Shop(), 1.00), ProductInShop(Product(), Shop(), 1.00)))
+        comboThree = Combination(arrayListOf(aldi, jumbo, lidl), arrayListOf(ProductInShop(Product(), Shop(), 1.00), ProductInShop(Product(), Shop(), 0.50), ProductInShop(Product(), Shop(), 1.00)))
+        var comboThree_2 = Combination(arrayListOf(aldi, jumbo, lidl), arrayListOf(ProductInShop(Product(), Shop(), 1.00), ProductInShop(Product(), Shop(), 0.40), ProductInShop(Product(), Shop(), 1.00)))
+        cheapestCombo = listGenerator.getCombinationWithBestPrice(arrayListOf(comboOne, comboTwo, comboThree, comboThree_2), 3)
+
+        Assert.assertEquals(cheapestCombo, comboThree_2)
+    }
+
+    @Test
+    fun getDirections_Test() {
+        listGenerator.GoogleDirectionsService = MockGoogleDirectionsService().apply {
+            json = JSONObject("{\n" +
+                    "   \"routes\" : [\n" +
+                    "      {\n" +
+                    "         \"legs\" : [\n" +
+                    "            {\n" +
+                    "               \"distance\" : {\n" +
+                    "                  \"text\" : \"0.5 km\",\n" +
+                    "                  \"value\" : 202\n" +
+                    "               },\n" +
+                    "               \"duration\" : {\n" +
+                    "                  \"text\" : \"2 min\",\n" +
+                    "                  \"value\" : 50\n" +
+                    "               }\n" +
+                    "            },\n" +
+                    "            {\n" +
+                    "               \"distance\" : {\n" +
+                    "                  \"text\" : \"0.5 km\",\n" +
+                    "                  \"value\" : 202\n" +
+                    "               },\n" +
+                    "               \"duration\" : {\n" +
+                    "                  \"text\" : \"1 min\",\n" +
+                    "                  \"value\" : 50\n" +
+                    "               }\n" +
+                    "            },\n" +
+                    "            {\n" +
+                    "               \"distance\" : {\n" +
+                    "                  \"text\" : \"2 km\",\n" +
+                    "                  \"value\" : 202\n" +
+                    "               },\n" +
+                    "               \"duration\" : {\n" +
+                    "                  \"text\" : \"1 min\",\n" +
+                    "                  \"value\" : 46\n" +
+                    "               }\n" +
+                    "            },\n" +
+                    "            {\n" +
+                    "               \"distance\" : {\n" +
+                    "                  \"text\" : \"1 km\",\n" +
+                    "                  \"value\" : 202\n" +
+                    "               },\n" +
+                    "               \"duration\" : {\n" +
+                    "                  \"text\" : \"1 min\",\n" +
+                    "                  \"value\" : 46\n" +
+                    "               }\n" +
+                    "            }\n" +
+                    "         ]\n" +
+                    "      }\n" +
+                    "   ],\n" +
+                    "   \"status\" : \"OK\"\n" +
+                    "}")
+        }
+        val combination = Combination(arrayListOf(Shop()), arrayListOf(ProductInShop()))
+        listGenerator.getDirections(combination)
+
+        Assert.assertEquals(combination.directions!!.distancetoTravel!!, 808.0, 0.001)
+        Assert.assertEquals(combination.directions!!.timeToTravel!!, 192.0, 0.001)
+    }
+
+    @Test
+    fun getFinalCombinations_Test() {
+        listGenerator.GoogleDirectionsService = MockGoogleDirectionsService().apply {
+            json = JSONObject("{\n" +
+                    "   \"routes\" : [\n" +
+                    "      {\n" +
+                    "         \"legs\" : [\n" +
+                    "            {\n" +
+                    "               \"distance\" : {\n" +
+                    "                  \"text\" : \"0.5 km\",\n" +
+                    "                  \"value\" : 202\n" +
+                    "               },\n" +
+                    "               \"duration\" : {\n" +
+                    "                  \"text\" : \"2 min\",\n" +
+                    "                  \"value\" : 50\n" +
+                    "               }\n" +
+                    "            },\n" +
+                    "            {\n" +
+                    "               \"distance\" : {\n" +
+                    "                  \"text\" : \"0.5 km\",\n" +
+                    "                  \"value\" : 202\n" +
+                    "               },\n" +
+                    "               \"duration\" : {\n" +
+                    "                  \"text\" : \"1 min\",\n" +
+                    "                  \"value\" : 50\n" +
+                    "               }\n" +
+                    "            },\n" +
+                    "            {\n" +
+                    "               \"distance\" : {\n" +
+                    "                  \"text\" : \"2 km\",\n" +
+                    "                  \"value\" : 202\n" +
+                    "               },\n" +
+                    "               \"duration\" : {\n" +
+                    "                  \"text\" : \"1 min\",\n" +
+                    "                  \"value\" : 46\n" +
+                    "               }\n" +
+                    "            },\n" +
+                    "            {\n" +
+                    "               \"distance\" : {\n" +
+                    "                  \"text\" : \"1 km\",\n" +
+                    "                  \"value\" : 202\n" +
+                    "               },\n" +
+                    "               \"duration\" : {\n" +
+                    "                  \"text\" : \"1 min\",\n" +
+                    "                  \"value\" : 46\n" +
+                    "               }\n" +
+                    "            }\n" +
+                    "         ]\n" +
+                    "      }\n" +
+                    "   ],\n" +
+                    "   \"status\" : \"OK\"\n" +
+                    "}")
+        }
+        val combo1 = Combination(arrayListOf(Shop()), arrayListOf(ProductInShop(bananas, lidl,1.5)))
+        val combo1_2 = Combination(arrayListOf(Shop()), arrayListOf(ProductInShop(bananas, lidl,0.5)))
+        val combo2 = Combination(arrayListOf(Shop(), Shop()), arrayListOf(ProductInShop(bananas, lidl,1.5)))
+        val combo2_2 = Combination(arrayListOf(Shop(), Shop()), arrayListOf(ProductInShop(bananas, lidl,0.5)))
+        val combo3 = Combination(arrayListOf(Shop(), Shop(), Shop()), arrayListOf(ProductInShop(bananas, lidl,1.5)))
+        val combo3_2 = Combination(arrayListOf(Shop(), Shop(), Shop()), arrayListOf(ProductInShop(bananas, lidl,0.5)))
+        val combinations = arrayListOf(combo1, combo2, combo3, combo1_2, combo2_2, combo3_2)
+        listGenerator.getFinalCombinations(combinations)
+        Assert.assertEquals(combo1_2, listGenerator.oneShopCombination)
+        Assert.assertEquals(combo2_2, listGenerator.twoShopCombination)
+        Assert.assertEquals(combo3_2, listGenerator.threeShopCombination)
+
+        Assert.assertEquals(combo1_2.directions!!.timeToTravel!!, 192.0, 0.001)
+        Assert.assertEquals(combo2_2.directions!!.timeToTravel!!, 192.0, 0.001)
+        Assert.assertEquals(combo3_2.directions!!.timeToTravel!!, 192.0, 0.001)
+    }
+
+
 
 }

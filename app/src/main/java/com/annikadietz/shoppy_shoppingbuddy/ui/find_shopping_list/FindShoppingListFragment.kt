@@ -60,10 +60,10 @@ class FindShoppingListFragment : Fragment() {
 
         shopCombinationButton.setOnClickListener {
             var result = listGenerator.getCombinationsWithProductsInShops(shops, shoppingList, productsInShops)
-            var sortedResult = listGenerator.sortedCombination(result)
+
 
             linearLayout.removeAllViews()
-            sortedResult.forEach {
+            result.forEach {
                 Log.w("Test", it.productsInShops?.first()?.price.toString())
                 writeLine(linearLayout, it)
             }

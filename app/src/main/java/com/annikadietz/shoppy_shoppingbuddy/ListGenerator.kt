@@ -130,11 +130,6 @@ class ListGenerator {
         }
     }
 
-    fun sortedCombination(unsortedCombination: ArrayList<Combination>) : List<Combination> {
-        var sorted = unsortedCombination.sortedBy { c -> c.productsInShops?.sumByDouble { p -> p.price } }
-        return sorted
-    }
-
     fun getPriceFromCombination (combination: Combination): Double {
         var fullPrice = 0.0
         combination.productsInShops?.forEach {
@@ -144,11 +139,16 @@ class ListGenerator {
     }
     fun getCombinationWithBestPrice(combinations:ArrayList<Combination>, shopCount: Int) : Combination {
         var bestPriceCombination: Combination = Combination()
+        bestPriceCombination.productsInShops = ArrayList<ProductInShop>()
+        bestPriceCombination.productsInShops?.add(ProductInShop(Product(), Shop(), Double.MAX_VALUE))
         combinations.forEach{
             var combination = it
             if (combination.shops?.size == shopCount) {
-                if (getPriceFromCombination(combination) < getPriceFromCombination(bestPriceCombination)){
+                val new = getPriceFromCombination(combination)
+                val old = getPriceFromCombination(bestPriceCombination)
+                if (new <= old){
                     bestPriceCombination = combination
+
                 }
             }
         }
@@ -160,15 +160,15 @@ class ListGenerator {
         oneShopCombination = getCombinationWithBestPrice(combinations, 1)
         twoShopCombination = getCombinationWithBestPrice(combinations, 2)
         threeShopCombination = getCombinationWithBestPrice(combinations, 3)
-        getDirections(oneShopCombination, context)
-        getDirections(twoShopCombination, context)
-        getDirections(threeShopCombination, context)
+        getDirections(oneShopCombination)
+        getDirections(twoShopCombination)
+        getDirections(threeShopCombination)
         print("done")
     }
 
     // Takes a combination and adds directions to it
     @RequiresApi(Build.VERSION_CODES.N)
-    fun getDirections(combination: Combination, context: Context)  {
+    fun getDirections(combination: Combination)  {
         var shops = combination.shops
         var origin = myLocation
         var destination = myLocation
