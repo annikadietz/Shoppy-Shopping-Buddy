@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/list"
-    android:name="com.annikadietz.shoppy_shoppingbuddy.ShoppingCombinationInformationFragment"
-    android:layout_width="match_parent"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
-    app:layoutManager="LinearLayoutManager"
-    tools:context=".ui.shopping_combination_information.ShoppingCombinationInformationFragment"
-    tools:listitem="@layout/shopping_combination_information" />
+    android:background="#f4f4f4" >
+
+    <ExpandableListView
+        android:id="@+id/list_shopping_combinations"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

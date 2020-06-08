@@ -19,6 +19,7 @@ class ListGenerator {
         this.context = context
         this.myLocation = myLocation
     }
+
     fun findCheapestStore(shops: ArrayList<Shop>, shoppingList: ArrayList<Product>, products: ArrayList<ProductInShop>) : ArrayList<ProductInShop> {
 
         // TODO: Replace all this with actual data from the database!!!!
@@ -132,7 +133,7 @@ class ListGenerator {
     fun getPriceFromCombination (combination: Combination): Double {
         var fullPrice = 0.0
         combination.productsInShops?.forEach {
-            fullPrice += it.price
+                fullPrice += it.price
         }
         return fullPrice
     }
