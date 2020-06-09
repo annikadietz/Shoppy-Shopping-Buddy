@@ -19,6 +19,8 @@ import com.annikadietz.shoppy_shoppingbuddy.ui.shopping_combination_information.
 class ShoppingList : Fragment() {
 
     private lateinit var shoppingListViewModel: ShoppingListViewModel
+    private lateinit var shoppingListListView: View
+    private lateinit var shopNowButton: Button
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -28,33 +30,8 @@ class ShoppingList : Fragment() {
 
         shoppingListViewModel = ViewModelProviders.of(this).get(ShoppingListViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_shopping_list, container, false)
-        var shoppingListListView = root.findViewById<ListView>(R.id.shopping_list_view)
-        val shoppingListObserver = Observer<MutableList<Product>> { newProductList ->
-            val listItems = arrayOfNulls<String>(newProductList.size)
-            for (i in 0 until newProductList.size) {
-                val product = newProductList[i]
-                listItems[i] = product.name
-            }
-            val adapter = ArrayAdapter(this.requireContext(), android.R.layout.simple_list_item_1, listItems)
-            shoppingListListView.adapter = adapter
-        }
-
-        // Observe the LiveData, passing in this activity as the LifecycleOwner and the observer.
-        shoppingListViewModel.shoppingList.observe(this, shoppingListObserver)
-
-        var shop_now_button = root.findViewById<Button>(R.id.find_shopping_options_button)
-        shop_now_button.setOnClickListener(View.OnClickListener {
-            var fragment = ShoppingCombinationInformationFragment()
-            replaceFragment(fragment)
-        })
-
+        shoppingListListView = shoppingListViewModel.initiateList(root, this)
+        shopNowButton = shoppingListViewModel.initiateButton(root, this.requireFragmentManager())
         return root
-    }
-
-    fun replaceFragment(someFragment: Fragment) {
-        val transaction: FragmentTransaction = fragmentManager!!.beginTransaction()
-        transaction.replace(R.id.nav_host_fragment, someFragment)
-        transaction.addToBackStack(null)
-        transaction.commit()
     }
 }

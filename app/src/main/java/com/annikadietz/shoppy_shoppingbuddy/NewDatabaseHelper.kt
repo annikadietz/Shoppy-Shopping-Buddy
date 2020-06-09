@@ -9,7 +9,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.getField
 import com.google.firebase.ktx.Firebase
 
-object NewDatabaseHelper {
+object NewDatabaseHelper : DatabaseHelperInterface {
     var db = Firebase.firestore
     lateinit private var shops: MutableList<Shop>
     lateinit private var products: MutableList<Product>
@@ -62,15 +62,15 @@ object NewDatabaseHelper {
             }
     }
 
-    fun getShops() : MutableList<Shop> {
+    override fun getShops() : MutableList<Shop> {
         return shops
     }
 
-    fun getProducts() : MutableList<Product> {
+    override fun getProducts() : MutableList<Product> {
         return products
     }
 
-    fun getProductsInShops() : MutableList<ProductInShop> {
+    override fun getProductsInShops() : MutableList<ProductInShop> {
         return productsInShops
     }
 }
