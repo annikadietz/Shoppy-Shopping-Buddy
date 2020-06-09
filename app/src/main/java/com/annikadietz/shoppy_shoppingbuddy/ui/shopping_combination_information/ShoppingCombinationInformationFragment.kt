@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ExpandableListView
 import androidx.fragment.app.Fragment
 import com.annikadietz.shoppy_shoppingbuddy.DatabaseHelperInterface
 import com.annikadietz.shoppy_shoppingbuddy.ListGenerator
@@ -41,9 +42,18 @@ class ShoppingCombinationInformationFragment : Fragment() {
         viewModel = ShoppingCombinationInformationViewModel(listGenerator, databaseHelper)
 
         fillArrayLists()
-        listGenerator.getCombinationsWithProductsInShops(shops, shoppingList, productsInShops)
 
-        viewModel.setUpInterface(root, viewModel.getTopThreeCombinations())
+        var topCombinations = viewModel.getTopThreeCombinations()
+        var adapter = ExpandableShoppingListAdapter(root.context, topCombinations, topCombinations)
+
+        listGenerator.getCombinationsWithProductsInShops(shops, shoppingList, productsInShops, adapter)
+
+        topCombinations = viewModel.getTopThreeCombinations()
+        adapter = ExpandableShoppingListAdapter(root.context, topCombinations, topCombinations)
+
+        var listView = root.findViewById<ExpandableListView>(R.id.list_shopping_combinations)
+
+        listView.setAdapter(adapter)
         return root
     }
 

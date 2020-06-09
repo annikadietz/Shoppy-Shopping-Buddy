@@ -35,11 +35,4 @@ class ShoppingCombinationInformationViewModel(lg: ListGenerator, dbh: DatabaseHe
         topThreeCombinations.add(listGenerator.threeShopCombination)
         return topThreeCombinations
     }
-
-    fun setUpInterface(rootView: View, topCombinations: ArrayList<Combination>) {
-        var listView = rootView.findViewById<ExpandableListView>(R.id.list_shopping_combinations)
-
-        var adapter = ExpandableShoppingListAdapter(rootView.context, topCombinations, topCombinations)
-        listView.setAdapter(adapter)
-    }
 }
