@@ -1,7 +1,5 @@
 package com.annikadietz.shoppy_shoppingbuddy.ui.shopping_combination_information
 
-import java.util.HashMap
-
 import android.content.Context
 import android.graphics.Typeface
 import android.view.LayoutInflater
@@ -10,13 +8,21 @@ import android.view.ViewGroup
 import android.widget.BaseExpandableListAdapter
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.lifecycle.LiveData
+import com.annikadietz.shoppy_shoppingbuddy.CalculationHelper
+import com.annikadietz.shoppy_shoppingbuddy.ListGenerator
 import com.annikadietz.shoppy_shoppingbuddy.Model.Combination
+import com.annikadietz.shoppy_shoppingbuddy.Model.Directions
 import com.annikadietz.shoppy_shoppingbuddy.Model.ProductInShop
 import com.annikadietz.shoppy_shoppingbuddy.R
+import kotlinx.android.synthetic.main.shop_information_line.view.*
 import kotlinx.android.synthetic.main.shopping_combination_list_group.view.*
 import kotlinx.android.synthetic.main.shopping_combination_list_item.view.*
 import kotlinx.android.synthetic.main.single_product_list_item.view.*
 import org.w3c.dom.Text
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.properties.Delegates
 
 class ExpandableShoppingListAdapter(val _context: Context,  var _listDataHeader: ArrayList<Combination>, private val _listChild: List<Combination> // header titles
     // child data in format of header title, child title
@@ -54,24 +60,26 @@ class ExpandableShoppingListAdapter(val _context: Context,  var _listDataHeader:
 
         var product_list_layout: LinearLayout? = convertView?.product_list_layout
         product_list_layout?.removeAllViews()
-        var shopsString: String = "Shops: "
-        combination.shops?.forEach {
-            shopsString += it.name + " (" + it.streetAddress + ")"
-        }
-        var shopsTextView = TextView(this._context)
-        shopsTextView.text = shopsString
-        if (product_list_layout != null) {
-            product_list_layout.addView(shopsTextView)
-        }
 
-        products.forEach {
+        combination.shops?.forEach {shop ->
             val infalInflater = this._context
-            .getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-            val productView = infalInflater.inflate(R.layout.single_product_list_item, null)
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+            var shopView: View = infalInflater.inflate(R.layout.shop_information_line, null)
+            shopView.shop_name.text = shop.name
+            shopView.shop_address.text = shop.streetAddress + ", " + shop.postCode
+            product_list_layout?.addView(shopView)
 
-            productView.product_list_item_name.text = it.product.name + " " + it.shop.name
-            productView.product_list_item_price.text = it.price.toString()
-            product_list_layout?.addView(productView)
+            products.forEach {
+                if(it.shop == shop) {
+                    val infalInflater = this._context
+                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+                    val productView = infalInflater.inflate(R.layout.single_product_list_item, null)
+
+                    productView.product_list_item_name.text = it.product.name + " " + it.shop.name
+                    productView.product_list_item_price.text = it.price.toString() + "€"
+                    product_list_layout?.addView(productView)
+                }
+            }
         }
 
         return convertView!!
@@ -112,9 +120,9 @@ class ExpandableShoppingListAdapter(val _context: Context,  var _listDataHeader:
         //convertView!!.shopping_combination_list_group.text = headerTitle
         if (convertView != null) {
             // TODO: Function to calculate distance
-            convertView.distance_text.text = "Distance: " + combination.shops?.size.toString()
+            convertView.distance_text.text = "Distance: " + combination.directions?.distancetoTravel.toString() + "km"
             convertView.shop_count_text.text = "Amount Shops: " + combination.shops?.size.toString()
-            convertView.total_price_text.text = "Price: " + combination.productsInShops.sumByDouble { p -> p.price }.toString()
+            convertView.total_price_text.text = "Price: " + combination.productsInShops.sumByDouble { p -> p.price }.toString() + "€"
         }
 
         return convertView!!

@@ -6,12 +6,9 @@ import com.annikadietz.shoppy_shoppingbuddy.Model.Product
 import com.annikadietz.shoppy_shoppingbuddy.Model.ProductInShop
 import com.annikadietz.shoppy_shoppingbuddy.Model.Shop
 import com.annikadietz.shoppy_shoppingbuddy.ui.shopping_combination_information.ShoppingCombinationInformationViewModel
-import org.hamcrest.Matchers.containsInAnyOrder
 import org.junit.Assert
-import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito
-import java.util.*
 import kotlin.collections.ArrayList
 
 class ShoppingCombinationInformationViewModelUnitTest {
@@ -60,5 +57,4 @@ class ShoppingCombinationInformationViewModelUnitTest {
 
         Assert.assertArrayEquals(result.toArray(), expectedArray)
     }
-
 }
