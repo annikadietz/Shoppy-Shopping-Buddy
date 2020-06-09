@@ -121,7 +121,7 @@ class ExpandableShoppingListAdapter(val _context: Context,  var _listDataHeader:
         if (convertView != null) {
             // TODO: Function to calculate distance
             if(combination.directions != null) {
-                convertView.distance_text.text = "Distance: " + combination.directions?.distancetoTravel.toString() + "km"
+                convertView.distance_text.text = "Distance: " + combination.directions?.distancetoTravel.toString() + "m"
             }
 //            convertView.distance_text.text = "Distance: 1km"
             convertView.shop_count_text.text = "Shops: " + combination.shops?.size.toString()
