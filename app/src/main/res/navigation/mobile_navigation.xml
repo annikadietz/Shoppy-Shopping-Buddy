@@ -25,5 +25,10 @@
         android:name="com.annikadietz.shoppy_shoppingbuddy.ui.shopping_combination_information.ShoppingCombinationInformationFragment"
         android:label="fragment_shopping_combination_information"
         tools:layout="@layout/fragment_shopping_combination_information" />
+    <fragment
+        android:id="@+id/shop_selection"
+        android:name="com.annikadietz.shoppy_shoppingbuddy.ui.shop_selection.ShopSelectionFragment"
+        android:label="fragment_shop_selection"
+        tools:layout="@layout/fragment_shop_selection" />
 
 </navigation>

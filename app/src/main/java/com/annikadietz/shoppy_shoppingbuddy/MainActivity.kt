@@ -27,8 +27,6 @@ class MainActivity : AppCompatActivity()  {
         DatabaseHelper.subscribeCategories()
 
         NewDatabaseHelper.subscribeShops()
-//        NewDatabaseHelper.subscribeProducts()
-//        NewDatabaseHelper.subscribeProductInShop()
 
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         val navView: NavigationView = findViewById(R.id.nav_view)
@@ -37,7 +35,7 @@ class MainActivity : AppCompatActivity()  {
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_product_search, R.id.nav_product_add, R.id.nav_shopping_list
+                R.id.nav_product_search, R.id.nav_product_add, R.id.nav_shopping_list, R.id.shop_selection
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
