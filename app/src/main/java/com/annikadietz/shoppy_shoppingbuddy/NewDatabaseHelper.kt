@@ -69,8 +69,10 @@ object NewDatabaseHelper : DatabaseHelperInterface {
         products.forEach {
             var productType = it.type?.name
             if (productType != null) {
-                if (productTypes.find { it == productType } == null) {
-                    productTypes.add(productType)
+                if (productType.isNotEmpty()) {
+                    if (productTypes.find { it == productType } == null) {
+                        productTypes.add(productType)
+                    }
                 }
             }
         }
