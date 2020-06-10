@@ -12,6 +12,9 @@ import com.google.android.material.navigation.NavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import android.view.Menu
+import android.view.MenuItem
+import androidx.appcompat.widget.SearchView
+import com.annikadietz.shoppy_shoppingbuddy.ui.product_search.ProductSearchFragment
 
 
 class MainActivity : AppCompatActivity()  {
@@ -23,12 +26,8 @@ class MainActivity : AppCompatActivity()  {
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-        DatabaseHelper.subscribeShops()
-        DatabaseHelper.subscribeProducts()
-        DatabaseHelper.subscribeCategories()
-
         NewDatabaseHelper.subscribeShops()
-//        NewDatabaseHelper.subscribeProducts()
+        NewDatabaseHelper.subscribeProducts()
 //        NewDatabaseHelper.subscribeProductInShop()
 
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
@@ -36,6 +35,7 @@ class MainActivity : AppCompatActivity()  {
         val navController = findNavController(R.id.nav_host_fragment)
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
+
         appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.nav_product_search, R.id.nav_product_add, R.id.nav_find_shopping_list
@@ -43,6 +43,7 @@ class MainActivity : AppCompatActivity()  {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

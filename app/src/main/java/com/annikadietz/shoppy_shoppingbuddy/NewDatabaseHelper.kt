@@ -12,7 +12,7 @@ import com.google.firebase.ktx.Firebase
 object NewDatabaseHelper {
     var db = Firebase.firestore
     lateinit private var shops: MutableList<Shop>
-    lateinit private var products: MutableList<Product>
+    private var products = arrayListOf<Product>()
     lateinit var productsInShops: ArrayList<ProductInShop>
 
     fun subscribeShops() {
@@ -31,9 +31,11 @@ object NewDatabaseHelper {
     fun subscribeProducts() {
         db.collection("products")
             .get()
-            .addOnSuccessListener { result ->
-                products = result.toObjects(Product::class.java)
-                subscribeProductInShop()
+            .addOnSuccessListener { results ->
+                Log.w("listener", "Got results")
+                products.clear()
+                results.forEach { product -> products.add(product.toObject(Product::class.java)) }
+                Log.w("listener", products.size.toString())
             }
             .addOnFailureListener { exception ->
                 Log.w("shops", "Error getting documents.", exception)
@@ -66,7 +68,7 @@ object NewDatabaseHelper {
         return shops
     }
 
-    fun getProducts() : MutableList<Product> {
+    fun getProducts() : ArrayList<Product> {
         return products
     }
 
