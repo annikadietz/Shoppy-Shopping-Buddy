@@ -1,36 +1,20 @@
 package com.annikadietz.shoppy_shoppingbuddy.ui.product_search
 
-import android.app.DownloadManager
-import android.content.Context
 import android.os.Bundle
-import android.util.AttributeSet
-import android.util.Log
-import android.view.*
-import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.SearchView
-import android.widget.TextView
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.*
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.android.volley.Request
-import com.android.volley.Response
-import com.android.volley.toolbox.StringRequest
-import com.android.volley.toolbox.Volley
-import com.annikadietz.shoppy_shoppingbuddy.DatabaseHelper
 import com.annikadietz.shoppy_shoppingbuddy.Model.Product
-import com.annikadietz.shoppy_shoppingbuddy.Model.ProductInShop
-import com.annikadietz.shoppy_shoppingbuddy.Model.Shop
 import com.annikadietz.shoppy_shoppingbuddy.NewDatabaseHelper
 import com.annikadietz.shoppy_shoppingbuddy.R
-import org.json.JSONObject
-import java.util.ArrayList
-import kotlin.random.Random
-import kotlin.random.nextInt
+
 
 class ProductSearchFragment : Fragment() {
 
@@ -40,6 +24,9 @@ class ProductSearchFragment : Fragment() {
     lateinit var recyclerAdapter: RecyclerAdapter
     lateinit var swipeRefreshLayout: SwipeRefreshLayout
     lateinit var searchView: SearchView
+    lateinit var typeSpinner: Spinner
+    var productTypes = arrayListOf<String>()
+    lateinit var selectedType: String
 
     private lateinit var products: List<Product>
 
@@ -57,6 +44,7 @@ class ProductSearchFragment : Fragment() {
         recyclerView.addItemDecoration(dividerItemDecoration)
 
         products = NewDatabaseHelper.getProducts()
+
         recyclerAdapter = RecyclerAdapter(products)
 
         recyclerView.layoutManager = LinearLayoutManager(this.context)
@@ -85,6 +73,34 @@ class ProductSearchFragment : Fragment() {
             }
 
         })
+
+        typeSpinner = root.findViewById(R.id.typeSpinner)
+        productTypes = NewDatabaseHelper.productTypes
+
+
+        var typeAdapter = this.context?.let {
+            ArrayAdapter<String>(
+                it,
+                android.R.layout.simple_spinner_item, productTypes)
+        }
+        if (typeAdapter != null) {
+            typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        }
+        typeAdapter?.add("")
+        typeSpinner.adapter = typeAdapter
+        typeSpinner.setSelection(0)
+        typeSpinner.onItemSelectedListener = object :
+            AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>,
+                                        view: View, position: Int, id: Long) {
+                selectedType = productTypes[position]
+                recyclerAdapter.selectedType = selectedType
+                recyclerAdapter.filter.filter(searchView.query)
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {
+            }
+        };
 
         return root
     }

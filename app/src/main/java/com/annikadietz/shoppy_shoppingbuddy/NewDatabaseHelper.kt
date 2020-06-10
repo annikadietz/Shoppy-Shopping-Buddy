@@ -4,7 +4,6 @@ import android.util.Log
 import com.annikadietz.shoppy_shoppingbuddy.Model.Product
 import com.annikadietz.shoppy_shoppingbuddy.Model.ProductInShop
 import com.annikadietz.shoppy_shoppingbuddy.Model.Shop
-import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.getField
 import com.google.firebase.ktx.Firebase
@@ -13,6 +12,7 @@ object NewDatabaseHelper : DatabaseHelperInterface {
     var db = Firebase.firestore
     lateinit private var shops: MutableList<Shop>
     private var products = arrayListOf<Product>()
+    var productTypes = arrayListOf<String>()
     lateinit var productsInShops: ArrayList<ProductInShop>
 
     fun subscribeShops() {
@@ -35,6 +35,7 @@ object NewDatabaseHelper : DatabaseHelperInterface {
                 Log.w("listener", "Got results")
                 products.clear()
                 results.forEach { product -> products.add(product.toObject(Product::class.java)) }
+                fillProductTypes()
                 subscribeProductInShop()
                 Log.w("listener", products.size.toString())
             }
@@ -64,7 +65,16 @@ object NewDatabaseHelper : DatabaseHelperInterface {
                 Log.w("shops", "Error getting documents.", exception)
             }
     }
-
+    fun fillProductTypes(){
+        products.forEach {
+            var productType = it.type?.name
+            if (productType != null) {
+                if (productTypes.find { it == productType } == null) {
+                    productTypes.add(productType)
+                }
+            }
+        }
+    }
     override fun getShops() : MutableList<Shop> {
         return shops
     }

@@ -14,13 +14,28 @@ public class RecyclerAdapter: RecyclerView.Adapter<RecyclerAdapter.ViewHolder>, 
     var count = 0
     lateinit var products: List<Product>
     lateinit var productsFiltered: ArrayList<Product>
-
+    var selectedType = ""
     private val productFilter = object : Filter() {
         override fun performFiltering(constraint: CharSequence): Filter.FilterResults? {
             var searchResults = arrayListOf<Product>()
-            if(constraint.isNotEmpty()){
+            var selectedItem = selectedType
+            if(constraint.isNotEmpty() && selectedType.isEmpty()){
                 products.forEach {
                     if(it.name!!.toLowerCase().contains( constraint.toString().toLowerCase())){
+                        searchResults.add(it)
+                    }
+                }
+                return FilterResults().apply { values = searchResults }
+            } else if (constraint.isEmpty() && selectedType.isNotEmpty()) {
+                products.forEach {
+                    if(it.type?.name?.toLowerCase() == selectedType.toLowerCase()){
+                        searchResults.add(it)
+                    }
+                }
+                return FilterResults().apply { values = searchResults }
+            } else if (constraint.isNotEmpty() && selectedType.isNotEmpty()) {
+                products.forEach {
+                    if(it.type?.name?.toLowerCase() == selectedType.toLowerCase() && it.name!!.toLowerCase().contains( constraint.toString().toLowerCase())){
                         searchResults.add(it)
                     }
                 }
