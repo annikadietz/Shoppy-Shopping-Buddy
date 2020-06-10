@@ -16,8 +16,14 @@
         android:name="com.annikadietz.shoppy_shoppingbuddy.ui.product_add.ProductAddFragment"
         android:label="@string/menu_product_add" />
     <fragment
-        android:id="@+id/nav_find_shopping_list"
-        android:name="com.annikadietz.shoppy_shoppingbuddy.ui.find_shopping_list.FindShoppingListFragment"
-        android:label="fragment_find_shopping_list2" />
+        android:id="@+id/nav_shopping_list"
+        android:name="com.annikadietz.shoppy_shoppingbuddy.ui.shopping_list.ShoppingList"
+        android:label="Shopping List"
+        tools:layout="@layout/fragment_shopping_list" />
+    <fragment
+        android:id="@+id/shoppingCombinationInformationFragment"
+        android:name="com.annikadietz.shoppy_shoppingbuddy.ui.shopping_combination_information.ShoppingCombinationInformationFragment"
+        android:label="fragment_shopping_combination_information"
+        tools:layout="@layout/fragment_shopping_combination_information" />
 
 </navigation>

@@ -1,7 +1,6 @@
 package com.annikadietz.shoppy_shoppingbuddy
 
 import android.os.Bundle
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -38,7 +37,7 @@ class MainActivity : AppCompatActivity()  {
 
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_product_search, R.id.nav_product_add, R.id.nav_find_shopping_list
+                R.id.nav_product_search, R.id.nav_product_add, R.id.nav_shopping_list
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)

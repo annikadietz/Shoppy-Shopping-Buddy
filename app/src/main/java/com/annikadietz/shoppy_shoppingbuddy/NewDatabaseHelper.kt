@@ -9,7 +9,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.getField
 import com.google.firebase.ktx.Firebase
 
-object NewDatabaseHelper {
+object NewDatabaseHelper : DatabaseHelperInterface {
     var db = Firebase.firestore
     lateinit private var shops: MutableList<Shop>
     private var products = arrayListOf<Product>()
@@ -35,6 +35,7 @@ object NewDatabaseHelper {
                 Log.w("listener", "Got results")
                 products.clear()
                 results.forEach { product -> products.add(product.toObject(Product::class.java)) }
+                subscribeProductInShop()
                 Log.w("listener", products.size.toString())
             }
             .addOnFailureListener { exception ->
@@ -64,15 +65,15 @@ object NewDatabaseHelper {
             }
     }
 
-    fun getShops() : MutableList<Shop> {
+    override fun getShops() : MutableList<Shop> {
         return shops
     }
 
-    fun getProducts() : ArrayList<Product> {
+    override fun getProducts() : ArrayList<Product> {
         return products
     }
 
-    fun getProductsInShops() : MutableList<ProductInShop> {
+    override fun getProductsInShops() : MutableList<ProductInShop> {
         return productsInShops
     }
 }
