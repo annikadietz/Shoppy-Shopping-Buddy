@@ -2,9 +2,11 @@ package com.annikadietz.shoppy_shoppingbuddy
 
 import android.content.Context
 import android.os.Build
+import android.widget.ExpandableListAdapter
 import androidx.annotation.RequiresApi
 import com.annikadietz.shoppy_shoppingbuddy.Model.*
 import com.annikadietz.shoppy_shoppingbuddy.Model.Shop
+import com.annikadietz.shoppy_shoppingbuddy.ui.shopping_combination_information.ExpandableShoppingListAdapter
 import kotlin.collections.ArrayList
 
 
@@ -19,6 +21,7 @@ class ListGenerator {
         this.context = context
         this.myLocation = myLocation
     }
+
     fun findCheapestStore(shops: ArrayList<Shop>, shoppingList: ArrayList<Product>, products: ArrayList<ProductInShop>) : ArrayList<ProductInShop> {
 
         // TODO: Replace all this with actual data from the database!!!!
@@ -90,7 +93,7 @@ class ListGenerator {
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
-    fun getCombinationsWithProductsInShops(shops: ArrayList<Shop>, shoppingList: ArrayList<Product>, products: ArrayList<ProductInShop>) : ArrayList<Combination> {
+    fun getCombinationsWithProductsInShops(shops: ArrayList<Shop>, shoppingList: ArrayList<Product>, products: ArrayList<ProductInShop>, listAdapter: ExpandableShoppingListAdapter) : ArrayList<Combination> {
         var combos = findAllPossibleStoreCombinations(shops)
         combos.forEach {
             var combination = it
@@ -100,7 +103,7 @@ class ListGenerator {
                 combination.productsInShops?.add(price)
             }
         }
-        getFinalCombinations(combos)
+        getFinalCombinations(combos, listAdapter)
 
         return combos
     }
@@ -132,7 +135,7 @@ class ListGenerator {
     fun getPriceFromCombination (combination: Combination): Double {
         var fullPrice = 0.0
         combination.productsInShops?.forEach {
-            fullPrice += it.price
+                fullPrice += it.price
         }
         return fullPrice
     }
@@ -155,7 +158,7 @@ class ListGenerator {
         return bestPriceCombination
     }
     @RequiresApi(Build.VERSION_CODES.N)
-    fun getFinalCombinations(combinations: ArrayList<Combination>){
+    fun getFinalCombinations(combinations: ArrayList<Combination>, listAdapter: ExpandableShoppingListAdapter){
         oneShopCombination = getCombinationWithBestPrice(combinations, 1)
         twoShopCombination = getCombinationWithBestPrice(combinations, 2)
         threeShopCombination = getCombinationWithBestPrice(combinations, 3)
@@ -165,6 +168,7 @@ class ListGenerator {
                 getDirections(oneShopCombination)
                 getDirections(twoShopCombination)
                 getDirections(threeShopCombination)
+                listAdapter.notifyDataSetChanged();
             } catch (e: Exception) {
                 e.printStackTrace()
             }

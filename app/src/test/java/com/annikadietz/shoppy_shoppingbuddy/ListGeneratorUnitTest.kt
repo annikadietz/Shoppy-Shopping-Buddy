@@ -435,7 +435,4 @@ class ListGeneratorUnitTest {
         Assert.assertEquals(combo2_2.directions!!.timeToTravel!!, 192.0, 0.001)
         Assert.assertEquals(combo3_2.directions!!.timeToTravel!!, 192.0, 0.001)
     }
-
-
-
 }
