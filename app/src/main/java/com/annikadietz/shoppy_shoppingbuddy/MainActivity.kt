@@ -2,24 +2,15 @@ package com.annikadietz.shoppy_shoppingbuddy
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
-import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
-import android.view.Menu
 import android.view.MenuItem
-import androidx.fragment.app.Fragment
+import android.view.View
 import com.annikadietz.shoppy_shoppingbuddy.ui.product_search.ProductSearchFragment
 import com.annikadietz.shoppy_shoppingbuddy.ui.shopping_list.ShoppingListFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.auth.FirebaseAuth
 
 
 class MainActivity : AppCompatActivity()  {
@@ -61,5 +52,10 @@ class MainActivity : AppCompatActivity()  {
             return true
         }
     })
+
+    fun onLogout() {
+        FirebaseAuth.getInstance().signOut()
+        startActivity(Intent(this, AuthActivity::class.java))
+    }
 
 }

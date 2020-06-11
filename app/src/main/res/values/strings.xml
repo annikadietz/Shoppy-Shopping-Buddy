@@ -38,5 +38,7 @@
     <string name="register">Register</string>
     <string name="re_type_password">Re-type Password</string>
     <string name="your_name">Full Name</string>
+    <string name="registered_email">stephan@ruiz.com</string>
+    <string name="registered_pass">stephan</string>
 
 </resources>

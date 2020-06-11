@@ -1,5 +1,6 @@
 package com.annikadietz.shoppy_shoppingbuddy.ui.register
 
+import android.content.Intent
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.text.TextUtils
@@ -10,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import com.annikadietz.shoppy_shoppingbuddy.MainActivity
 import com.annikadietz.shoppy_shoppingbuddy.R
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
@@ -65,7 +67,15 @@ class RegisterFragment : Fragment() {
             return
         }
 
+        if (emptyCheck("Re-enter password", repassword.text.toString())) {
+            return
+        }
+
         if (passwordLengthCheck("Password too short, enter minimum 6 characters", password.text.toString().length, 6)) {
+            return
+        }
+
+        if (!passwordMatchCheck("Passwords must match, please enter password again", password.text.toString(), repassword.text.toString())) {
             return
         }
 
@@ -77,13 +87,22 @@ class RegisterFragment : Fragment() {
                 if (task.isSuccessful) {
                     Toast.makeText(activity, "Authentication success." + task.isSuccessful,
                         Toast.LENGTH_LONG).show()
-//                        startActivity(Intent(this@RegisterActivity, SignedInActivity::class.java))
-//                        finish()
+                        startActivity(Intent(activity, MainActivity::class.java))
+                        activity?.finish()
                 } else {
                     Toast.makeText(activity, "Authentication failed." + task.exception,
                         Toast.LENGTH_LONG).show()
                 }
             })
+    }
+
+    private fun passwordMatchCheck(message: String, password: String, repassword: String): Boolean {
+        return if (password != repassword) {
+            Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
+            false
+        } else {
+            true
+        }
     }
 
     fun registerUser(email: EditText, password: EditText): Task<AuthResult>? {
