@@ -85,6 +85,11 @@ object NewDatabaseHelper : DatabaseHelperInterface {
         return products
     }
 
+    fun setProducts(newProducts: ArrayList<Product>) {
+        products.clear()
+        products.addAll(newProducts)
+    }
+
     override fun getProductsInShops() : MutableList<ProductInShop> {
         return productsInShops
     }
