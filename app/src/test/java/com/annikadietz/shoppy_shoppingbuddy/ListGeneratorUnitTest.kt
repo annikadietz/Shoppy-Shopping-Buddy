@@ -2,6 +2,7 @@ package com.annikadietz.shoppy_shoppingbuddy
 
 import android.content.Context
 import com.annikadietz.shoppy_shoppingbuddy.Model.*
+import com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice
 import com.annikadietz.shoppy_shoppingbuddy.Model.Shop
 import org.json.JSONObject
 import org.junit.Assert
@@ -18,7 +19,9 @@ class ListGeneratorUnitTest {
     var listGenerator = ListGenerator(mock(Context::class.java), "Hoitingeslag%2029,%207824%20KG")
     var shops = arrayListOf<Shop>()
     var productsInShops = arrayListOf<ProductInShop>()
+    var productsInShopsWithPrices = arrayListOf<ProductInShopWithPrices>()
     var combos = arrayListOf<Combination>()
+    var combosWithPrices = arrayListOf<CombinationWithPrices>()
 
     var potatoes = Product("Potatoes - 1kg", Type("Vegetables"))
     var pizza = Product("Pizza - Italia", Type("Frozen"))
@@ -28,6 +31,7 @@ class ListGeneratorUnitTest {
     var jumbo = Shop("Jumbo", "7824JA", "Kerspellaan 9")
     var aldi = Shop("Aldi", "7824CP", "Peyserhof 2")
     var lidl = Shop("Lidl", "7823PH", "Houtweg 151")
+
 
     var potatoesInJumbo = ProductInShop(potatoes, jumbo, 2.5)
     var potatoesInAldi = ProductInShop(potatoes, aldi, 2.5)
@@ -45,6 +49,7 @@ class ListGeneratorUnitTest {
     var eggsInAldi = ProductInShop(eggs, aldi, 2.5)
     var eggsInLidl = ProductInShop(eggs, lidl, 2.5)
 
+
     var combo1 = Combination(arrayListOf(jumbo), arrayListOf())
     var combo2 = Combination(arrayListOf(aldi), arrayListOf())
     var combo3 = Combination(arrayListOf(lidl), arrayListOf())
@@ -53,9 +58,84 @@ class ListGeneratorUnitTest {
     var combo6 = Combination(arrayListOf(aldi, lidl), arrayListOf())
     var combo7 = Combination(arrayListOf(jumbo, aldi, lidl), arrayListOf())
 
+    var prices1 = SuggestionPrice(2.0)
+    var prices1_1 = SuggestionPrice(2.5)
+    var prices2 = SuggestionPrice(3.0)
+    var prices2_2 = SuggestionPrice(3.5)
+    var prices3 = SuggestionPrice(4.0)
+    var prices3_3 = SuggestionPrice(2.0)
+    var prices4 = SuggestionPrice(2.5)
+    var prices4_4 = SuggestionPrice(3.0)
+    var prices5 = SuggestionPrice(3.5)
+    var prices5_5 = SuggestionPrice(4.0)
+    var prices6 = SuggestionPrice(2.0)
+    var prices6_6 = SuggestionPrice(2.5)
+    var prices7 = SuggestionPrice(3.0)
+    var prices7_7 = SuggestionPrice(3.5)
+    var prices8 = SuggestionPrice(4.0)
+    var prices8_8 = SuggestionPrice(6.0)
+    var prices9 = SuggestionPrice(3.5)
+    var prices9_9 = SuggestionPrice(4.0)
+    var prices10 = SuggestionPrice(2.0)
+    var prices10_10 = SuggestionPrice(2.5)
+    var prices11 = SuggestionPrice(3.0)
+    var prices11_11 = SuggestionPrice(3.5)
+    var prices12 = SuggestionPrice(4.0)
+    var prices12_12 = SuggestionPrice(6.0)
+
+    var suggestionsPrices1 =
+        arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice>()
+    var suggestionsPrices2 =
+        arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice>()
+    var suggestionsPrices3 =
+        arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice>()
+    var suggestionsPrices4 =
+        arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice>()
+    var suggestionsPrices5 =
+        arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice>()
+    var suggestionsPrices6 =
+        arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice>()
+    var suggestionsPrices7 =
+        arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice>()
+    var suggestionsPrices8 =
+        arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice>()
+    var suggestionsPrices9 =
+        arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice>()
+    var suggestionsPrices10 =
+        arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice>()
+    var suggestionsPrices11 =
+        arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice>()
+    var suggestionsPrices12 =
+        arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice>()
+    var potatoesInJumboWithPrices =
+        ProductInShopWithPrices(potatoes, jumbo, 2.5, suggestionsPrices1)
+    var potatoesInAldiWithPrices = ProductInShopWithPrices(potatoes, aldi, 2.5, suggestionsPrices2)
+    var potatoesInLidlWithPrices = ProductInShopWithPrices(potatoes, lidl, 2.5, suggestionsPrices3)
+
+    var pizzaInJumboWithPrices = ProductInShopWithPrices(pizza, jumbo, 2.5, suggestionsPrices4)
+    var pizzaInAldiWithPrices = ProductInShopWithPrices(pizza, aldi, 2.5, suggestionsPrices5)
+    var pizzaInLidlWithPrices = ProductInShopWithPrices(pizza, lidl, 2.5, suggestionsPrices6)
+
+    var bananasInJumboWithPrices = ProductInShopWithPrices(bananas, jumbo, 2.5, suggestionsPrices7)
+    var bananasInAldiWithPrices = ProductInShopWithPrices(bananas, aldi, 2.5, suggestionsPrices8)
+    var bananasInLidlWithPrices = ProductInShopWithPrices(bananas, lidl, 2.5, suggestionsPrices9)
+
+    var eggsInJumboWithPrices = ProductInShopWithPrices(eggs, jumbo, 2.5, suggestionsPrices10)
+    var eggsInAldiWithPrices = ProductInShopWithPrices(eggs, aldi, 2.5, suggestionsPrices11)
+    var eggsInLidlWithPrices = ProductInShopWithPrices(eggs, lidl, 2.5, suggestionsPrices12)
+
+    var combo1WithPrices = CombinationWithPrices(arrayListOf(jumbo), arrayListOf())
+    var combo2WithPrices = CombinationWithPrices(arrayListOf(aldi), arrayListOf())
+    var combo3WithPrices = CombinationWithPrices(arrayListOf(lidl), arrayListOf())
+    var combo4WithPrices = CombinationWithPrices(arrayListOf(jumbo, aldi), arrayListOf())
+    var combo5WithPrices = CombinationWithPrices(arrayListOf(jumbo, lidl), arrayListOf())
+    var combo6WithPrices = CombinationWithPrices(arrayListOf(aldi, lidl), arrayListOf())
+    var combo7WithPrices = CombinationWithPrices(arrayListOf(jumbo, aldi, lidl), arrayListOf())
+
     fun createObjects() {
         shops = arrayListOf<Shop>()
         productsInShops = arrayListOf<ProductInShop>()
+        productsInShopsWithPrices = arrayListOf<ProductInShopWithPrices>()
 
         potatoes = Product("Potatoes - 1kg", Type("Vegetables"))
         pizza = Product("Pizza - Italia", Type("Frozen"))
@@ -85,6 +165,77 @@ class ListGeneratorUnitTest {
         eggsInJumbo = ProductInShop(eggs, jumbo, 2.5)
         eggsInAldi = ProductInShop(eggs, aldi, 2.5)
         eggsInLidl = ProductInShop(eggs, lidl, 2.5)
+
+        suggestionsPrices1 =
+            arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice>()
+        suggestionsPrices2 =
+            arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice>()
+        suggestionsPrices3 =
+            arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice>()
+        suggestionsPrices4 =
+            arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice>()
+        suggestionsPrices5 =
+            arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice>()
+        suggestionsPrices6 =
+            arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice>()
+        suggestionsPrices7 =
+            arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice>()
+        suggestionsPrices8 =
+            arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice>()
+        suggestionsPrices9 =
+            arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice>()
+        suggestionsPrices10 =
+            arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice>()
+        suggestionsPrices11 =
+            arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice>()
+        suggestionsPrices12 =
+            arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice>()
+
+        suggestionsPrices1.add(prices1)
+        suggestionsPrices1.add(prices1_1)
+        suggestionsPrices2.add(prices2)
+        suggestionsPrices2.add(prices2_2)
+        suggestionsPrices3.add(prices3)
+        suggestionsPrices3.add(prices3_3)
+        suggestionsPrices4.add(prices4)
+        suggestionsPrices4.add(prices4_4)
+        suggestionsPrices5.add(prices5)
+        suggestionsPrices5.add(prices5_5)
+        suggestionsPrices6.add(prices6)
+        suggestionsPrices6.add(prices6_6)
+        suggestionsPrices7.add(prices7)
+        suggestionsPrices7.add(prices7_7)
+        suggestionsPrices8.add(prices8_8)
+        suggestionsPrices9.add(prices9)
+        suggestionsPrices9.add(prices9_9)
+        suggestionsPrices10.add(prices10)
+        suggestionsPrices10.add(prices10_10)
+        suggestionsPrices11.add(prices11)
+        suggestionsPrices11.add(prices11_11)
+        suggestionsPrices12.add(prices12)
+        suggestionsPrices12.add(prices12_12)
+
+        potatoesInJumboWithPrices =
+            ProductInShopWithPrices(potatoes, jumbo, 2.5, suggestionsPrices1)
+        potatoesInAldiWithPrices = ProductInShopWithPrices(potatoes, aldi, 2.5, suggestionsPrices2)
+        potatoesInLidlWithPrices = ProductInShopWithPrices(potatoes, lidl, 2.5, suggestionsPrices3)
+
+        pizzaInJumboWithPrices = ProductInShopWithPrices(pizza, jumbo, 2.5, suggestionsPrices4)
+        pizzaInAldiWithPrices = ProductInShopWithPrices(pizza, aldi, 2.5, suggestionsPrices5)
+        pizzaInLidlWithPrices =
+            ProductInShopWithPrices(pizza, lidl, 2.5, suggestionsPrices6) // the cheap one
+
+        bananasInJumboWithPrices = ProductInShopWithPrices(bananas, jumbo, 2.5, suggestionsPrices7)
+        bananasInAldiWithPrices = ProductInShopWithPrices(bananas, aldi, 2.5, suggestionsPrices8)
+        bananasInLidlWithPrices = ProductInShopWithPrices(bananas, lidl, 2.5, suggestionsPrices9)
+
+        eggsInJumboWithPrices = ProductInShopWithPrices(eggs, jumbo, 2.5, suggestionsPrices9)
+        eggsInAldiWithPrices = ProductInShopWithPrices(eggs, aldi, 2.5, suggestionsPrices10)
+        eggsInLidlWithPrices = ProductInShopWithPrices(eggs, lidl, 2.5, suggestionsPrices11)
+
+        combo1WithPrices = CombinationWithPrices(arrayListOf(aldi), arrayListOf())
+        combo4WithPrices = CombinationWithPrices(arrayListOf(jumbo, aldi), arrayListOf())
+        combo7WithPrices = CombinationWithPrices(arrayListOf(jumbo, aldi, lidl), arrayListOf())
     }
 
     fun setup() {
@@ -108,6 +259,26 @@ class ListGeneratorUnitTest {
         productsInShops.add(eggsInAldi)
         productsInShops.add(eggsInLidl)
 
+        shops.add(jumbo)
+        shops.add(aldi)
+        shops.add(lidl)
+
+        productsInShopsWithPrices.add(potatoesInJumboWithPrices)
+        productsInShopsWithPrices.add(potatoesInAldiWithPrices)
+        productsInShopsWithPrices.add(potatoesInLidlWithPrices)
+
+        productsInShopsWithPrices.add(pizzaInJumboWithPrices)
+        productsInShopsWithPrices.add(pizzaInAldiWithPrices)
+        productsInShopsWithPrices.add(pizzaInLidlWithPrices)
+
+        productsInShopsWithPrices.add(bananasInJumboWithPrices)
+        productsInShopsWithPrices.add(bananasInAldiWithPrices)
+        productsInShopsWithPrices.add(bananasInLidlWithPrices)
+
+        productsInShopsWithPrices.add(eggsInJumboWithPrices)
+        productsInShopsWithPrices.add(eggsInAldiWithPrices)
+        productsInShopsWithPrices.add(eggsInLidlWithPrices)
+
         combos.add(combo1)
 //        combos.add(combo2)
 //        combos.add(combo3)
@@ -115,19 +286,29 @@ class ListGeneratorUnitTest {
 //        combos.add(combo5)
 //        combos.add(combo6)
         combos.add(combo7)
+
+
+        combosWithPrices.add(combo1WithPrices)
+        combosWithPrices.add(combo4WithPrices)
+        combosWithPrices.add(combo7WithPrices)
     }
 
-    fun findCheapestStore(shops: ArrayList<Shop>, shoppingList: ArrayList<Product>): ArrayList<ProductInShop> {
+    fun findCheapestStore(
+
+        shops: ArrayList<Shop>,
+        shoppingList: ArrayList<Product>
+    ): ArrayList<ProductInShop> {
         var cheapestShop: Shop
         var finalShoppingList = arrayListOf<ProductInShop>()
         var cheapestPrice: Double = Double.MAX_VALUE
-        shops.forEach{
+        shops.forEach {
             var shop = it
             var price = 0.0;
             var productsFound = arrayListOf<ProductInShop?>()
             shoppingList.forEach { it ->
                 var product = it
-                var productInShop = productsInShops.find {actor ->actor.shop == shop && actor.product == product}
+                var productInShop =
+                    productsInShops.find { actor -> actor.shop == shop && actor.product == product }
                 if (productInShop != null) {
                     price += productInShop.price
                     productsFound.add(productInShop)
@@ -142,9 +323,11 @@ class ListGeneratorUnitTest {
         return finalShoppingList
     }
 
+    //tested
     @Test
     fun findsCheapestStore_Test() {
         createObjects()
+        pizzaInAldiWithPrices.price = 0.5
         pizzaInAldi.price = 0.5
         setup()
         var shoppingList = arrayListOf<Product>().apply {
@@ -161,21 +344,34 @@ class ListGeneratorUnitTest {
         Assert.assertTrue(result.contains(bananasInAldi))
         Assert.assertTrue(result.contains(potatoesInAldi))
         Assert.assertTrue(result.contains(eggsInAldi))
-    }
 
+        var result2 = listGenerator.findCheapestStoreWithPrices(
+            shops,
+            shoppingList,
+            productsInShopsWithPrices
+        )
+        Assert.assertTrue(result2.contains(pizzaInAldiWithPrices))
+        Assert.assertTrue(result2.contains(bananasInAldiWithPrices))
+        Assert.assertTrue(result2.contains(potatoesInAldiWithPrices))
+        Assert.assertTrue(result2.contains(eggsInAldiWithPrices))
+    }
+//tested
     @Test
     fun findAllPossibleStoreCombinations_Test() {
         createObjects()
         setup()
 
         var result = listGenerator.findAllPossibleStoreCombinations(shops)
+//        var result = listGenerator.findAllPossibleStoreCombinationsWithPrices(shops)
         var foundCombo1 = result.find { c -> c.shops!!.contains(jumbo) }
         var foundCombo2 = result.find { c -> c.shops!!.contains(aldi) }
         var foundCombo3 = result.find { c -> c.shops!!.contains(lidl) }
         var foundCombo4 = result.find { c -> c.shops!!.contains(jumbo) && c.shops!!.contains(aldi) }
         var foundCombo5 = result.find { c -> c.shops!!.contains(jumbo) && c.shops!!.contains(lidl) }
         var foundCombo6 = result.find { c -> c.shops!!.contains(lidl) && c.shops!!.contains(aldi) }
-        var foundCombo7 = result.find { c -> c.shops!!.contains(jumbo) && c.shops!!.contains(aldi) && c.shops!!.contains(lidl)}
+        var foundCombo7 = result.find { c ->
+            c.shops!!.contains(jumbo) && c.shops!!.contains(aldi) && c.shops!!.contains(lidl)
+        }
 
         Assert.assertTrue(foundCombo1 != null)
         Assert.assertTrue(foundCombo2 != null)
@@ -184,8 +380,10 @@ class ListGeneratorUnitTest {
         Assert.assertTrue(foundCombo5 != null)
         Assert.assertTrue(foundCombo6 != null)
         Assert.assertTrue(foundCombo7 != null)
-    }
 
+
+    }
+//tested
     @Test
     fun findsPriceInShop_Test() {
         createObjects()
@@ -196,24 +394,47 @@ class ListGeneratorUnitTest {
         Assert.assertEquals(eggsInAldi, result)
         result = listGenerator.findPriceInShop(jumbo, pizza, productsInShops)
         Assert.assertEquals(pizzaInJumbo, result)
-    }
 
+        var result2 = listGenerator.findPriceInShopWithPrices(lidl, eggs, productsInShopsWithPrices)
+        Assert.assertEquals(eggsInLidlWithPrices, result2)
+        result2 = listGenerator.findPriceInShopWithPrices(aldi, eggs, productsInShopsWithPrices)
+        Assert.assertEquals(eggsInAldiWithPrices, result2)
+        result2 = listGenerator.findPriceInShopWithPrices(jumbo, pizza, productsInShopsWithPrices)
+        Assert.assertEquals(pizzaInJumboWithPrices, result2)
+    }
+//tested
     @Test
     fun findBestPriceInShopCombination_Test() {
         createObjects()
         eggsInAldi.price = 10.0
         eggsInJumbo.price = 5.0
         eggsInLidl.price = 1.0
+
+        eggsInAldiWithPrices.price = 10.0
+        eggsInJumboWithPrices.price = 5.0
+        eggsInLidlWithPrices.price = 1.0
         setup()
         var combination = Combination(arrayListOf(jumbo, aldi), arrayListOf())
-        var result = listGenerator.findBestPriceInShopCombination(eggs, combination, productsInShops)
+        var result =
+            listGenerator.findBestPriceInShopCombination(eggs, combination, productsInShops)
         Assert.assertEquals(eggsInJumbo, result)
 
         combination = Combination(arrayListOf(jumbo, lidl, aldi), arrayListOf())
         result = listGenerator.findBestPriceInShopCombination(eggs, combination, productsInShops)
         Assert.assertEquals(eggsInLidl, result)
-    }
 
+        var combination2 = CombinationWithPrices(arrayListOf(jumbo, aldi), arrayListOf())
+        var result2 =
+            listGenerator.findBestPriceInShopCombinationWithPrices(eggs, combination2, productsInShopsWithPrices)
+        Assert.assertEquals(eggsInJumboWithPrices, result2)
+
+        combination2 = CombinationWithPrices(arrayListOf(jumbo, lidl, aldi), arrayListOf())
+        result2 = listGenerator.findBestPriceInShopCombinationWithPrices(eggs, combination2, productsInShopsWithPrices)
+        Assert.assertEquals(eggsInLidlWithPrices, result2)
+
+
+    }
+//tested
     @Test
     fun getCombinationsWithProductsInShops_Test() {
         createObjects()
@@ -221,6 +442,12 @@ class ListGeneratorUnitTest {
         bananasInAldi.price = 1.0
         potatoesInJumbo.price = 1.0
         eggsInAldi.price = 1.0
+
+
+        pizzaInJumboWithPrices.price = 1.0
+        bananasInAldiWithPrices.price = 1.0
+        potatoesInJumboWithPrices.price = 1.0
+        eggsInAldiWithPrices.price = 1.0
         setup()
 
         var shoppingList = arrayListOf<Product>().apply {
@@ -230,7 +457,8 @@ class ListGeneratorUnitTest {
             add(eggs)
         }
 
-        var result = listGenerator.getCombinationsWithProductsInShops(shops, shoppingList, productsInShops)
+        var result =
+            listGenerator.getCombinationsWithProductsInShops(shops, shoppingList, productsInShops)
         var combination = result.find { c -> c.shops!!.contains(jumbo) && c.shops!!.contains(aldi) }
 
         print(result)
@@ -238,7 +466,20 @@ class ListGeneratorUnitTest {
         Assert.assertTrue(combination?.productsInShops!!.contains(bananasInAldi))
         Assert.assertTrue(combination?.productsInShops!!.contains(potatoesInJumbo))
         Assert.assertTrue(combination?.productsInShops!!.contains(eggsInAldi))
+
+
+        var result2 =
+            listGenerator.getCombinationsWithProductsInShopsWithPrices(shops, shoppingList, productsInShopsWithPrices)
+        var combination2 = result2.find { c -> c.shops!!.contains(jumbo) && c.shops!!.contains(aldi) }
+
+        print(result2)
+
+        Assert.assertTrue(combination2?.productsInShopsWithPrices!!.contains(pizzaInJumboWithPrices))
+        Assert.assertTrue(combination2?.productsInShopsWithPrices!!.contains(bananasInAldiWithPrices))
+        Assert.assertTrue(combination2?.productsInShopsWithPrices!!.contains(potatoesInJumboWithPrices))
+        Assert.assertTrue(combination2?.productsInShopsWithPrices!!.contains(eggsInAldiWithPrices))
     }
+
 
     @Test
     fun findBestRoute_Test() {
@@ -257,7 +498,7 @@ class ListGeneratorUnitTest {
         //var result = listGenerator.getDirections(shops, shoppingList, productsInShops, "Hoitingeslag%2029,%207824%20KG", context)
         print("goof")
     }
-
+//tested
     @Test
     fun getPriceFromCombination_Test() {
         createObjects()
@@ -271,93 +512,375 @@ class ListGeneratorUnitTest {
         combo4.productsInShops?.add(eggsInJumbo)
         combo4.productsInShops?.add(pizzaInJumbo)
         combo4.productsInShops?.add(bananasInJumbo)
+
+        potatoesInJumboWithPrices.price = 1.00
+        eggsInJumboWithPrices.price = 2.00
+        pizzaInJumboWithPrices.price = 2.00
+        bananasInJumboWithPrices.price = 1.00
+
+        combo4WithPrices.productsInShopsWithPrices?.add(potatoesInJumboWithPrices)
+        combo4WithPrices.productsInShopsWithPrices?.add(eggsInJumboWithPrices)
+        combo4WithPrices.productsInShopsWithPrices?.add(pizzaInJumboWithPrices)
+        combo4WithPrices.productsInShopsWithPrices?.add(bananasInJumboWithPrices)
+
         val ans = listGenerator.getPriceFromCombination(combo4)
         Assert.assertEquals(ans, 6.00, 0.0001)
+
+        val ans2 = listGenerator.getPriceFromCombinationWithPrices(combo4WithPrices)
+        Assert.assertEquals(ans2, 6.00, 0.0001)
     }
 
-    // TODO("Create 3 different testing")
+    //tested
     @Test
-    fun getCombinationWithBestPrice_Test() {
+    fun getCombinationWithBestPriceWithOneShop_Test() {
         createObjects()
         setup()
 
-        var comboOne = Combination(arrayListOf(aldi), arrayListOf(ProductInShop(Product(), Shop(), 1.00), ProductInShop(Product(), Shop(), 0.50), ProductInShop(Product(), Shop(), 1.00)))
-        var comboOne_2 = Combination(arrayListOf(aldi), arrayListOf(ProductInShop(Product(), Shop(), 1.00), ProductInShop(Product(), Shop(), 0.40), ProductInShop(Product(), Shop(), 1.00)))
-        var comboTwo = Combination(arrayListOf(aldi, jumbo), arrayListOf(ProductInShop(Product(), Shop(), 1.00), ProductInShop(Product(), Shop(), 1.00), ProductInShop(Product(), Shop(), 1.00)))
-        var comboThree = Combination(arrayListOf(aldi, jumbo, lidl), arrayListOf(ProductInShop(Product(), Shop(), 1.00), ProductInShop(Product(), Shop(), 1.00), ProductInShop(Product(), Shop(), 1.00)))
-        var cheapestCombo = listGenerator.getCombinationWithBestPrice(arrayListOf(comboOne, comboTwo, comboThree, comboOne_2), 1)
+        var comboOne = Combination(
+            arrayListOf(aldi),
+            arrayListOf(
+                ProductInShop(Product(), Shop(), 1.00),
+                ProductInShop(Product(), Shop(), 0.50),
+                ProductInShop(Product(), Shop(), 1.00)
+            )
+        )
+        var comboOne_2 = Combination(
+            arrayListOf(aldi),
+            arrayListOf(
+                ProductInShop(Product(), Shop(), 1.00),
+                ProductInShop(Product(), Shop(), 0.40),
+                ProductInShop(Product(), Shop(), 1.00)
+            )
+        )
+        var comboTwo = Combination(
+            arrayListOf(aldi, jumbo),
+            arrayListOf(
+                ProductInShop(Product(), Shop(), 1.00),
+                ProductInShop(Product(), Shop(), 1.00),
+                ProductInShop(Product(), Shop(), 1.00)
+            )
+        )
+        var comboThree = Combination(
+            arrayListOf(aldi, jumbo, lidl),
+            arrayListOf(
+                ProductInShop(Product(), Shop(), 1.00),
+                ProductInShop(Product(), Shop(), 1.00),
+                ProductInShop(Product(), Shop(), 1.00)
+            )
+        )
+        var cheapestCombo = listGenerator.getCombinationWithBestPrice(
+            arrayListOf(
+                comboOne,
+                comboTwo,
+                comboThree,
+                comboOne_2
+            ), 1
+        )
 
         Assert.assertEquals(cheapestCombo, comboOne_2)
 
-        comboOne = Combination(arrayListOf(aldi), arrayListOf(ProductInShop(Product(), Shop(), 1.00), ProductInShop(Product(), Shop(), 1.00), ProductInShop(Product(), Shop(), 1.00)))
-        comboTwo = Combination(arrayListOf(aldi, jumbo), arrayListOf(ProductInShop(Product(), Shop(), 1.00), ProductInShop(Product(), Shop(), 0.50), ProductInShop(Product(), Shop(), 1.00)))
-        var comboTwo_2 = Combination(arrayListOf(aldi, jumbo), arrayListOf(ProductInShop(Product(), Shop(), 1.00), ProductInShop(Product(), Shop(), 0.40), ProductInShop(Product(), Shop(), 1.00)))
-        comboThree = Combination(arrayListOf(aldi, jumbo, lidl), arrayListOf(ProductInShop(Product(), Shop(), 1.00), ProductInShop(Product(), Shop(), 1.00), ProductInShop(Product(), Shop(), 1.00)))
-        cheapestCombo = listGenerator.getCombinationWithBestPrice(arrayListOf(comboOne, comboTwo, comboThree, comboTwo_2), 2)
+
+    }
+    //tested
+    @Test
+    fun getCombinationWithBestPriceWithTwoShop_Test() {
+        createObjects()
+        setup()
+
+       var comboOne = Combination(
+            arrayListOf(aldi),
+            arrayListOf(
+                ProductInShop(Product(), Shop(), 1.00),
+                ProductInShop(Product(), Shop(), 1.00),
+                ProductInShop(Product(), Shop(), 1.00)
+            )
+        )
+        var comboTwo = Combination(
+            arrayListOf(aldi, jumbo),
+            arrayListOf(
+                ProductInShop(Product(), Shop(), 1.00),
+                ProductInShop(Product(), Shop(), 0.50),
+                ProductInShop(Product(), Shop(), 1.00)
+            )
+        )
+        var comboTwo_2 = Combination(
+            arrayListOf(aldi, jumbo),
+            arrayListOf(
+                ProductInShop(Product(), Shop(), 1.00),
+                ProductInShop(Product(), Shop(), 0.40),
+                ProductInShop(Product(), Shop(), 1.00)
+            )
+        )
+        var comboThree = Combination(
+            arrayListOf(aldi, jumbo, lidl),
+            arrayListOf(
+                ProductInShop(Product(), Shop(), 1.00),
+                ProductInShop(Product(), Shop(), 1.00),
+                ProductInShop(Product(), Shop(), 1.00)
+            )
+        )
+        var cheapestCombo = listGenerator.getCombinationWithBestPrice(
+            arrayListOf(
+                comboOne,
+                comboTwo,
+                comboThree,
+                comboTwo_2
+            ), 2
+        )
 
         Assert.assertEquals(cheapestCombo, comboTwo_2)
 
-        comboOne = Combination(arrayListOf(aldi), arrayListOf(ProductInShop(Product(), Shop(), 1.00), ProductInShop(Product(), Shop(), 1.00), ProductInShop(Product(), Shop(), 1.00)))
-        comboTwo = Combination(arrayListOf(aldi, jumbo), arrayListOf(ProductInShop(Product(), Shop(), 1.00), ProductInShop(Product(), Shop(), 1.00), ProductInShop(Product(), Shop(), 1.00)))
-        comboThree = Combination(arrayListOf(aldi, jumbo, lidl), arrayListOf(ProductInShop(Product(), Shop(), 1.00), ProductInShop(Product(), Shop(), 0.50), ProductInShop(Product(), Shop(), 1.00)))
-        var comboThree_2 = Combination(arrayListOf(aldi, jumbo, lidl), arrayListOf(ProductInShop(Product(), Shop(), 1.00), ProductInShop(Product(), Shop(), 0.40), ProductInShop(Product(), Shop(), 1.00)))
-        cheapestCombo = listGenerator.getCombinationWithBestPrice(arrayListOf(comboOne, comboTwo, comboThree, comboThree_2), 3)
+    }
+    //tested
+    @Test
+    fun getCombinationWithBestPriceWithThreeShop_Test() {
+        createObjects()
+        setup()
+      var  comboOne = Combination(
+            arrayListOf(aldi),
+            arrayListOf(
+                ProductInShop(Product(), Shop(), 1.00),
+                ProductInShop(Product(), Shop(), 1.00),
+                ProductInShop(Product(), Shop(), 1.00)
+            )
+        )
+        var comboTwo = Combination(
+            arrayListOf(aldi, jumbo),
+            arrayListOf(
+                ProductInShop(Product(), Shop(), 1.00),
+                ProductInShop(Product(), Shop(), 1.00),
+                ProductInShop(Product(), Shop(), 1.00)
+            )
+        )
+        var comboThree = Combination(
+            arrayListOf(aldi, jumbo, lidl),
+            arrayListOf(
+                ProductInShop(Product(), Shop(), 1.00),
+                ProductInShop(Product(), Shop(), 0.50),
+                ProductInShop(Product(), Shop(), 1.00)
+            )
+        )
+        var comboThree_2 = Combination(
+            arrayListOf(aldi, jumbo, lidl),
+            arrayListOf(
+                ProductInShop(Product(), Shop(), 1.00),
+                ProductInShop(Product(), Shop(), 0.40),
+                ProductInShop(Product(), Shop(), 1.00)
+            )
+        )
+        var cheapestCombo = listGenerator.getCombinationWithBestPrice(
+            arrayListOf(
+                comboOne,
+                comboTwo,
+                comboThree,
+                comboThree_2
+            ), 3
+        )
 
         Assert.assertEquals(cheapestCombo, comboThree_2)
     }
 
     @Test
+    fun getCombinationWithBestPriceWithOneShopWithPrices_Test() {
+        createObjects()
+        setup()
+
+
+        var comboOne = CombinationWithPrices(
+            arrayListOf(aldi),
+            arrayListOf(
+                ProductInShopWithPrices(Product(), Shop(), 1.00,suggestionsPrices1),
+                ProductInShopWithPrices(Product(), Shop(), 0.50,suggestionsPrices2),
+                ProductInShopWithPrices(Product(), Shop(), 1.00,suggestionsPrices3)
+            )
+        )
+        var comboOne_2 = CombinationWithPrices(
+            arrayListOf(aldi),
+            arrayListOf(
+                ProductInShopWithPrices(Product(), Shop(), 1.00,suggestionsPrices4),
+                ProductInShopWithPrices(Product(), Shop(), 0.40,suggestionsPrices5),
+                ProductInShopWithPrices(Product(), Shop(), 1.00,suggestionsPrices6)
+            )
+        )
+        var comboTwo = CombinationWithPrices(
+            arrayListOf(aldi, jumbo),
+            arrayListOf(
+                ProductInShopWithPrices(Product(), Shop(), 1.00,suggestionsPrices7),
+                ProductInShopWithPrices(Product(), Shop(), 1.00,suggestionsPrices8),
+                ProductInShopWithPrices(Product(), Shop(), 1.00,suggestionsPrices9)
+            )
+        )
+        var comboThree = CombinationWithPrices(
+            arrayListOf(aldi, jumbo, lidl),
+            arrayListOf(
+                ProductInShopWithPrices(Product(), Shop(), 1.00,suggestionsPrices10),
+                ProductInShopWithPrices(Product(), Shop(), 1.00,suggestionsPrices11),
+                ProductInShopWithPrices(Product(), Shop(), 1.00,suggestionsPrices12)
+            )
+        )
+        var cheapestCombo = listGenerator.getCombinationWithBestPriceWithPrices(
+            arrayListOf(
+                comboOne,
+                comboTwo,
+                comboThree,
+                comboOne_2
+            ), 1
+        )
+
+        Assert.assertEquals(cheapestCombo, comboOne_2)
+
+    }
+    //tested
+    @Test
+    fun getCombinationWithBestPriceWithTwoShopWithPrices_Test() {
+        createObjects()
+        setup()
+
+        var comboOne = CombinationWithPrices(
+            arrayListOf(aldi),
+            arrayListOf(
+                ProductInShopWithPrices(Product(), Shop(), 1.00,suggestionsPrices1),
+                ProductInShopWithPrices(Product(), Shop(), 1.00,suggestionsPrices2),
+                ProductInShopWithPrices(Product(), Shop(), 1.00,suggestionsPrices3)
+            )
+        )
+        var comboTwo = CombinationWithPrices(
+            arrayListOf(aldi, jumbo),
+            arrayListOf(
+                ProductInShopWithPrices(Product(), Shop(), 1.00,suggestionsPrices4),
+                ProductInShopWithPrices(Product(), Shop(), 0.50,suggestionsPrices5),
+                ProductInShopWithPrices(Product(), Shop(), 1.00,suggestionsPrices6)
+            )
+        )
+        var comboTwo_2 = CombinationWithPrices(
+            arrayListOf(aldi, jumbo),
+            arrayListOf(
+                ProductInShopWithPrices(Product(), Shop(), 1.00,suggestionsPrices7),
+                ProductInShopWithPrices(Product(), Shop(), 0.40,suggestionsPrices8),
+                ProductInShopWithPrices(Product(), Shop(), 1.00,suggestionsPrices9)
+            )
+        )
+        var comboThree = CombinationWithPrices(
+            arrayListOf(aldi, jumbo, lidl),
+            arrayListOf(
+                ProductInShopWithPrices(Product(), Shop(), 1.00,suggestionsPrices10),
+                ProductInShopWithPrices(Product(), Shop(), 1.00,suggestionsPrices11),
+                ProductInShopWithPrices(Product(), Shop(), 1.00,suggestionsPrices12)
+            )
+        )
+        var cheapestCombo = listGenerator.getCombinationWithBestPriceWithPrices(
+            arrayListOf(
+                comboOne,
+                comboTwo,
+                comboThree,
+                comboTwo_2
+            ), 2
+        )
+
+        Assert.assertEquals(cheapestCombo, comboTwo_2)
+
+    }
+    @Test
+    fun getCombinationWithBestPriceWithThreeShopWithPrices_Test() {
+        createObjects()
+        setup()
+        var  comboOne = Combination(
+            arrayListOf(aldi),
+            arrayListOf(
+                ProductInShop(Product(), Shop(), 1.00),
+                ProductInShop(Product(), Shop(), 1.00),
+                ProductInShop(Product(), Shop(), 1.00)
+            )
+        )
+        var comboTwo = Combination(
+            arrayListOf(aldi, jumbo),
+            arrayListOf(
+                ProductInShop(Product(), Shop(), 1.00),
+                ProductInShop(Product(), Shop(), 1.00),
+                ProductInShop(Product(), Shop(), 1.00)
+            )
+        )
+        var comboThree = Combination(
+            arrayListOf(aldi, jumbo, lidl),
+            arrayListOf(
+                ProductInShop(Product(), Shop(), 1.00),
+                ProductInShop(Product(), Shop(), 0.50),
+                ProductInShop(Product(), Shop(), 1.00)
+            )
+        )
+        var comboThree_2 = Combination(
+            arrayListOf(aldi, jumbo, lidl),
+            arrayListOf(
+                ProductInShop(Product(), Shop(), 1.00),
+                ProductInShop(Product(), Shop(), 0.40),
+                ProductInShop(Product(), Shop(), 1.00)
+            )
+        )
+        var cheapestCombo = listGenerator.getCombinationWithBestPrice(
+            arrayListOf(
+                comboOne,
+                comboTwo,
+                comboThree,
+                comboThree_2
+            ), 3
+        )
+
+        Assert.assertEquals(cheapestCombo, comboThree_2)
+    }
+    @Test
     fun getDirections_Test() {
         listGenerator.GoogleDirectionsService = MockGoogleDirectionsService().apply {
-            json = JSONObject("{\n" +
-                    "   \"routes\" : [\n" +
-                    "      {\n" +
-                    "         \"legs\" : [\n" +
-                    "            {\n" +
-                    "               \"distance\" : {\n" +
-                    "                  \"text\" : \"0.5 km\",\n" +
-                    "                  \"value\" : 202\n" +
-                    "               },\n" +
-                    "               \"duration\" : {\n" +
-                    "                  \"text\" : \"2 min\",\n" +
-                    "                  \"value\" : 50\n" +
-                    "               }\n" +
-                    "            },\n" +
-                    "            {\n" +
-                    "               \"distance\" : {\n" +
-                    "                  \"text\" : \"0.5 km\",\n" +
-                    "                  \"value\" : 202\n" +
-                    "               },\n" +
-                    "               \"duration\" : {\n" +
-                    "                  \"text\" : \"1 min\",\n" +
-                    "                  \"value\" : 50\n" +
-                    "               }\n" +
-                    "            },\n" +
-                    "            {\n" +
-                    "               \"distance\" : {\n" +
-                    "                  \"text\" : \"2 km\",\n" +
-                    "                  \"value\" : 202\n" +
-                    "               },\n" +
-                    "               \"duration\" : {\n" +
-                    "                  \"text\" : \"1 min\",\n" +
-                    "                  \"value\" : 46\n" +
-                    "               }\n" +
-                    "            },\n" +
-                    "            {\n" +
-                    "               \"distance\" : {\n" +
-                    "                  \"text\" : \"1 km\",\n" +
-                    "                  \"value\" : 202\n" +
-                    "               },\n" +
-                    "               \"duration\" : {\n" +
-                    "                  \"text\" : \"1 min\",\n" +
-                    "                  \"value\" : 46\n" +
-                    "               }\n" +
-                    "            }\n" +
-                    "         ]\n" +
-                    "      }\n" +
-                    "   ],\n" +
-                    "   \"status\" : \"OK\"\n" +
-                    "}")
+            json = JSONObject(
+                "{\n" +
+                        "   \"routes\" : [\n" +
+                        "      {\n" +
+                        "         \"legs\" : [\n" +
+                        "            {\n" +
+                        "               \"distance\" : {\n" +
+                        "                  \"text\" : \"0.5 km\",\n" +
+                        "                  \"value\" : 202\n" +
+                        "               },\n" +
+                        "               \"duration\" : {\n" +
+                        "                  \"text\" : \"2 min\",\n" +
+                        "                  \"value\" : 50\n" +
+                        "               }\n" +
+                        "            },\n" +
+                        "            {\n" +
+                        "               \"distance\" : {\n" +
+                        "                  \"text\" : \"0.5 km\",\n" +
+                        "                  \"value\" : 202\n" +
+                        "               },\n" +
+                        "               \"duration\" : {\n" +
+                        "                  \"text\" : \"1 min\",\n" +
+                        "                  \"value\" : 50\n" +
+                        "               }\n" +
+                        "            },\n" +
+                        "            {\n" +
+                        "               \"distance\" : {\n" +
+                        "                  \"text\" : \"2 km\",\n" +
+                        "                  \"value\" : 202\n" +
+                        "               },\n" +
+                        "               \"duration\" : {\n" +
+                        "                  \"text\" : \"1 min\",\n" +
+                        "                  \"value\" : 46\n" +
+                        "               }\n" +
+                        "            },\n" +
+                        "            {\n" +
+                        "               \"distance\" : {\n" +
+                        "                  \"text\" : \"1 km\",\n" +
+                        "                  \"value\" : 202\n" +
+                        "               },\n" +
+                        "               \"duration\" : {\n" +
+                        "                  \"text\" : \"1 min\",\n" +
+                        "                  \"value\" : 46\n" +
+                        "               }\n" +
+                        "            }\n" +
+                        "         ]\n" +
+                        "      }\n" +
+                        "   ],\n" +
+                        "   \"status\" : \"OK\"\n" +
+                        "}"
+            )
         }
         val combination = Combination(arrayListOf(Shop()), arrayListOf(ProductInShop()))
         listGenerator.getDirections(combination)
@@ -369,62 +892,74 @@ class ListGeneratorUnitTest {
     @Test
     fun getFinalCombinations_Test() {
         listGenerator.GoogleDirectionsService = MockGoogleDirectionsService().apply {
-            json = JSONObject("{\n" +
-                    "   \"routes\" : [\n" +
-                    "      {\n" +
-                    "         \"legs\" : [\n" +
-                    "            {\n" +
-                    "               \"distance\" : {\n" +
-                    "                  \"text\" : \"0.5 km\",\n" +
-                    "                  \"value\" : 202\n" +
-                    "               },\n" +
-                    "               \"duration\" : {\n" +
-                    "                  \"text\" : \"2 min\",\n" +
-                    "                  \"value\" : 50\n" +
-                    "               }\n" +
-                    "            },\n" +
-                    "            {\n" +
-                    "               \"distance\" : {\n" +
-                    "                  \"text\" : \"0.5 km\",\n" +
-                    "                  \"value\" : 202\n" +
-                    "               },\n" +
-                    "               \"duration\" : {\n" +
-                    "                  \"text\" : \"1 min\",\n" +
-                    "                  \"value\" : 50\n" +
-                    "               }\n" +
-                    "            },\n" +
-                    "            {\n" +
-                    "               \"distance\" : {\n" +
-                    "                  \"text\" : \"2 km\",\n" +
-                    "                  \"value\" : 202\n" +
-                    "               },\n" +
-                    "               \"duration\" : {\n" +
-                    "                  \"text\" : \"1 min\",\n" +
-                    "                  \"value\" : 46\n" +
-                    "               }\n" +
-                    "            },\n" +
-                    "            {\n" +
-                    "               \"distance\" : {\n" +
-                    "                  \"text\" : \"1 km\",\n" +
-                    "                  \"value\" : 202\n" +
-                    "               },\n" +
-                    "               \"duration\" : {\n" +
-                    "                  \"text\" : \"1 min\",\n" +
-                    "                  \"value\" : 46\n" +
-                    "               }\n" +
-                    "            }\n" +
-                    "         ]\n" +
-                    "      }\n" +
-                    "   ],\n" +
-                    "   \"status\" : \"OK\"\n" +
-                    "}")
+            json = JSONObject(
+                "{\n" +
+                        "   \"routes\" : [\n" +
+                        "      {\n" +
+                        "         \"legs\" : [\n" +
+                        "            {\n" +
+                        "               \"distance\" : {\n" +
+                        "                  \"text\" : \"0.5 km\",\n" +
+                        "                  \"value\" : 202\n" +
+                        "               },\n" +
+                        "               \"duration\" : {\n" +
+                        "                  \"text\" : \"2 min\",\n" +
+                        "                  \"value\" : 50\n" +
+                        "               }\n" +
+                        "            },\n" +
+                        "            {\n" +
+                        "               \"distance\" : {\n" +
+                        "                  \"text\" : \"0.5 km\",\n" +
+                        "                  \"value\" : 202\n" +
+                        "               },\n" +
+                        "               \"duration\" : {\n" +
+                        "                  \"text\" : \"1 min\",\n" +
+                        "                  \"value\" : 50\n" +
+                        "               }\n" +
+                        "            },\n" +
+                        "            {\n" +
+                        "               \"distance\" : {\n" +
+                        "                  \"text\" : \"2 km\",\n" +
+                        "                  \"value\" : 202\n" +
+                        "               },\n" +
+                        "               \"duration\" : {\n" +
+                        "                  \"text\" : \"1 min\",\n" +
+                        "                  \"value\" : 46\n" +
+                        "               }\n" +
+                        "            },\n" +
+                        "            {\n" +
+                        "               \"distance\" : {\n" +
+                        "                  \"text\" : \"1 km\",\n" +
+                        "                  \"value\" : 202\n" +
+                        "               },\n" +
+                        "               \"duration\" : {\n" +
+                        "                  \"text\" : \"1 min\",\n" +
+                        "                  \"value\" : 46\n" +
+                        "               }\n" +
+                        "            }\n" +
+                        "         ]\n" +
+                        "      }\n" +
+                        "   ],\n" +
+                        "   \"status\" : \"OK\"\n" +
+                        "}"
+            )
         }
-        val combo1 = Combination(arrayListOf(Shop()), arrayListOf(ProductInShop(bananas, lidl,1.5)))
-        val combo1_2 = Combination(arrayListOf(Shop()), arrayListOf(ProductInShop(bananas, lidl,0.5)))
-        val combo2 = Combination(arrayListOf(Shop(), Shop()), arrayListOf(ProductInShop(bananas, lidl,1.5)))
-        val combo2_2 = Combination(arrayListOf(Shop(), Shop()), arrayListOf(ProductInShop(bananas, lidl,0.5)))
-        val combo3 = Combination(arrayListOf(Shop(), Shop(), Shop()), arrayListOf(ProductInShop(bananas, lidl,1.5)))
-        val combo3_2 = Combination(arrayListOf(Shop(), Shop(), Shop()), arrayListOf(ProductInShop(bananas, lidl,0.5)))
+        val combo1 =
+            Combination(arrayListOf(Shop()), arrayListOf(ProductInShop(bananas, lidl, 1.5)))
+        val combo1_2 =
+            Combination(arrayListOf(Shop()), arrayListOf(ProductInShop(bananas, lidl, 0.5)))
+        val combo2 =
+            Combination(arrayListOf(Shop(), Shop()), arrayListOf(ProductInShop(bananas, lidl, 1.5)))
+        val combo2_2 =
+            Combination(arrayListOf(Shop(), Shop()), arrayListOf(ProductInShop(bananas, lidl, 0.5)))
+        val combo3 = Combination(
+            arrayListOf(Shop(), Shop(), Shop()),
+            arrayListOf(ProductInShop(bananas, lidl, 1.5))
+        )
+        val combo3_2 = Combination(
+            arrayListOf(Shop(), Shop(), Shop()),
+            arrayListOf(ProductInShop(bananas, lidl, 0.5))
+        )
         val combinations = arrayListOf(combo1, combo2, combo3, combo1_2, combo2_2, combo3_2)
         listGenerator.getFinalCombinations(combinations)
         Assert.assertEquals(combo1_2, listGenerator.oneShopCombination)
@@ -435,7 +970,6 @@ class ListGeneratorUnitTest {
         Assert.assertEquals(combo2_2.directions!!.timeToTravel!!, 192.0, 0.001)
         Assert.assertEquals(combo3_2.directions!!.timeToTravel!!, 192.0, 0.001)
     }
-
 
 
 }

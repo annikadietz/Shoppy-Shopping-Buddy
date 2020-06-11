@@ -25,5 +25,15 @@
         android:name="com.annikadietz.shoppy_shoppingbuddy.ui.shopping_combination_information.ShoppingCombinationInformationFragment"
         android:label="fragment_shopping_combination_information"
         tools:layout="@layout/fragment_shopping_combination_information" />
+    <fragment
+        android:id="@+id/nav_shopping_list_test"
+        android:name="com.annikadietz.shoppy_shoppingbuddy.ui.register_purchas.Register_purchas_fragment"
+        android:label="register_fragment"
+        tools:layout="@layout/register_fragment" />
+    <fragment
+        android:id="@+id/popUpWindow"
+        android:name="com.annikadietz.shoppy_shoppingbuddy.ui.register_purchas.PopUpWindow"
+        android:label="pop_up_window_fragment"
+        tools:layout="@layout/pop_up_window_fragment" />
 
 </navigation>

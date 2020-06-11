@@ -9,6 +9,7 @@
 
     <string name="menu_shopping_list">Your Shopping List</string>
     <string name="menu_product_search">Search Product</string>
+    <string name="menu_shopping_list_test">Shopping List test</string>
     <string name="menu_product_add">Add Product</string>
     <string name="menu_slideshow">Slideshow</string>
     <string name="menu_tools">Tools</string>

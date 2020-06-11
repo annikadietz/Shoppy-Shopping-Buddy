@@ -15,6 +15,7 @@ object DatabaseHelper {
     var db = Firebase.firestore
     lateinit private var shops: MutableList<DocumentSnapshot>
     lateinit private var products: MutableList<DocumentSnapshot>
+    lateinit private var prices: MutableList<DocumentSnapshot>
     lateinit private var categories: MutableList<DocumentSnapshot>
 
     fun writeNewProduct(name: String, category: DocumentSnapshot, price: Double, lastConfirmed: Date, shop: DocumentSnapshot, context: Context) {
@@ -70,13 +71,25 @@ object DatabaseHelper {
                 Log.w("categories", "Error getting documents.", exception)
             }
     }
-
+    fun subscribePrices() {
+        db.collection("pricis")
+            .get()
+            .addOnSuccessListener { result ->
+                prices = result.documents
+            }
+            .addOnFailureListener { exception ->
+                Log.w("Prices", "Error getting documents.", exception)
+            }
+    }
     fun getShops(): MutableList<DocumentSnapshot> {
         return shops
     }
 
     fun getProducts(): MutableList<DocumentSnapshot> {
         return products
+    }
+    fun getPrices(): MutableList<DocumentSnapshot> {
+        return prices
     }
 
     fun getCategories(): MutableList<DocumentSnapshot> {
@@ -181,5 +194,10 @@ class Shop {
 class Category {
     var Name: String? = ""
 
+    constructor() {}
+}
+class Price {
+    var suggestionsPrice: Double? = 0.0
+    var counter:Double?=0.0
     constructor() {}
 }
