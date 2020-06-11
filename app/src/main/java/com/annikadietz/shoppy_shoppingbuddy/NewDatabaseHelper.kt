@@ -14,6 +14,7 @@ object NewDatabaseHelper : DatabaseHelperInterface {
     private var shops = arrayListOf<Shop>()
     private var products = arrayListOf<Product>()
     var productsInShops = arrayListOf<ProductInShop>()
+    var productTypes = arrayListOf<String>()
 
     fun subscribeShops() {
         db.collection("shops")
@@ -33,6 +34,7 @@ object NewDatabaseHelper : DatabaseHelperInterface {
             .addOnSuccessListener { results ->
                 products.clear()
                 results.forEach { product -> products.add(product.toObject(Product::class.java)) }
+                fillProductTypes()
             }
             .addOnFailureListener { exception ->
                 Log.w("shops", "Error getting documents.", exception)
@@ -61,5 +63,15 @@ object NewDatabaseHelper : DatabaseHelperInterface {
 
     override fun getProductsInShops() : MutableList<ProductInShop> {
         return productsInShops
+    }
+    fun fillProductTypes(){
+        products.forEach {
+            var productType = it.type?.name
+            if (productType != null) {
+                if (productTypes.find { it == productType } == null) {
+                    productTypes.add(productType)
+                }
+            }
+        }
     }
 }
