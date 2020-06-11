@@ -2,7 +2,6 @@ package com.annikadietz.shoppy_shoppingbuddy
 
 import android.content.Context
 import android.os.Build
-import android.widget.ExpandableListAdapter
 import androidx.annotation.RequiresApi
 import com.annikadietz.shoppy_shoppingbuddy.Model.*
 import com.annikadietz.shoppy_shoppingbuddy.Model.Shop
@@ -22,7 +21,7 @@ class ListGenerator {
         this.myLocation = myLocation
     }
 
-    fun findCheapestStore(shops: ArrayList<Shop>, shoppingList: ArrayList<Product>, products: ArrayList<ProductInShop>) : ArrayList<ProductInShop> {
+    fun findCheapestStore(shops: ArrayList<Shop>, shoppingList: ArrayList<Product>, productsInShops: ArrayList<ProductInShop>) : ArrayList<ProductInShop> {
 
         // TODO: Replace all this with actual data from the database!!!!
 
@@ -35,7 +34,7 @@ class ListGenerator {
             var productsFound = arrayListOf<ProductInShop?>()
             shoppingList.forEach { it ->
                 var product = it
-                var productInShop = products.find {p ->p.shop == shop && p.product == product}
+                var productInShop = productsInShops.find { p ->p.shop.streetAddress == shop.streetAddress && p.shop.name == shop.name && p.product.name == product.name}
                 if (productInShop != null) {
                     price += productInShop.price
                     productsFound.add(productInShop)
@@ -123,7 +122,7 @@ class ListGenerator {
     }
 
     fun findPriceInShop(shop: Shop, product: Product, products: ArrayList<ProductInShop>) : ProductInShop {
-        var result = products.find { p ->p.shop == shop && p.product == product }
+        var result = products.find { p -> p.shop.streetAddress == shop.streetAddress && p.shop.name == shop.name && p.product.name == product.name }
         if (result != null) {
             return result
         }
@@ -207,22 +206,7 @@ class ListGenerator {
         }
 
         combination.directions = Directions(totalDistance, totalTime)
-            print("done")
-//            val directionsRequest = object : StringRequest(Request.Method.GET, urlDirections, Response.Listener<String> {
-//                    response ->
-//                val jsonResponse = JSONObject(response)
-//                val routes = jsonResponse.getJSONArray("routes")
-//                val legs = routes.getJSONObject(0).getJSONArray("legs")
-//                var totalDistance = 0;
-//                for (i in 0 until legs.length()) {
-//                    val distanceValue = legs.getJSONObject(i).getJSONObject("distance").getString("value")
-//                    totalDistance += distanceValue.toInt()
-//                }
-//            }, Response.ErrorListener {
-//                    _ ->
-//            }){}
-//            val requestQueue = Volley.newRequestQueue(context)
-//            requestQueue.add(directionsRequest)
+
         }
 
 }
