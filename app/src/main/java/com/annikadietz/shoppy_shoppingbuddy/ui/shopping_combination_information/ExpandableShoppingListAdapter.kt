@@ -70,7 +70,7 @@ class ExpandableShoppingListAdapter(val _context: Context,  var _listDataHeader:
             product_list_layout?.addView(shopView)
 
             products.forEach {
-                if(it.shop == shop) {
+                if(it.shop.name == shop.name && it.shop.streetAddress == shop.streetAddress) {
                     val infalInflater = this._context
                         .getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
                     val productView = infalInflater.inflate(R.layout.single_product_list_item, null)
