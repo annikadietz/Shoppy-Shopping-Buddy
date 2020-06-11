@@ -5,6 +5,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import com.annikadietz.shoppy_shoppingbuddy.Model.*
 import com.annikadietz.shoppy_shoppingbuddy.Model.Shop
+import com.annikadietz.shoppy_shoppingbuddy.ui.shopping_combination_information.ExpandableShoppingListAdapter
 import kotlin.collections.ArrayList
 
 
@@ -25,7 +26,7 @@ class ListGenerator {
         this.myLocation = myLocation
     }
 
-    fun findCheapestStore(shops: ArrayList<Shop>, shoppingList: ArrayList<Product>, products: ArrayList<ProductInShop>) : ArrayList<ProductInShop> {
+    fun findCheapestStore(shops: ArrayList<Shop>, shoppingList: ArrayList<Product>, productsInShops: ArrayList<ProductInShop>) : ArrayList<ProductInShop> {
 
         // TODO: Replace all this with actual data from the database!!!!
 
@@ -38,7 +39,7 @@ class ListGenerator {
             var productsFound = arrayListOf<ProductInShop?>()
             shoppingList.forEach { it ->
                 var product = it
-                var productInShop = products.find {p ->p.shop == shop && p.product == product}
+                var productInShop = productsInShops.find { p ->p.shop.streetAddress == shop.streetAddress && p.shop.name == shop.name && p.product.name == product.name}
                 if (productInShop != null) {
                     price += productInShop.price
                     productsFound.add(productInShop)
@@ -166,7 +167,7 @@ fun findAllPossibleStoreCombinationsWithPrices(shops: ArrayList<Shop>) : ArrayLi
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
-    fun getCombinationsWithProductsInShops(shops: ArrayList<Shop>, shoppingList: ArrayList<Product>, products: ArrayList<ProductInShop>) : ArrayList<Combination> {
+    fun getCombinationsWithProductsInShops(shops: ArrayList<Shop>, shoppingList: ArrayList<Product>, products: ArrayList<ProductInShop>, listAdapter: ExpandableShoppingListAdapter) : ArrayList<Combination> {
         var combos = findAllPossibleStoreCombinations(shops)
         combos.forEach {
             var combination = it
@@ -176,7 +177,7 @@ fun findAllPossibleStoreCombinationsWithPrices(shops: ArrayList<Shop>) : ArrayLi
                 combination.productsInShops?.add(price)
             }
         }
-        getFinalCombinations(combos)
+        getFinalCombinations(combos, listAdapter)
 
         return combos
     }
@@ -227,7 +228,7 @@ fun findAllPossibleStoreCombinationsWithPrices(shops: ArrayList<Shop>) : ArrayLi
     }
 
     fun findPriceInShop(shop: Shop, product: Product, products: ArrayList<ProductInShop>) : ProductInShop {
-        var result = products.find { p ->p.shop == shop && p.product == product }
+        var result = products.find { p -> p.shop.streetAddress == shop.streetAddress && p.shop.name == shop.name && p.product.name == product.name }
         if (result != null) {
             return result
         }
@@ -298,7 +299,7 @@ fun findAllPossibleStoreCombinationsWithPrices(shops: ArrayList<Shop>) : ArrayLi
         return bestPriceCombination
     }
     @RequiresApi(Build.VERSION_CODES.N)
-    fun getFinalCombinations(combinations: ArrayList<Combination>){
+    fun getFinalCombinations(combinations: ArrayList<Combination>, listAdapter: ExpandableShoppingListAdapter){
         oneShopCombination = getCombinationWithBestPrice(combinations, 1)
         twoShopCombination = getCombinationWithBestPrice(combinations, 2)
         threeShopCombination = getCombinationWithBestPrice(combinations, 3)
@@ -308,6 +309,7 @@ fun findAllPossibleStoreCombinationsWithPrices(shops: ArrayList<Shop>) : ArrayLi
                 getDirections(oneShopCombination)
                 getDirections(twoShopCombination)
                 getDirections(threeShopCombination)
+                listAdapter.notifyDataSetChanged();
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -363,22 +365,7 @@ fun findAllPossibleStoreCombinationsWithPrices(shops: ArrayList<Shop>) : ArrayLi
         }
 
         combination.directions = Directions(totalDistance, totalTime)
-            print("done")
-//            val directionsRequest = object : StringRequest(Request.Method.GET, urlDirections, Response.Listener<String> {
-//                    response ->
-//                val jsonResponse = JSONObject(response)
-//                val routes = jsonResponse.getJSONArray("routes")
-//                val legs = routes.getJSONObject(0).getJSONArray("legs")
-//                var totalDistance = 0;
-//                for (i in 0 until legs.length()) {
-//                    val distanceValue = legs.getJSONObject(i).getJSONObject("distance").getString("value")
-//                    totalDistance += distanceValue.toInt()
-//                }
-//            }, Response.ErrorListener {
-//                    _ ->
-//            }){}
-//            val requestQueue = Volley.newRequestQueue(context)
-//            requestQueue.add(directionsRequest)
+
         }
 
 //Todo delete the old one after testing
