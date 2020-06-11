@@ -32,7 +32,7 @@ class RegisterFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val root = inflater.inflate(R.layout.register_fragment, container, false)
-        val addProductButton: Button = root.findViewById(R.id.sign_up_button)
+        val addProductButton: Button = root.findViewById(R.id.btn_register)
         addProductButton.setOnClickListener {
             register()
         }
