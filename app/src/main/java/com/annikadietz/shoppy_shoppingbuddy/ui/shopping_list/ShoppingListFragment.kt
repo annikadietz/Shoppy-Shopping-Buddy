@@ -16,7 +16,7 @@ import com.annikadietz.shoppy_shoppingbuddy.R
 import com.annikadietz.shoppy_shoppingbuddy.ui.shopping_combination_information.ShoppingCombinationInformationFragment
 
 
-class ShoppingList : Fragment() {
+class ShoppingListFragment : Fragment() {
 
     private lateinit var shoppingListViewModel: ShoppingListViewModel
     private lateinit var shoppingListListView: View
