@@ -72,12 +72,11 @@ class ShopRecyclerAdapter: RecyclerView.Adapter<ShopRecyclerAdapter.ViewHolder>,
         }
 
         holder.checkBox.setOnCheckedChangeListener { buttonView, isChecked ->
-            // TODO use correct UID
             if (isChecked) {
-                databaseHelper.addMyShop(shop, "Hmfo4r4SrqVG1Kp1ZzduRFwajRW2")
+                databaseHelper.addMyShop(shop)
             }
             else {
-                databaseHelper.deleteMyShop(shop, "Hmfo4r4SrqVG1Kp1ZzduRFwajRW2")
+                databaseHelper.deleteMyShop(shop)
             }
             Log.w("Hello", databaseHelper.getMyShops().toString())
         }

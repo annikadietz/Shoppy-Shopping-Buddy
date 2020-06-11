@@ -104,7 +104,7 @@ class ExpandableShoppingListAdapter(val _context: Context,  var _listDataHeader:
         if (groupPosition % 2 == 1) {
             convertView?.setBackgroundResource(R.color.colorGrey)
         } else {
-            convertView?.setBackgroundResource(R.color.colorLightGrey)
+            convertView?.setBackgroundResource(R.color.colorDarkGrey)
         }
 
         //convertView!!.shopping_combination_list_group.text = headerTitle

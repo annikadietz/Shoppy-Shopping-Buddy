@@ -9,6 +9,7 @@ import android.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.annikadietz.shoppy_shoppingbuddy.MainActivity
 import com.annikadietz.shoppy_shoppingbuddy.Model.Shop
 import com.annikadietz.shoppy_shoppingbuddy.NewDatabaseHelper
 import com.annikadietz.shoppy_shoppingbuddy.R
@@ -42,9 +43,9 @@ class ShopSelectionFragment : Fragment() {
         searchView = root.findViewById(R.id.searchViewShop)
         recyclerView = root.findViewById(R.id.recyclerViewShop)
 
-        shops = NewDatabaseHelper.getShops()
+        shops = databaseHelper.getShops()
 
-        recyclerAdapter = ShopRecyclerAdapter(shops, viewModel.myShops, databaseHelper)
+        recyclerAdapter = ShopRecyclerAdapter(shops, databaseHelper.getMyShops(), databaseHelper)
 
         recyclerView.layoutManager = LinearLayoutManager(this.context)
         recyclerView.adapter = recyclerAdapter

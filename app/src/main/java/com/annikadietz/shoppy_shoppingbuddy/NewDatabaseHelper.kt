@@ -17,15 +17,16 @@ object NewDatabaseHelper : DatabaseHelperInterface {
     private var myShops = arrayListOf<Shop>()
     private var products = arrayListOf<Product>()
     lateinit var productsInShops: ArrayList<ProductInShop>
+    lateinit var uid: String
 
-    fun subscribeShops(uid: String) {
+    fun subscribeShops() {
         productsInShops = ArrayList()
         db.collection("shops")
             .get()
             .addOnSuccessListener { result ->
                 shops = (result.toObjects(Shop::class.java))
                 subscribeProducts()
-                subscribeMyShops(uid)
+                subscribeMyShops()
             }
             .addOnFailureListener { exception ->
                 Log.w("shops", "Error getting documents.", exception)
@@ -69,13 +70,12 @@ object NewDatabaseHelper : DatabaseHelperInterface {
             }
     }
 
-    fun subscribeMyShops(uid: String) {
+    fun subscribeMyShops() {
         db.collection("myShops")
             .get()
             .addOnSuccessListener { result ->
                 myShops = ArrayList<Shop>()
                 result.forEach {
-                    // TODO actual user ID here
                     if (it["uid"] == uid) {
                         var exampleShop = it["shop"] as HashMap<String, String>
                         var shop = shops.find { s -> s.name == exampleShop["name"] && s.postCode == exampleShop["postCode"] && s.streetAddress == exampleShop["streetAddress"] }
@@ -91,7 +91,7 @@ object NewDatabaseHelper : DatabaseHelperInterface {
             }
     }
 
-    fun deleteMyShop(shop : Shop, uid : String) {
+    fun deleteMyShop(shop : Shop) {
         db.collection("myShops")
             .get()
             .addOnSuccessListener { result ->
@@ -104,7 +104,7 @@ object NewDatabaseHelper : DatabaseHelperInterface {
                             db.collection("myShops").document(it.id)
                                 .delete()
                                 .addOnSuccessListener {
-                                    subscribeMyShops(uid)
+                                    subscribeMyShops()
                                     Log.d("delete my shops", "DocumentSnapshot successfully deleted!")
                                 }
                                 .addOnFailureListener { e -> Log.w("delete my shops", "Error deleting document", e) }
@@ -118,7 +118,7 @@ object NewDatabaseHelper : DatabaseHelperInterface {
             }
     }
 
-    fun addMyShop(shop : Shop, uid: String) {
+    fun addMyShop(shop : Shop) {
         val docData: HashMap<String, Any> = hashMapOf(
             "shop" to hashMapOf(
                 "name" to shop.name,
@@ -131,7 +131,7 @@ object NewDatabaseHelper : DatabaseHelperInterface {
         db.collection("myShops").document()
             .set(docData)
             .addOnSuccessListener {
-                subscribeMyShops(uid)
+                subscribeMyShops()
                 Log.d("add my shops", "DocumentSnapshot successfully written!")
             }
             .addOnFailureListener { e -> Log.w("add my shops", "Error writing document", e) }

@@ -48,15 +48,8 @@ class ShoppingListViewModel : ViewModel() {
         var shopButton = root.findViewById<Button>(R.id.find_shopping_options_button)
         shopButton.setOnClickListener(View.OnClickListener {
             var fragment = ShoppingCombinationInformationFragment()
-            replaceFragment(fragment, fragmentManager)
+            fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).commit()
         })
         return  shopButton
-    }
-
-    fun replaceFragment(someFragment: Fragment, fragmentManager: FragmentManager) {
-        val transaction: FragmentTransaction = fragmentManager!!.beginTransaction()
-        transaction.replace(R.id.nav_host_fragment, someFragment)
-        transaction.addToBackStack(null)
-        transaction.commit()
     }
 }
