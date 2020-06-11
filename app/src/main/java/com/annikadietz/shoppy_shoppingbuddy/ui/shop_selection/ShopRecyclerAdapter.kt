@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
+import com.annikadietz.shoppy_shoppingbuddy.DatabaseHelperInterface
 import com.annikadietz.shoppy_shoppingbuddy.Model.Shop
 import com.annikadietz.shoppy_shoppingbuddy.NewDatabaseHelper
 import com.annikadietz.shoppy_shoppingbuddy.R
@@ -16,6 +17,7 @@ class ShopRecyclerAdapter: RecyclerView.Adapter<ShopRecyclerAdapter.ViewHolder>,
     lateinit var selectedShops: List<Shop>
     lateinit var shops: List<Shop>
     lateinit var shopsFiltered: ArrayList<Shop>
+    lateinit var databaseHelper: NewDatabaseHelper
     var selectedType = ""
 
     private val shopFilter = object : Filter() {
@@ -43,10 +45,11 @@ class ShopRecyclerAdapter: RecyclerView.Adapter<ShopRecyclerAdapter.ViewHolder>,
         return shopFilter
     }
 
-    constructor(shopList: List<Shop>, selectedShopList: List<Shop>) : super() {
+    constructor(shopList: List<Shop>, selectedShopList: List<Shop>, dbh: NewDatabaseHelper) : super() {
         shops = shopList
         selectedShops = selectedShopList
         shopsFiltered = ArrayList(shops)
+        databaseHelper = dbh
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -71,12 +74,12 @@ class ShopRecyclerAdapter: RecyclerView.Adapter<ShopRecyclerAdapter.ViewHolder>,
         holder.checkBox.setOnCheckedChangeListener { buttonView, isChecked ->
             // TODO use correct UID
             if (isChecked) {
-                NewDatabaseHelper.addMyShop(shop, "Hmfo4r4SrqVG1Kp1ZzduRFwajRW2")
+                databaseHelper.addMyShop(shop, "Hmfo4r4SrqVG1Kp1ZzduRFwajRW2")
             }
             else {
-                NewDatabaseHelper.deleteMyShop(shop, "Hmfo4r4SrqVG1Kp1ZzduRFwajRW2")
+                databaseHelper.deleteMyShop(shop, "Hmfo4r4SrqVG1Kp1ZzduRFwajRW2")
             }
-            NewDatabaseHelper.subscribeMyShops("Hmfo4r4SrqVG1Kp1ZzduRFwajRW2")
+            Log.w("Hello", databaseHelper.getMyShops().toString())
         }
     }
     // Represents a single row in the RecyclerView

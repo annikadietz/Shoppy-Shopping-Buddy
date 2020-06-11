@@ -46,7 +46,7 @@ class ShoppingCombinationInformationFragment : Fragment() {
         var topCombinations = viewModel.getTopThreeCombinations()
         var adapter = ExpandableShoppingListAdapter(root.context, topCombinations, topCombinations)
 
-        listGenerator.getCombinationsWithProductsInShops(myShops, shoppingList, productsInShops, adapter)
+        listGenerator.getCombinationsWithProductsInShops(databaseHelper.getMyShops(), shoppingList, productsInShops, adapter)
 
         topCombinations = viewModel.getTopThreeCombinations()
         adapter = ExpandableShoppingListAdapter(root.context, topCombinations, topCombinations)

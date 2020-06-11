@@ -103,7 +103,10 @@ object NewDatabaseHelper : DatabaseHelperInterface {
                             it.id
                             db.collection("myShops").document(it.id)
                                 .delete()
-                                .addOnSuccessListener { Log.d("delete my shops", "DocumentSnapshot successfully deleted!") }
+                                .addOnSuccessListener {
+                                    subscribeMyShops(uid)
+                                    Log.d("delete my shops", "DocumentSnapshot successfully deleted!")
+                                }
                                 .addOnFailureListener { e -> Log.w("delete my shops", "Error deleting document", e) }
                         }
                     }
@@ -127,7 +130,10 @@ object NewDatabaseHelper : DatabaseHelperInterface {
 
         db.collection("myShops").document()
             .set(docData)
-            .addOnSuccessListener { Log.d("add my shops", "DocumentSnapshot successfully written!") }
+            .addOnSuccessListener {
+                subscribeMyShops(uid)
+                Log.d("add my shops", "DocumentSnapshot successfully written!")
+            }
             .addOnFailureListener { e -> Log.w("add my shops", "Error writing document", e) }
     }
 

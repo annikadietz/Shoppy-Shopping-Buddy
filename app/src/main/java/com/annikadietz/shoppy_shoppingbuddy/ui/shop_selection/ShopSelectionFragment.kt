@@ -25,6 +25,7 @@ class ShopSelectionFragment : Fragment() {
     lateinit var swipeRefreshLayout: SwipeRefreshLayout
     lateinit var searchView: SearchView
     var viewModel = ShopSelectionViewModel()
+    var databaseHelper = NewDatabaseHelper
 
     private lateinit var shops: List<Shop>
 
@@ -43,7 +44,7 @@ class ShopSelectionFragment : Fragment() {
 
         shops = NewDatabaseHelper.getShops()
 
-        recyclerAdapter = ShopRecyclerAdapter(shops, viewModel.myShops)
+        recyclerAdapter = ShopRecyclerAdapter(shops, viewModel.myShops, databaseHelper)
 
         recyclerView.layoutManager = LinearLayoutManager(this.context)
         recyclerView.adapter = recyclerAdapter
