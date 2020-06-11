@@ -5,11 +5,11 @@ import com.annikadietz.shoppy_shoppingbuddy.Model.ProductInShop
 import com.annikadietz.shoppy_shoppingbuddy.Model.Shop
 
 interface DatabaseHelperInterface {
-    fun getShops(): MutableList<Shop>
+    fun getShops(): ArrayList<Shop>
 
-    fun getProducts(): MutableList<Product>
+    fun getProducts(): ArrayList<Product>
 
-    fun getProductsInShops(): MutableList<ProductInShop>
+    fun getProductsInShops(): ArrayList<ProductInShop>
 
     fun getMyShops(): ArrayList<Shop>
 }
