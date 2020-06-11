@@ -1,5 +1,7 @@
 package com.annikadietz.shoppy_shoppingbuddy.Model
 
+import androidx.lifecycle.LiveData
+
 class Directions {
     var distancetoTravel: Double?
     var timeToTravel: Double?
