@@ -1,7 +1,6 @@
 package com.annikadietz.shoppy_shoppingbuddy.ui.register_purchas
 
 import android.app.AlertDialog
-import android.app.ProgressDialog.show
 import android.content.DialogInterface
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
@@ -11,10 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.lifecycle.Observer
-import com.annikadietz.shoppy_shoppingbuddy.DatabaseHelper
 import com.annikadietz.shoppy_shoppingbuddy.R
-import com.annikadietz.shoppy_shoppingbuddy.ui.product_search.ProductSearchViewModel
-import java.lang.System.exit
 
 class Register_purchas_fragment : Fragment() {
     var messageText = ""
@@ -33,7 +29,7 @@ class Register_purchas_fragment : Fragment() {
     ): View? {
         viewModel =
             ViewModelProviders.of(this).get(RegisterViewModel::class.java)
-        val root =inflater.inflate(R.layout.register_fragment, container, false)
+        val root =inflater.inflate(R.layout.popup_fragment, container, false)
         val textView: TextView = root.findViewById(R.id.product_info)
         viewModel.text.observe(this, Observer {
             textView.text = it
