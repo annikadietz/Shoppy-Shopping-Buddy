@@ -1,28 +1,18 @@
 package com.annikadietz.shoppy_shoppingbuddy.ui.shopping_combination_information
 
 import android.content.Context
-import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseExpandableListAdapter
 import android.widget.LinearLayout
-import android.widget.TextView
-import androidx.lifecycle.LiveData
-import com.annikadietz.shoppy_shoppingbuddy.CalculationHelper
-import com.annikadietz.shoppy_shoppingbuddy.ListGenerator
 import com.annikadietz.shoppy_shoppingbuddy.Model.Combination
-import com.annikadietz.shoppy_shoppingbuddy.Model.Directions
-import com.annikadietz.shoppy_shoppingbuddy.Model.ProductInShop
 import com.annikadietz.shoppy_shoppingbuddy.R
 import kotlinx.android.synthetic.main.shop_information_line.view.*
 import kotlinx.android.synthetic.main.shopping_combination_list_group.view.*
 import kotlinx.android.synthetic.main.shopping_combination_list_item.view.*
 import kotlinx.android.synthetic.main.single_product_list_item.view.*
-import org.w3c.dom.Text
-import java.util.*
 import kotlin.collections.ArrayList
-import kotlin.properties.Delegates
 
 class ExpandableShoppingListAdapter(val _context: Context,  var _listDataHeader: ArrayList<Combination>, private val _listChild: List<Combination> // header titles
     // child data in format of header title, child title
@@ -65,7 +55,7 @@ class ExpandableShoppingListAdapter(val _context: Context,  var _listDataHeader:
             val infalInflater = this._context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             var shopView: View = infalInflater.inflate(R.layout.shop_information_line, null)
-            shopView.shop_name.text = shop.name
+            shopView.shop_row.text = shop.name
             shopView.shop_address.text = shop.streetAddress + ", " + shop.postCode
             product_list_layout?.addView(shopView)
 

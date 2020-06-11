@@ -25,8 +25,8 @@ class ShoppingCombinationInformationFragment : Fragment() {
     private lateinit var databaseHelper: DatabaseHelperInterface
     lateinit var viewModel: ShoppingCombinationInformationViewModel
     private lateinit var shoppingList: ArrayList<Product>
-    private lateinit var shops: ArrayList<Shop>
     private lateinit var productsInShops: ArrayList<ProductInShop>
+    lateinit var myShops: ArrayList<Shop>
 
 
     override fun onCreateView(
@@ -46,7 +46,7 @@ class ShoppingCombinationInformationFragment : Fragment() {
         var topCombinations = viewModel.getTopThreeCombinations()
         var adapter = ExpandableShoppingListAdapter(root.context, topCombinations, topCombinations)
 
-        listGenerator.getCombinationsWithProductsInShops(shops, shoppingList, productsInShops, adapter)
+        listGenerator.getCombinationsWithProductsInShops(myShops, shoppingList, productsInShops, adapter)
 
         topCombinations = viewModel.getTopThreeCombinations()
         adapter = ExpandableShoppingListAdapter(root.context, topCombinations, topCombinations)
@@ -59,8 +59,8 @@ class ShoppingCombinationInformationFragment : Fragment() {
 
     private fun fillArrayLists() {
         shoppingList = viewModel.findShoppingList()
-        shops = viewModel.findShops()
         productsInShops = viewModel.findProductsInShops()
+        myShops = viewModel.findMyShops()
     }
 
 }

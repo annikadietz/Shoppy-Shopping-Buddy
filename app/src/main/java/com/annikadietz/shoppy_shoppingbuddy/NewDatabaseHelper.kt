@@ -4,24 +4,28 @@ import android.util.Log
 import com.annikadietz.shoppy_shoppingbuddy.Model.Product
 import com.annikadietz.shoppy_shoppingbuddy.Model.ProductInShop
 import com.annikadietz.shoppy_shoppingbuddy.Model.Shop
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.getField
 import com.google.firebase.ktx.Firebase
+import java.io.Serializable
 
 object NewDatabaseHelper : DatabaseHelperInterface {
     var db = Firebase.firestore
     lateinit private var shops: MutableList<Shop>
+    private var myShops = arrayListOf<Shop>()
     private var products = arrayListOf<Product>()
     lateinit var productsInShops: ArrayList<ProductInShop>
 
-    fun subscribeShops() {
+    fun subscribeShops(uid: String) {
         productsInShops = ArrayList()
         db.collection("shops")
             .get()
             .addOnSuccessListener { result ->
                 shops = (result.toObjects(Shop::class.java))
                 subscribeProducts()
+                subscribeMyShops(uid)
             }
             .addOnFailureListener { exception ->
                 Log.w("shops", "Error getting documents.", exception)
@@ -63,6 +67,72 @@ object NewDatabaseHelper : DatabaseHelperInterface {
             .addOnFailureListener { exception ->
                 Log.w("shops", "Error getting documents.", exception)
             }
+    }
+
+    fun subscribeMyShops(uid: String) {
+        db.collection("myShops")
+            .get()
+            .addOnSuccessListener { result ->
+                myShops = ArrayList<Shop>()
+                result.forEach {
+                    // TODO actual user ID here
+                    if (it["uid"] == uid) {
+                        var exampleShop = it["shop"] as HashMap<String, String>
+                        var shop = shops.find { s -> s.name == exampleShop["name"] && s.postCode == exampleShop["postCode"] && s.streetAddress == exampleShop["streetAddress"] }
+                        if (shop != null) {
+                            myShops.add(shop)
+                        }
+                    }
+                }
+                Log.w("productsIn", myShops.size.toString())
+            }
+            .addOnFailureListener { exception ->
+                Log.w("shops", "Error getting documents.", exception)
+            }
+    }
+
+    fun deleteMyShop(shop : Shop, uid : String) {
+        db.collection("myShops")
+            .get()
+            .addOnSuccessListener { result ->
+                productsInShops = ArrayList<ProductInShop>()
+                result.forEach {
+                    if (it["uid"] == uid) {
+                        var dbShop = it["shop"] as HashMap<String, String>
+                        if(dbShop["name"] == shop.name && dbShop["streetAddress"] == shop.streetAddress && dbShop["postCode"] == shop.postCode) {
+                            it.id
+                            db.collection("myShops").document(it.id)
+                                .delete()
+                                .addOnSuccessListener { Log.d("delete my shops", "DocumentSnapshot successfully deleted!") }
+                                .addOnFailureListener { e -> Log.w("delete my shops", "Error deleting document", e) }
+                        }
+                    }
+                }
+                Log.w("productsIn", myShops.size.toString())
+            }
+            .addOnFailureListener { exception ->
+                Log.w("shops", "Error getting documents.", exception)
+            }
+    }
+
+    fun addMyShop(shop : Shop, uid: String) {
+        val docData: HashMap<String, Any> = hashMapOf(
+            "shop" to hashMapOf(
+                "name" to shop.name,
+                "postCode" to shop.postCode,
+                "streetAddress" to shop.streetAddress
+            ),
+            "uid" to uid
+        )
+
+        db.collection("myShops").document()
+            .set(docData)
+            .addOnSuccessListener { Log.d("add my shops", "DocumentSnapshot successfully written!") }
+            .addOnFailureListener { e -> Log.w("add my shops", "Error writing document", e) }
+    }
+
+    override fun getMyShops(): ArrayList<Shop> {
+        return myShops
     }
 
     override fun getShops() : MutableList<Shop> {

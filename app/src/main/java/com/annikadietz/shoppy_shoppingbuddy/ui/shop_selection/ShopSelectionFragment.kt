@@ -5,12 +5,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.annikadietz.shoppy_shoppingbuddy.Model.Shop
+import com.annikadietz.shoppy_shoppingbuddy.NewDatabaseHelper
 import com.annikadietz.shoppy_shoppingbuddy.R
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
@@ -19,15 +20,16 @@ private const val ARG_PARAM2 = "param2"
  */
 class ShopSelectionFragment : Fragment() {
     // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    lateinit var recyclerView: RecyclerView
+    lateinit var recyclerAdapter: ShopRecyclerAdapter
+    lateinit var swipeRefreshLayout: SwipeRefreshLayout
+    lateinit var searchView: SearchView
+    var viewModel = ShopSelectionViewModel()
+
+    private lateinit var shops: List<Shop>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
     }
 
     override fun onCreateView(
@@ -35,28 +37,41 @@ class ShopSelectionFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_shop_selection, container, false)
-    }
+        var root =  inflater.inflate(R.layout.fragment_shop_selection, container, false)
+        searchView = root.findViewById(R.id.searchViewShop)
+        recyclerView = root.findViewById(R.id.recyclerViewShop)
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment shop_selection.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            ShopSelectionFragment()
-                .apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+        shops = NewDatabaseHelper.getShops()
+
+        recyclerAdapter = ShopRecyclerAdapter(shops, viewModel.myShops)
+
+        recyclerView.layoutManager = LinearLayoutManager(this.context)
+        recyclerView.adapter = recyclerAdapter
+
+        swipeRefreshLayout = root.findViewById(R.id.swipeRefreshLayout)
+
+        swipeRefreshLayout.setOnRefreshListener {
+            recyclerAdapter.notifyDataSetChanged()
+            swipeRefreshLayout.isRefreshing = false
+        }
+
+        searchView = root.findViewById(R.id.searchViewShop)
+        searchView.isIconifiedByDefault = false
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+
+            override fun onQueryTextChange(newText: String): Boolean {
+                recyclerAdapter.filter.filter(newText)
+                return false
             }
-    }
 
+            override fun onQueryTextSubmit(query: String): Boolean {
+                // task HERE
+                return false
+            }
+
+        })
+
+        return root
+    }
 }

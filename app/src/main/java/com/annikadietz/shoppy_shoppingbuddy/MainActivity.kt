@@ -1,6 +1,7 @@
 package com.annikadietz.shoppy_shoppingbuddy
 
 import android.os.Bundle
+import android.util.Log
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -11,6 +12,7 @@ import com.google.android.material.navigation.NavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import android.view.Menu
+import com.annikadietz.shoppy_shoppingbuddy.Model.Shop
 
 
 class MainActivity : AppCompatActivity()  {
@@ -26,7 +28,9 @@ class MainActivity : AppCompatActivity()  {
         DatabaseHelper.subscribeProducts()
         DatabaseHelper.subscribeCategories()
 
-        NewDatabaseHelper.subscribeShops()
+        // TODO use correct UID
+        NewDatabaseHelper.subscribeShops("Hmfo4r4SrqVG1Kp1ZzduRFwajRW2")
+
 
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         val navView: NavigationView = findViewById(R.id.nav_view)

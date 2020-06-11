@@ -10,4 +10,6 @@ interface DatabaseHelperInterface {
     fun getProducts(): MutableList<Product>
 
     fun getProductsInShops(): MutableList<ProductInShop>
+
+    fun getMyShops(): ArrayList<Shop>
 }
