@@ -40,7 +40,9 @@
         android:inputType="textPersonName"
         android:fontFamily="@font/roboto_regular"
         android:background="@drawable/et_custom"
-        android:textSize="15sp" />
+        android:textSize="15sp"
+        android:textColor="@color/colorBlack"
+        android:textColorHint="@color/colorGrey"/>
 
     <EditText
         android:id="@+id/email"
@@ -54,7 +56,9 @@
         android:fontFamily="@font/roboto_regular"
         android:inputType="textEmailAddress"
         android:background="@drawable/et_custom"
-        android:textSize="15sp" />
+        android:textSize="15sp"
+        android:textColor="@color/colorBlack"
+        android:textColorHint="@color/colorGrey" />
 
     <EditText
         android:id="@+id/password"
@@ -68,7 +72,9 @@
         android:fontFamily="@font/roboto_regular"
         android:inputType="textPassword"
         android:background="@drawable/et_custom"
-        android:textSize="15sp" />
+        android:textSize="15sp"
+        android:textColor="@color/colorBlack"
+        android:textColorHint="@color/colorGrey"/>
 
     <EditText
         android:id="@+id/repassword"
@@ -81,7 +87,9 @@
         android:fontFamily="@font/roboto_regular"
         android:inputType="textPassword"
         android:background="@drawable/et_custom"
-        android:textSize="15sp" />
+        android:textSize="15sp"
+        android:textColor="@color/colorBlack"
+        android:textColorHint="@color/colorGrey"/>
 
     <ProgressBar
         android:id="@+id/progressBar"

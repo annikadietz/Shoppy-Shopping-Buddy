@@ -38,8 +38,9 @@ android:layout_height="match_parent">
     android:fontFamily="@font/roboto_regular"
     android:layout_above="@id/password"
     android:background="@drawable/et_custom"
-    android:text="@string/registered_email"
-    android:textSize="15sp" />
+    android:textSize="15sp"
+    android:textColor="@color/colorBlack"
+    android:textColorHint="@color/colorGrey"/>
 
 <EditText
     android:id="@+id/password"
@@ -54,8 +55,10 @@ android:layout_height="match_parent">
     android:inputType="textPassword"
     android:layout_centerInParent="true"
     android:background="@drawable/et_custom"
-    android:text="@string/registered_pass"
-    android:textSize="15sp" />
+    android:textSize="15sp"
+    android:textColor="@color/colorBlack"
+    android:textColorHint="@color/colorGrey"
+    />
 
 <Button
     android:id="@+id/btn_login"

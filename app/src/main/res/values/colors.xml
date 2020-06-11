@@ -3,16 +3,9 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+
     <color name="colorGrey">#C8C8C8</color>
     <color name="colorLightGrey">#F0F0F0</color>
-<!--    <color name="colorPrimary">#008577</color>-->
-<!--    <color name="colorPrimaryDark">#00574B</color>-->
-<!--    <color name="colorAccent">#D81B60</color>-->
-    <color name="white">#FFF</color>
-
-
-<!--    <color name="colorPrimary">#1F4287</color>-->
-<!--    <color name="colorPrimaryDark">#071E3D</color>-->
-<!--    <color name="colorAccent">#278EA5</color>-->
-    <color name="black">#000000</color>
+    <color name="colorWhite">#FFF</color>
+    <color name="colorBlack">#000000</color>
 </resources>
