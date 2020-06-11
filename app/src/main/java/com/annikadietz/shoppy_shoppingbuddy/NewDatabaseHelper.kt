@@ -17,7 +17,7 @@ object NewDatabaseHelper : DatabaseHelperInterface {
     private var myShops = arrayListOf<Shop>()
     private var products = arrayListOf<Product>()
     lateinit var productsInShops: ArrayList<ProductInShop>
-    lateinit var uid: String
+    var uid: String = ""
 
     fun subscribeShops() {
         productsInShops = ArrayList()
@@ -71,24 +71,27 @@ object NewDatabaseHelper : DatabaseHelperInterface {
     }
 
     fun subscribeMyShops() {
-        db.collection("myShops")
-            .get()
-            .addOnSuccessListener { result ->
-                myShops = ArrayList<Shop>()
-                result.forEach {
-                    if (it["uid"] == uid) {
-                        var exampleShop = it["shop"] as HashMap<String, String>
-                        var shop = shops.find { s -> s.name == exampleShop["name"] && s.postCode == exampleShop["postCode"] && s.streetAddress == exampleShop["streetAddress"] }
-                        if (shop != null) {
-                            myShops.add(shop)
+        if(uid != null) {
+            db.collection("myShops")
+                .get()
+                .addOnSuccessListener { result ->
+                    myShops = ArrayList<Shop>()
+                    result.forEach {
+                        if (it["uid"] == uid) {
+                            var exampleShop = it["shop"] as HashMap<String, String>
+                            var shop =
+                                shops.find { s -> s.name == exampleShop["name"] && s.postCode == exampleShop["postCode"] && s.streetAddress == exampleShop["streetAddress"] }
+                            if (shop != null) {
+                                myShops.add(shop)
+                            }
                         }
                     }
+                    Log.w("productsIn", myShops.size.toString())
                 }
-                Log.w("productsIn", myShops.size.toString())
-            }
-            .addOnFailureListener { exception ->
-                Log.w("shops", "Error getting documents.", exception)
-            }
+                .addOnFailureListener { exception ->
+                    Log.w("shops", "Error getting documents.", exception)
+                }
+        }
     }
 
     fun deleteMyShop(shop : Shop) {
