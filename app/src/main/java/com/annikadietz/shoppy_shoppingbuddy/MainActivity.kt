@@ -1,24 +1,24 @@
 package com.annikadietz.shoppy_shoppingbuddy
 
+import android.content.Intent
 import android.os.Bundle
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
-import android.view.Menu
-import android.view.MenuItem
 import androidx.fragment.app.Fragment
+import androidx.navigation.ui.AppBarConfiguration
+import android.view.MenuItem
+import android.view.View
 import com.annikadietz.shoppy_shoppingbuddy.ui.product_search.ProductSearchFragment
+import com.annikadietz.shoppy_shoppingbuddy.ui.shopping_combination_information.ShoppingCombinationInformationFragment
 import com.annikadietz.shoppy_shoppingbuddy.ui.shopping_list.ShoppingListFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.auth.FirebaseAuth
 
 
 class MainActivity : AppCompatActivity()  {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var bottomNav: BottomNavigationView
     private var productSearchFragment = ProductSearchFragment()
-    private var shoppingListFragment = ShoppingListFragment()
+    private var shoppingCombinationInformationFragment = ShoppingCombinationInformationFragment()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -31,8 +31,8 @@ class MainActivity : AppCompatActivity()  {
         DatabaseHelper.subscribeCategories()
 
         NewDatabaseHelper.subscribeShops()
-//        NewDatabaseHelper.subscribeProducts()
-//        NewDatabaseHelper.subscribeProductInShop()
+        NewDatabaseHelper.subscribeProducts()
+        NewDatabaseHelper.subscribeProductInShop()
 
     }
 
@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity()  {
         override fun invoke(menuItem: MenuItem): Boolean {
             var selectedFragment: Fragment = when(menuItem.itemId) {
                 R.id.nav_search -> productSearchFragment
-                R.id.nav_shoppingList -> shoppingListFragment
+                R.id.nav_shoppingList -> shoppingCombinationInformationFragment
                 R.id.nav_yourShops -> productSearchFragment
                 R.id.nav_shop -> productSearchFragment
                 else -> productSearchFragment
@@ -53,5 +53,10 @@ class MainActivity : AppCompatActivity()  {
             return true
         }
     })
+
+    fun onLogout() {
+        FirebaseAuth.getInstance().signOut()
+        startActivity(Intent(this, AuthActivity::class.java))
+    }
 
 }

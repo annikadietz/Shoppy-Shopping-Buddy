@@ -2,6 +2,7 @@ package com.annikadietz.shoppy_shoppingbuddy.ui.shopping_combination_information
 
 import android.content.Context
 import android.graphics.Typeface
+import android.net.Uri.decode
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +21,7 @@ import kotlinx.android.synthetic.main.shopping_combination_list_group.view.*
 import kotlinx.android.synthetic.main.shopping_combination_list_item.view.*
 import kotlinx.android.synthetic.main.single_product_list_item.view.*
 import org.w3c.dom.Text
+import java.lang.Byte.decode
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.properties.Delegates
@@ -70,7 +72,7 @@ class ExpandableShoppingListAdapter(val _context: Context,  var _listDataHeader:
             product_list_layout?.addView(shopView)
 
             products.forEach {
-                if(it.shop == shop) {
+                if(it.shop.name == shop.name && it.shop.streetAddress == shop.streetAddress) {
                     val infalInflater = this._context
                         .getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
                     val productView = infalInflater.inflate(R.layout.single_product_list_item, null)
@@ -112,9 +114,9 @@ class ExpandableShoppingListAdapter(val _context: Context,  var _listDataHeader:
         }
 
         if (groupPosition % 2 == 1) {
-            convertView?.setBackgroundResource(R.color.colorGrey)
+            convertView?.setBackgroundResource(R.color.darkGrey)
         } else {
-            convertView?.setBackgroundResource(R.color.colorLightGrey)
+            convertView?.setBackgroundResource(R.color.darkerGrey)
         }
 
         //convertView!!.shopping_combination_list_group.text = headerTitle
