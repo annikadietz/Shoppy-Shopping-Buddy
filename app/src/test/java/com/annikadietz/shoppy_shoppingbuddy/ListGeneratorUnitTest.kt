@@ -84,29 +84,29 @@ class ListGeneratorUnitTest {
     var prices12_12 = SuggestionPrice(6.0)
 
     var suggestionsPrices1 =
-        arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice>()
+        arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice?>()
     var suggestionsPrices2 =
-        arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice>()
+        arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice?>()
     var suggestionsPrices3 =
-        arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice>()
+        arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice?>()
     var suggestionsPrices4 =
-        arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice>()
+        arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice?>()
     var suggestionsPrices5 =
-        arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice>()
+        arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice?>()
     var suggestionsPrices6 =
-        arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice>()
+        arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice?>()
     var suggestionsPrices7 =
-        arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice>()
+        arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice?>()
     var suggestionsPrices8 =
-        arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice>()
+        arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice?>()
     var suggestionsPrices9 =
-        arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice>()
+        arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice?>()
     var suggestionsPrices10 =
-        arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice>()
+        arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice?>()
     var suggestionsPrices11 =
-        arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice>()
+        arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice?>()
     var suggestionsPrices12 =
-        arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice>()
+        arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice?>()
     var potatoesInJumboWithPrices =
         ProductInShopWithPrices(potatoes, jumbo, 2.5, suggestionsPrices1)
     var potatoesInAldiWithPrices = ProductInShopWithPrices(potatoes, aldi, 2.5, suggestionsPrices2)
@@ -167,29 +167,29 @@ class ListGeneratorUnitTest {
         eggsInLidl = ProductInShop(eggs, lidl, 2.5)
 
         suggestionsPrices1 =
-            arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice>()
+            arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice?>()
         suggestionsPrices2 =
-            arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice>()
+            arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice?>()
         suggestionsPrices3 =
-            arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice>()
+            arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice?>()
         suggestionsPrices4 =
-            arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice>()
+            arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice?>()
         suggestionsPrices5 =
-            arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice>()
+            arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice?>()
         suggestionsPrices6 =
-            arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice>()
+            arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice?>()
         suggestionsPrices7 =
-            arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice>()
+            arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice?>()
         suggestionsPrices8 =
-            arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice>()
+            arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice?>()
         suggestionsPrices9 =
-            arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice>()
+            arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice?>()
         suggestionsPrices10 =
-            arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice>()
+            arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice?>()
         suggestionsPrices11 =
-            arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice>()
+            arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice?>()
         suggestionsPrices12 =
-            arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice>()
+            arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice?>()
 
         suggestionsPrices1.add(prices1)
         suggestionsPrices1.add(prices1_1)
@@ -215,15 +215,13 @@ class ListGeneratorUnitTest {
         suggestionsPrices12.add(prices12)
         suggestionsPrices12.add(prices12_12)
 
-        potatoesInJumboWithPrices =
-            ProductInShopWithPrices(potatoes, jumbo, 2.5, suggestionsPrices1)
+        potatoesInJumboWithPrices =ProductInShopWithPrices(potatoes, jumbo, 2.5, suggestionsPrices1)
         potatoesInAldiWithPrices = ProductInShopWithPrices(potatoes, aldi, 2.5, suggestionsPrices2)
         potatoesInLidlWithPrices = ProductInShopWithPrices(potatoes, lidl, 2.5, suggestionsPrices3)
 
         pizzaInJumboWithPrices = ProductInShopWithPrices(pizza, jumbo, 2.5, suggestionsPrices4)
         pizzaInAldiWithPrices = ProductInShopWithPrices(pizza, aldi, 2.5, suggestionsPrices5)
-        pizzaInLidlWithPrices =
-            ProductInShopWithPrices(pizza, lidl, 2.5, suggestionsPrices6) // the cheap one
+        pizzaInLidlWithPrices =ProductInShopWithPrices(pizza, lidl, 2.5, suggestionsPrices6) // the cheap one
 
         bananasInJumboWithPrices = ProductInShopWithPrices(bananas, jumbo, 2.5, suggestionsPrices7)
         bananasInAldiWithPrices = ProductInShopWithPrices(bananas, aldi, 2.5, suggestionsPrices8)
@@ -232,6 +230,7 @@ class ListGeneratorUnitTest {
         eggsInJumboWithPrices = ProductInShopWithPrices(eggs, jumbo, 2.5, suggestionsPrices9)
         eggsInAldiWithPrices = ProductInShopWithPrices(eggs, aldi, 2.5, suggestionsPrices10)
         eggsInLidlWithPrices = ProductInShopWithPrices(eggs, lidl, 2.5, suggestionsPrices11)
+
 
         combo1WithPrices = CombinationWithPrices(arrayListOf(aldi), arrayListOf())
         combo4WithPrices = CombinationWithPrices(arrayListOf(jumbo, aldi), arrayListOf())
@@ -286,11 +285,10 @@ class ListGeneratorUnitTest {
 //        combos.add(combo5)
 //        combos.add(combo6)
         combos.add(combo7)
-
-
         combosWithPrices.add(combo1WithPrices)
         combosWithPrices.add(combo4WithPrices)
         combosWithPrices.add(combo7WithPrices)
+
     }
 
     fun findCheapestStore(
@@ -679,7 +677,7 @@ class ListGeneratorUnitTest {
 
         Assert.assertEquals(cheapestCombo, comboThree_2)
     }
-
+//tested
     @Test
     fun getCombinationWithBestPriceWithOneShopWithPrices_Test() {
         createObjects()
@@ -780,43 +778,44 @@ class ListGeneratorUnitTest {
         Assert.assertEquals(cheapestCombo, comboTwo_2)
 
     }
+    //tested
     @Test
     fun getCombinationWithBestPriceWithThreeShopWithPrices_Test() {
         createObjects()
         setup()
-        var  comboOne = Combination(
+        var  comboOne = CombinationWithPrices(
             arrayListOf(aldi),
             arrayListOf(
-                ProductInShop(Product(), Shop(), 1.00),
-                ProductInShop(Product(), Shop(), 1.00),
-                ProductInShop(Product(), Shop(), 1.00)
+                ProductInShopWithPrices(Product(), Shop(), 1.00,suggestionsPrices1),
+                ProductInShopWithPrices(Product(), Shop(), 1.00,suggestionsPrices2),
+                ProductInShopWithPrices(Product(), Shop(), 1.00,suggestionsPrices3)
             )
         )
-        var comboTwo = Combination(
+        var comboTwo = CombinationWithPrices(
             arrayListOf(aldi, jumbo),
             arrayListOf(
-                ProductInShop(Product(), Shop(), 1.00),
-                ProductInShop(Product(), Shop(), 1.00),
-                ProductInShop(Product(), Shop(), 1.00)
+                ProductInShopWithPrices(Product(), Shop(), 1.00,suggestionsPrices4),
+                ProductInShopWithPrices(Product(), Shop(), 1.00,suggestionsPrices5),
+                ProductInShopWithPrices(Product(), Shop(), 1.00,suggestionsPrices6)
             )
         )
-        var comboThree = Combination(
+        var comboThree = CombinationWithPrices(
             arrayListOf(aldi, jumbo, lidl),
             arrayListOf(
-                ProductInShop(Product(), Shop(), 1.00),
-                ProductInShop(Product(), Shop(), 0.50),
-                ProductInShop(Product(), Shop(), 1.00)
+                ProductInShopWithPrices(Product(), Shop(), 1.00,suggestionsPrices7),
+                ProductInShopWithPrices(Product(), Shop(), 0.50,suggestionsPrices8),
+                ProductInShopWithPrices(Product(), Shop(), 1.00,suggestionsPrices9)
             )
         )
-        var comboThree_2 = Combination(
+        var comboThree_2 = CombinationWithPrices(
             arrayListOf(aldi, jumbo, lidl),
             arrayListOf(
-                ProductInShop(Product(), Shop(), 1.00),
-                ProductInShop(Product(), Shop(), 0.40),
-                ProductInShop(Product(), Shop(), 1.00)
+                ProductInShopWithPrices(Product(), Shop(), 1.00,suggestionsPrices10),
+                ProductInShopWithPrices(Product(), Shop(), 0.40,suggestionsPrices11),
+                ProductInShopWithPrices(Product(), Shop(), 1.00,suggestionsPrices12)
             )
         )
-        var cheapestCombo = listGenerator.getCombinationWithBestPrice(
+        var cheapestCombo = listGenerator.getCombinationWithBestPriceWithPrices(
             arrayListOf(
                 comboOne,
                 comboTwo,
@@ -827,6 +826,7 @@ class ListGeneratorUnitTest {
 
         Assert.assertEquals(cheapestCombo, comboThree_2)
     }
+
     @Test
     fun getDirections_Test() {
         listGenerator.GoogleDirectionsService = MockGoogleDirectionsService().apply {

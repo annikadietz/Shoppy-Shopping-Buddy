@@ -5,10 +5,12 @@ import android.util.Log
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import java.util.*
 import com.google.firebase.firestore.*
+import kotlin.collections.ArrayList
 
 
 object DatabaseHelper {
@@ -38,7 +40,27 @@ object DatabaseHelper {
                 Toast.makeText(context, "There was a problem adding your product. Please try again later.", Toast.LENGTH_LONG).show()
             }
     }
+    fun writeProductInShopWithPrices(name: String, category: DocumentSnapshot, price: Double,suggestionPrice:ArrayList<SuggestionPrice>, lastConfirmed: Date, shop: DocumentSnapshot, context: Context) {
+        val product = hashMapOf(
+            "Name" to name,
+            "Price" to price,
+            "suggestionPrice" to suggestionPrice,
+            "Category" to category.reference,
+            "LastConfirmed" to lastConfirmed,
+            "ShopReference" to shop.reference
+        )
 
+        db.collection("ProductsInShopWithPrices")
+            .add(product)
+            .addOnSuccessListener {
+                Log.d("ProductAdding", "DocumentSnapshot added with ID: ${it.id}")
+                Toast.makeText(context, "Product was added.", Toast.LENGTH_LONG).show()
+            }
+            .addOnFailureListener {
+                Log.d("ProductAdding", "DocumentSnapshot added with ID: ${it.message}")
+                Toast.makeText(context, "There was a problem adding your product. Please try again later.", Toast.LENGTH_LONG).show()
+            }
+    }
     fun subscribeShops() {
         db.collection("Shop")
             .get()
@@ -71,16 +93,7 @@ object DatabaseHelper {
                 Log.w("categories", "Error getting documents.", exception)
             }
     }
-    fun subscribePrices() {
-        db.collection("pricis")
-            .get()
-            .addOnSuccessListener { result ->
-                prices = result.documents
-            }
-            .addOnFailureListener { exception ->
-                Log.w("Prices", "Error getting documents.", exception)
-            }
-    }
+
     fun getShops(): MutableList<DocumentSnapshot> {
         return shops
     }
