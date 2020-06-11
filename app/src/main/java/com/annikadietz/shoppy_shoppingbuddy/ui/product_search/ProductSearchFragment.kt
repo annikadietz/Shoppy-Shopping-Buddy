@@ -18,8 +18,6 @@ import com.annikadietz.shoppy_shoppingbuddy.R
 
 class ProductSearchFragment : Fragment() {
 
-    private lateinit var productSearchViewModel: ProductSearchViewModel
-
     lateinit var recyclerView: RecyclerView
     lateinit var recyclerAdapter: RecyclerAdapter
     lateinit var swipeRefreshLayout: SwipeRefreshLayout
@@ -27,7 +25,6 @@ class ProductSearchFragment : Fragment() {
     lateinit var typeSpinner: Spinner
     var productTypes = arrayListOf<String>()
     lateinit var selectedType: String
-
     private lateinit var products: List<Product>
 
     override fun onCreateView(
@@ -35,8 +32,6 @@ class ProductSearchFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        productSearchViewModel =
-            ViewModelProviders.of(this).get(ProductSearchViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_product_search, container, false)
         recyclerView = root.findViewById(R.id.recyclerView)
 
@@ -68,7 +63,6 @@ class ProductSearchFragment : Fragment() {
             }
 
             override fun onQueryTextSubmit(query: String): Boolean {
-                // task HERE
                 return false
             }
 
@@ -77,15 +71,12 @@ class ProductSearchFragment : Fragment() {
         typeSpinner = root.findViewById(R.id.typeSpinner)
         productTypes = NewDatabaseHelper.productTypes
 
-
         var typeAdapter = this.context?.let {
             ArrayAdapter<String>(
                 it,
                 android.R.layout.simple_spinner_item, productTypes)
         }
-        if (typeAdapter != null) {
-            typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        }
+        typeAdapter?.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         typeAdapter?.add("")
         typeSpinner.adapter = typeAdapter
         typeSpinner.setSelection(0)
@@ -100,7 +91,7 @@ class ProductSearchFragment : Fragment() {
 
             override fun onNothingSelected(parent: AdapterView<*>) {
             }
-        };
+        }
 
         return root
     }
