@@ -4,9 +4,9 @@ class SuggestionPrice {
     var price: Double?
     var counter: Double?
 
-    constructor(price: Double) {
+    constructor(price: Double?,counter:Double?) {
         this.price = price
-        this.counter = 0.0
+        this.counter = counter
     }
     constructor() {
         this.price = null

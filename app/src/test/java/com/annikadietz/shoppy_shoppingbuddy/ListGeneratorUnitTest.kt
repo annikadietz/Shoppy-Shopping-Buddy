@@ -58,30 +58,30 @@ class ListGeneratorUnitTest {
     var combo6 = Combination(arrayListOf(aldi, lidl), arrayListOf())
     var combo7 = Combination(arrayListOf(jumbo, aldi, lidl), arrayListOf())
 
-    var prices1 = SuggestionPrice(2.0)
-    var prices1_1 = SuggestionPrice(2.5)
-    var prices2 = SuggestionPrice(3.0)
-    var prices2_2 = SuggestionPrice(3.5)
-    var prices3 = SuggestionPrice(4.0)
-    var prices3_3 = SuggestionPrice(2.0)
-    var prices4 = SuggestionPrice(2.5)
-    var prices4_4 = SuggestionPrice(3.0)
-    var prices5 = SuggestionPrice(3.5)
-    var prices5_5 = SuggestionPrice(4.0)
-    var prices6 = SuggestionPrice(2.0)
-    var prices6_6 = SuggestionPrice(2.5)
-    var prices7 = SuggestionPrice(3.0)
-    var prices7_7 = SuggestionPrice(3.5)
-    var prices8 = SuggestionPrice(4.0)
-    var prices8_8 = SuggestionPrice(6.0)
-    var prices9 = SuggestionPrice(3.5)
-    var prices9_9 = SuggestionPrice(4.0)
-    var prices10 = SuggestionPrice(2.0)
-    var prices10_10 = SuggestionPrice(2.5)
-    var prices11 = SuggestionPrice(3.0)
-    var prices11_11 = SuggestionPrice(3.5)
-    var prices12 = SuggestionPrice(4.0)
-    var prices12_12 = SuggestionPrice(6.0)
+    var prices1 = SuggestionPrice(2.0,0.0)
+    var prices1_1 = SuggestionPrice(2.5,0.0)
+    var prices2 = SuggestionPrice(3.0,0.0)
+    var prices2_2 = SuggestionPrice(3.5,0.0)
+    var prices3 = SuggestionPrice(4.0,0.0)
+    var prices3_3 = SuggestionPrice(2.0,0.0)
+    var prices4 = SuggestionPrice(2.5,0.0)
+    var prices4_4 = SuggestionPrice(3.0,0.0)
+    var prices5 = SuggestionPrice(3.5,0.0)
+    var prices5_5 = SuggestionPrice(4.0,0.0)
+    var prices6 = SuggestionPrice(2.0,0.0)
+    var prices6_6 = SuggestionPrice(2.5,0.0)
+    var prices7 = SuggestionPrice(3.0,0.0)
+    var prices7_7 = SuggestionPrice(3.5,0.0)
+    var prices8 = SuggestionPrice(4.0,0.0)
+    var prices8_8 = SuggestionPrice(6.0,0.0)
+    var prices9 = SuggestionPrice(3.5,0.0)
+    var prices9_9 = SuggestionPrice(4.0,0.0)
+    var prices10 = SuggestionPrice(2.0,0.0)
+    var prices10_10 = SuggestionPrice(2.5,0.0)
+    var prices11 = SuggestionPrice(3.0,0.0)
+    var prices11_11 = SuggestionPrice(3.5,0.0)
+    var prices12 = SuggestionPrice(4.0,0.0)
+    var prices12_12 = SuggestionPrice(6.0,0.0)
 
     var suggestionsPrices1 =
         arrayListOf<com.annikadietz.shoppy_shoppingbuddy.Model.SuggestionPrice?>()
@@ -292,7 +292,6 @@ class ListGeneratorUnitTest {
     }
 
     fun findCheapestStore(
-
         shops: ArrayList<Shop>,
         shoppingList: ArrayList<Product>
     ): ArrayList<ProductInShop> {
@@ -312,7 +311,6 @@ class ListGeneratorUnitTest {
                     productsFound.add(productInShop)
                 }
             }
-
             if (price < cheapestPrice) {
                 cheapestPrice = price
                 finalShoppingList = productsFound.clone() as ArrayList<ProductInShop>

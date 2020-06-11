@@ -213,7 +213,7 @@ fun findAllPossibleStoreCombinationsWithPrices(shops: ArrayList<Shop>) : ArrayLi
     //ToDo delete after testing
     fun findBestPriceInShopCombinationWithPrices(product: Product, combination: CombinationWithPrices, products: ArrayList<ProductInShopWithPrices>) : ProductInShopWithPrices {
         var prices=ArrayList<SuggestionPrice?>()
-        prices.add(SuggestionPrice(0.0))
+        prices.add(SuggestionPrice(0.0,0.0))
         var lowestProductInShop = ProductInShopWithPrices(product, Shop("Fake shop", "Fake address", "Fake address"), Double.MAX_VALUE,prices)
         combination.shops?.forEach {
             var priceInShop = findPriceInShopWithPrices(it, product, products)
@@ -243,7 +243,7 @@ fun findAllPossibleStoreCombinationsWithPrices(shops: ArrayList<Shop>) : ArrayLi
         }
         else {
            var prices=ArrayList<SuggestionPrice?>()
-            prices.add(SuggestionPrice(0.0))
+            prices.add(SuggestionPrice(0.0,0.0))
             return ProductInShopWithPrices(product, Shop("Fake shop", "Fake address", "Fake address"), Double.MAX_VALUE,prices)
         }
     }
@@ -283,7 +283,7 @@ fun findAllPossibleStoreCombinationsWithPrices(shops: ArrayList<Shop>) : ArrayLi
     fun getCombinationWithBestPriceWithPrices(combinations:ArrayList<CombinationWithPrices>, shopCount: Int) : CombinationWithPrices {
         var bestPriceCombination: CombinationWithPrices = CombinationWithPrices()
         bestPriceCombination.productsInShopsWithPrices = ArrayList<ProductInShopWithPrices>()
-        bestPriceCombination.productsInShopsWithPrices?.add(ProductInShopWithPrices(Product(), Shop(), Double.MAX_VALUE,arrayListOf(SuggestionPrice(0.0))))
+        bestPriceCombination.productsInShopsWithPrices?.add(ProductInShopWithPrices(Product(), Shop(), Double.MAX_VALUE,arrayListOf(SuggestionPrice(0.0,0.0))))
         combinations.forEach{
             var combination = it
             if (combination.shops?.size == shopCount) {

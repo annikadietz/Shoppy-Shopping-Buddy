@@ -77,31 +77,35 @@ object NewDatabaseHelper {
                 Log.w("shops", "Error getting documents.", exception)
             }
     }
-//    fun subscribeProductInShopWithPrices() {
-//        db.collection("productsInShopsWithPrices")
-//            .get()
-//            .addOnSuccessListener { result ->
-//                productsInShopsWithPrices = ArrayList<ProductInShopWithPrices>()
-//                result.forEach {
-//                  //  var examplePrices = it["suggestionPrice"] as ArrayList<SuggestionPrice>
-//                    var exampleShop = it["shop"] as HashMap<String, String>
-//                    var exampleProduct = it["product"] as HashMap<String, String>
-//                    var price = it.getField<Double>("price")
-//                    var prices = it.getField<SuggestionPrice>("suggestionPrices")
-//                    suggestionPrices.add(prices)
-//                    var shop = shops.find { s -> s.name == exampleShop["name"] && s.postCode == exampleShop["postCode"] && s.streetAddress == exampleShop["streetAddress"] }
-//                    var product = products.find { p -> p.name == exampleProduct["name"]}
-//
-//                    if(product != null && shop != null && price != null) {
-//                        productsInShopsWithPrices.add(ProductInShopWithPrices(product, shop, price,suggestionPrices))
-//                    }
-//                }
-//                Log.w("productsIn", productsInShopsWithPrices.size.toString())
-//            }
-//            .addOnFailureListener { exception ->
-//                Log.w("shops", "Error getting documents.", exception)
-//            }
-//    }
+    fun subscribeProductInShopWithPrices() {
+        db.collection("productsInShopsWithPrices")
+            .get()
+            .addOnSuccessListener { result ->
+                productsInShopsWithPrices = ArrayList<ProductInShopWithPrices>()
+                result.forEach {
+                   var examplePrices = it["suggestionPrice"] as ArrayList<SuggestionPrice?>
+                    var exampleShop = it["shop"] as HashMap<String, String>
+                    var exampleProduct = it["product"] as HashMap<String, String>
+                    examplePrices.forEach{
+                        var price = it?.price
+                        var counter = it?.counter
+                        var prices=SuggestionPrice(price,counter)
+                        suggestionPrices.add(prices)
+                    }
+                    var price = it.getField<Double>("price")
+                    var shop = shops.find { s -> s.name == exampleShop["name"] && s.postCode == exampleShop["postCode"] && s.streetAddress == exampleShop["streetAddress"] }
+                    var product = products.find { p -> p.name == exampleProduct["name"]}
+
+                    if(product != null && shop != null && price != null) {
+                        productsInShopsWithPrices.add(ProductInShopWithPrices(product, shop, price,examplePrices))
+                    }
+                }
+                Log.w("productsIn", productsInShopsWithPrices.size.toString())
+            }
+            .addOnFailureListener { exception ->
+                Log.w("shops", "Error getting documents.", exception)
+            }
+    }
 
     fun getShops() : MutableList<Shop> {
         return shops
