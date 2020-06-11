@@ -41,7 +41,19 @@ object NewDatabaseHelper {
                 Log.w("shops", "Error getting documents.", exception)
             }
     }
-    
+
+//    //to add the prices
+//    fun subscribePrices() {
+//        db.collection("prices")
+//            .get()
+//            .addOnSuccessListener { result ->
+//                suggestionPrices = result.toObjects(SuggestionPrice::class.java)
+//                subscribeProductInShopWithPrices()
+//            }
+//            .addOnFailureListener { exception ->
+//                Log.w("Prices", "Error getting documents.", exception)
+//            }
+//    }
 
     fun subscribeProductInShop() {
         db.collection("productsInShops")
