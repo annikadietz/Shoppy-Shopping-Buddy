@@ -78,7 +78,6 @@ class ShopRecyclerAdapter: RecyclerView.Adapter<ShopRecyclerAdapter.ViewHolder>,
             else {
                 databaseHelper.deleteMyShop(shop)
             }
-            Log.w("Hello", databaseHelper.getMyShops().toString())
         }
     }
     // Represents a single row in the RecyclerView
