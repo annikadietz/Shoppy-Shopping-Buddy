@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.ui.AppBarConfiguration
 import android.view.MenuItem
 import android.view.View
+import com.annikadietz.shoppy_shoppingbuddy.ui.confirm_purchases.PurchasesFragment
 import com.annikadietz.shoppy_shoppingbuddy.ui.product_search.ProductSearchFragment
 import com.annikadietz.shoppy_shoppingbuddy.ui.shopping_combination_information.ShoppingCombinationInformationFragment
 import com.annikadietz.shoppy_shoppingbuddy.ui.shopping_list.ShoppingListFragment
@@ -19,6 +20,7 @@ class MainActivity : AppCompatActivity()  {
     private lateinit var bottomNav: BottomNavigationView
     private var productSearchFragment = ProductSearchFragment()
     private var shoppingCombinationInformationFragment = ShoppingCombinationInformationFragment()
+    private var confirm = PurchasesFragment()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -45,7 +47,7 @@ class MainActivity : AppCompatActivity()  {
             var selectedFragment: Fragment = when(menuItem.itemId) {
                 R.id.nav_search -> productSearchFragment
                 R.id.nav_shoppingList -> shoppingCombinationInformationFragment
-                R.id.nav_yourShops -> productSearchFragment
+                R.id.nav_yourShops -> confirm
                 R.id.nav_shop -> productSearchFragment
                 else -> productSearchFragment
             }

@@ -40,7 +40,8 @@ android:layout_height="match_parent">
     android:background="@drawable/et_custom"
     android:textSize="15sp"
     android:textColor="@color/colorBlack"
-    android:textColorHint="@color/colorGrey"/>
+    android:textColorHint="@color/colorGrey"
+    android:text="@string/registered_email"/>
 
 <EditText
     android:id="@+id/password"
@@ -58,6 +59,7 @@ android:layout_height="match_parent">
     android:textSize="15sp"
     android:textColor="@color/colorBlack"
     android:textColorHint="@color/colorGrey"
+    android:text="@string/registered_pass"
     />
 
 <Button
