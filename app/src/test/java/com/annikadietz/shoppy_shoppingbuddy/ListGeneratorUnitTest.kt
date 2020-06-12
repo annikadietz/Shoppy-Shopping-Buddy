@@ -825,6 +825,7 @@ class ListGeneratorUnitTest {
         Assert.assertEquals(cheapestCombo, comboThree_2)
     }
 
+
     @Test
     fun getDirections_Test() {
         listGenerator.GoogleDirectionsService = MockGoogleDirectionsService().apply {
