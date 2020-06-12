@@ -68,18 +68,17 @@ object NewDatabaseHelper : DatabaseHelperInterface {
                 }
     }
 
-    fun deleteMyShop(shop : Shop) {
-        var shopInDatabase = db.collection("myShops")
-            .whereEqualTo("name", shop.name)
-            .whereEqualTo("postCode", shop.postCode)
-            .whereEqualTo("streetAddress", shop.streetAddress)
+ var shopsInDatabase = db.collection("myShops")
+            .whereEqualTo("shop.name", shop.name)
+            .whereEqualTo("shop.postCode", shop.postCode)
+            .whereEqualTo("shop.streetAddress", shop.streetAddress)
+            .whereEqualTo("uid", uid)
             .get()
-        shopInDatabase.addOnSuccessListener {
+        shopsInDatabase.addOnSuccessListener {
             it.forEach {
                 db.collection("myShops").document(it.id).delete()
             }
         }
-    }
 
     fun addMyShop(shop : Shop) {
         val docData: HashMap<String, Any> = hashMapOf(
