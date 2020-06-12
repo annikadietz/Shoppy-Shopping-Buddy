@@ -12,12 +12,12 @@ object NewDatabaseHelper : DatabaseHelperInterface {
     private var shops = arrayListOf<Shop>()
     private var myShops = arrayListOf<Shop>()
     private var products = arrayListOf<Product>()
-    private var productsInShops= arrayListOf<ProductInShop>()
+    private var productsInShops = arrayListOf<ProductInShop>()
     var uid: String = ""
 
     fun subscribeShops() {
         db.collection("shops")
-            .addSnapshotListener  {results, e ->
+            .addSnapshotListener { results, e ->
 
                 shops.clear()
                 results?.forEach { shop -> shops.add(shop.toObject(Shop::class.java)) }
@@ -27,7 +27,7 @@ object NewDatabaseHelper : DatabaseHelperInterface {
 
     fun subscribeProducts() {
         db.collection("products")
-            .addSnapshotListener  {results, e ->
+            .addSnapshotListener { results, e ->
                 products.clear()
                 results?.forEach { product -> products.add(product.toObject(Product::class.java)) }
             }
@@ -36,30 +36,32 @@ object NewDatabaseHelper : DatabaseHelperInterface {
 
     fun subscribeProductInShop() {
         db.collection("productsInShops")
-            .addSnapshotListener  {results, e ->
+            .addSnapshotListener { results, e ->
                 productsInShops.clear()
                 results?.forEach { product -> productsInShops.add(product.toObject(ProductInShop::class.java)) }
             }
 
-
     }
 
     fun subscribeMyShops() {
-    db.collection("myShops")
-        .whereEqualTo("uid", uid)
-        .addSnapshotListener {
-        results, e ->
-            myShops.clear()
-            results?.forEach {
-                var shopParameters = it["shop"] as HashMap<String, String>
-                var shop = Shop(shopParameters["name"]!!, shopParameters["postCode"]!!, shopParameters["streetAddress"]!!)
-                myShops.add(shop)
+        db.collection("myShops")
+            .whereEqualTo("uid", uid)
+            .addSnapshotListener { results, e ->
+                myShops.clear()
+                results?.forEach {
+                    var shopParameters = it["shop"] as HashMap<String, String>
+                    var shop = Shop(
+                        shopParameters["name"]!!,
+                        shopParameters["postCode"]!!,
+                        shopParameters["streetAddress"]!!
+                    )
+                    myShops.add(shop)
+                }
             }
-        }
-
+        
     }
-    
-    fun deleteMyShop(shop : Shop) {
+
+    fun deleteMyShop(shop: Shop) {
         var shopsInDatabase = db.collection("myShops")
             .whereEqualTo("shop.name", shop.name)
             .whereEqualTo("shop.postCode", shop.postCode)
@@ -73,7 +75,7 @@ object NewDatabaseHelper : DatabaseHelperInterface {
         }
     }
 
-    fun addMyShop(shop : Shop) {
+    fun addMyShop(shop: Shop) {
         val myShop: HashMap<String, Any> = hashMapOf(
             "shop" to shop,
             "uid" to uid
@@ -90,15 +92,15 @@ object NewDatabaseHelper : DatabaseHelperInterface {
         return myShops
     }
 
-    override fun getShops() : ArrayList<Shop> {
+    override fun getShops(): ArrayList<Shop> {
         return shops
     }
 
-    override fun getProducts() : ArrayList<Product> {
+    override fun getProducts(): ArrayList<Product> {
         return products
     }
 
-    override fun getProductsInShops() : ArrayList<ProductInShop> {
+    override fun getProductsInShops(): ArrayList<ProductInShop> {
         return productsInShops
     }
 }
