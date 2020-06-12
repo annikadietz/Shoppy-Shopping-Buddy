@@ -35,6 +35,9 @@ class MainActivity : AppCompatActivity()  {
         DatabaseHelper.subscribeCategories()
 
         NewDatabaseHelper.subscribeShops()
+        NewDatabaseHelper.subscribeProducts()
+        NewDatabaseHelper.subscribeProductInShop()
+        NewDatabaseHelper.subscribeMyShops()
     }
 
     private var navListener = BottomNavigationView.OnNavigationItemSelectedListener(object :

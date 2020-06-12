@@ -16,17 +16,15 @@ object NewDatabaseHelper : DatabaseHelperInterface {
     private var shops = arrayListOf<Shop>()
     private var myShops = arrayListOf<Shop>()
     private var products = arrayListOf<Product>()
-    private var productsInShops: ArrayList<ProductInShop> = arrayListOf()
+    private var productsInShops= arrayListOf<ProductInShop>()
     var uid: String = ""
 
     fun subscribeShops() {
         db.collection("shops")
             .get()
-            .addOnSuccessListener { result ->
+            .addOnSuccessListener { results ->
                 shops.clear()
-                result.forEach { shop -> shops.add(shop.toObject(Shop::class.java)) }
-                subscribeProducts()
-                subscribeMyShops()
+                results.forEach { shop -> shops.add(shop.toObject(Shop::class.java)) }
             }
             .addOnFailureListener { exception ->
                 Log.w("shops", "Error getting documents.", exception)
@@ -39,7 +37,6 @@ object NewDatabaseHelper : DatabaseHelperInterface {
             .addOnSuccessListener { results ->
                 products.clear()
                 results.forEach { product -> products.add(product.toObject(Product::class.java)) }
-                subscribeProductInShop()
             }
             .addOnFailureListener { exception ->
                 Log.w("shops", "Error getting documents.", exception)
@@ -74,7 +71,8 @@ object NewDatabaseHelper : DatabaseHelperInterface {
                             }
                         }
                     }
-                    Log.w("productsIn", myShops.size.toString())
+                    Log.w("productsInMine", myShops.size.toString())
+                    Log.w("productsInMine", myShops.toString())
                 }
                 .addOnFailureListener { exception ->
                     Log.w("shops", "Error getting documents.", exception)
