@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
-import com.annikadietz.shoppy_shoppingbuddy.DatabaseHelperInterface
 import com.annikadietz.shoppy_shoppingbuddy.Model.Shop
 import com.annikadietz.shoppy_shoppingbuddy.NewDatabaseHelper
 import com.annikadietz.shoppy_shoppingbuddy.R
@@ -66,10 +65,12 @@ class ShopRecyclerAdapter: RecyclerView.Adapter<ShopRecyclerAdapter.ViewHolder>,
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         var shop = shopsFiltered[position]
-        holder.checkBox.text = shop.name
+        holder.shopName.text = shop.name
+        holder.shopAddress.text = shop.streetAddress + " " + shop.postCode
         if(selectedShops.any{ selectedShop -> selectedShop.name == shop.name && selectedShop.postCode == shop.postCode && selectedShop.streetAddress == shop.streetAddress }) {
             holder.checkBox.isChecked = true
         }
+
 
         holder.checkBox.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
@@ -81,10 +82,21 @@ class ShopRecyclerAdapter: RecyclerView.Adapter<ShopRecyclerAdapter.ViewHolder>,
         }
     }
     // Represents a single row in the RecyclerView
-    class ViewHolder : RecyclerView.ViewHolder{
+    class ViewHolder : RecyclerView.ViewHolder, View.OnClickListener {
         lateinit var checkBox: CheckBox
+        lateinit var shopName: TextView
+        lateinit var shopAddress: TextView
         constructor(itemView: View) : super(itemView) {
-            checkBox = itemView.findViewById(R.id.shop_name)
+            checkBox = itemView.findViewById(R.id.shop_checkbox)
+            shopName = itemView.findViewById(R.id.shop_name)
+            shopAddress = itemView.findViewById(R.id.shop_address)
+            itemView.setOnClickListener(this)
+
+        }
+
+        override fun onClick(v: View?) {
+            this.checkBox.isChecked = !this.checkBox.isChecked
+            this.checkBox.callOnClick()
         }
     }
 }
