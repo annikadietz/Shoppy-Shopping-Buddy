@@ -74,30 +74,16 @@ object NewDatabaseHelper : DatabaseHelperInterface {
     }
 
     fun deleteMyShop(shop : Shop) {
-        db.collection("myShops")
+        var shopInDatabase = db.collection("myShops")
+            .whereEqualTo("name", shop.name)
+            .whereEqualTo("postCode", shop.postCode)
+            .whereEqualTo("streetAddress", shop.streetAddress)
             .get()
-            .addOnSuccessListener { result ->
-                myShops.clear()
-                result.forEach {
-                    if (it["uid"] == uid) {
-                        var dbShop = it["shop"] as HashMap<String, String>
-                        if(dbShop["name"] == shop.name && dbShop["streetAddress"] == shop.streetAddress && dbShop["postCode"] == shop.postCode) {
-                            it.id
-                            db.collection("myShops").document(it.id)
-                                .delete()
-                                .addOnSuccessListener {
-                                    subscribeMyShops()
-                                    Log.d("delete my shops", "DocumentSnapshot successfully deleted!")
-                                }
-                                .addOnFailureListener { e -> Log.w("delete my shops", "Error deleting document", e) }
-                        }
-                    }
-                }
-                Log.w("productsIn", myShops.size.toString())
+        shopInDatabase.addOnSuccessListener {
+            it.forEach {
+                db.collection("myShops").document(it.id).delete()
             }
-            .addOnFailureListener { exception ->
-                Log.w("shops", "Error getting documents.", exception)
-            }
+        }
     }
 
     fun addMyShop(shop : Shop) {
