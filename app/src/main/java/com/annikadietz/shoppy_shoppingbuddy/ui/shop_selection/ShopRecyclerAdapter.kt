@@ -67,7 +67,7 @@ class ShopRecyclerAdapter: RecyclerView.Adapter<ShopRecyclerAdapter.ViewHolder>,
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         var shop = shopsFiltered[position]
         holder.checkBox.text = shop.name
-        if(selectedShops.contains(shop)) {
+        if(selectedShops.any{ selectedShop -> selectedShop.name == shop.name && selectedShop.postCode == shop.postCode && selectedShop.streetAddress == shop.streetAddress }) {
             holder.checkBox.isChecked = true
         }
 

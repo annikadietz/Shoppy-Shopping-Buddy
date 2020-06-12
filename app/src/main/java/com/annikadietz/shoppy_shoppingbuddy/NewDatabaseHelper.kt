@@ -4,12 +4,8 @@ import android.util.Log
 import com.annikadietz.shoppy_shoppingbuddy.Model.Product
 import com.annikadietz.shoppy_shoppingbuddy.Model.ProductInShop
 import com.annikadietz.shoppy_shoppingbuddy.Model.Shop
-import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.firestore.ktx.getField
 import com.google.firebase.ktx.Firebase
-import java.io.Serializable
 
 object NewDatabaseHelper : DatabaseHelperInterface {
     private var db = Firebase.firestore
@@ -60,15 +56,12 @@ object NewDatabaseHelper : DatabaseHelperInterface {
             db.collection("myShops")
                 .get()
                 .addOnSuccessListener { result ->
-                    myShops = ArrayList<Shop>()
+                    myShops.clear()
                     result.forEach {
                         if (it["uid"] == uid) {
-                            var exampleShop = it["shop"] as HashMap<String, String>
-                            var shop =
-                                shops.find { s -> s.name == exampleShop["name"] && s.postCode == exampleShop["postCode"] && s.streetAddress == exampleShop["streetAddress"] }
-                            if (shop != null) {
-                                myShops.add(shop)
-                            }
+                            var shopParameters = it["shop"] as HashMap<String, String>
+                            var shop = Shop(shopParameters["name"]!!, shopParameters["postCode"]!!, shopParameters["streetAddress"]!!)
+                            myShops.add(shop)
                         }
                     }
                     Log.w("productsInMine", myShops.size.toString())
@@ -84,7 +77,7 @@ object NewDatabaseHelper : DatabaseHelperInterface {
         db.collection("myShops")
             .get()
             .addOnSuccessListener { result ->
-                productsInShops = ArrayList<ProductInShop>()
+                myShops.clear()
                 result.forEach {
                     if (it["uid"] == uid) {
                         var dbShop = it["shop"] as HashMap<String, String>

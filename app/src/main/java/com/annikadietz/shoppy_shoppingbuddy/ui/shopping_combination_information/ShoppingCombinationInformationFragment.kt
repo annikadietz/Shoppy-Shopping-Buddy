@@ -45,12 +45,11 @@ class ShoppingCombinationInformationFragment : Fragment() {
 
         fillArrayLists()
 
-        var topCombinations = viewModel.getTopThreeCombinations()
         var adapter = ExpandableShoppingListAdapter(root.context, arrayListOf(Combination()), arrayListOf(Combination()))
 
         listGenerator.getCombinationsWithProductsInShops(databaseHelper.getMyShops(), databaseHelper.getProducts(), databaseHelper.getProductsInShops(), adapter)
 
-        topCombinations = viewModel.getTopThreeCombinations()
+        var topCombinations = viewModel.getTopThreeCombinations()
         adapter = ExpandableShoppingListAdapter(root.context, topCombinations, topCombinations)
 
         var listView = root.findViewById<ExpandableListView>(R.id.list_shopping_combinations)
