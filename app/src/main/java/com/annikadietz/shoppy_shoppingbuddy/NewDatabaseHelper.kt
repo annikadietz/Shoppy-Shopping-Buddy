@@ -81,19 +81,13 @@ object NewDatabaseHelper : DatabaseHelperInterface {
         }
 
     fun addMyShop(shop : Shop) {
-        val docData: HashMap<String, Any> = hashMapOf(
-            "shop" to hashMapOf(
-                "name" to shop.name,
-                "postCode" to shop.postCode,
-                "streetAddress" to shop.streetAddress
-            ),
+        val myShop: HashMap<String, Any> = hashMapOf(
+            "shop" to shop,
             "uid" to uid
         )
-
         db.collection("myShops").document()
-            .set(docData)
+            .set(myShop)
             .addOnSuccessListener {
-                subscribeMyShops()
                 Log.d("add my shops", "DocumentSnapshot successfully written!")
             }
             .addOnFailureListener { e -> Log.w("add my shops", "Error writing document", e) }
