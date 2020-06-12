@@ -52,25 +52,20 @@ object NewDatabaseHelper : DatabaseHelperInterface {
     }
 
     fun subscribeMyShops() {
-        if(uid != null) {
-            db.collection("myShops")
+    db.collection("myShops")
+                .whereEqualTo("uid", uid)
                 .get()
-                .addOnSuccessListener { result ->
+                .addOnSuccessListener { results ->
                     myShops.clear()
-                    result.forEach {
-                        if (it["uid"] == uid) {
-                            var shopParameters = it["shop"] as HashMap<String, String>
-                            var shop = Shop(shopParameters["name"]!!, shopParameters["postCode"]!!, shopParameters["streetAddress"]!!)
-                            myShops.add(shop)
-                        }
+                    results.forEach {
+                        var shopParameters = it["shop"] as HashMap<String, String>
+                        var shop = Shop(shopParameters["name"]!!, shopParameters["postCode"]!!, shopParameters["streetAddress"]!!)
+                        myShops.add(shop)
                     }
-                    Log.w("productsInMine", myShops.size.toString())
-                    Log.w("productsInMine", myShops.toString())
                 }
                 .addOnFailureListener { exception ->
                     Log.w("shops", "Error getting documents.", exception)
                 }
-        }
     }
 
     fun deleteMyShop(shop : Shop) {
