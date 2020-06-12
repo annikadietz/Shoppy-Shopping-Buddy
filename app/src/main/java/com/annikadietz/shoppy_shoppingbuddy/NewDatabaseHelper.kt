@@ -1,5 +1,6 @@
 package com.annikadietz.shoppy_shoppingbuddy
 
+import android.content.Context
 import android.util.Log
 import com.annikadietz.shoppy_shoppingbuddy.Model.Product
 import com.annikadietz.shoppy_shoppingbuddy.Model.ProductInShop
@@ -8,8 +9,10 @@ import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.getField
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.ktx.initialize
 
 object NewDatabaseHelper : DatabaseHelperInterface {
+
     var db = Firebase.firestore
     private var shops = arrayListOf<Shop>()
     private var products = arrayListOf<Product>()
@@ -17,6 +20,7 @@ object NewDatabaseHelper : DatabaseHelperInterface {
     var productTypes = arrayListOf<String>()
 
     fun subscribeShops() {
+
         db.collection("shops")
             .get()
             .addOnSuccessListener { results ->
@@ -34,7 +38,6 @@ object NewDatabaseHelper : DatabaseHelperInterface {
             .addOnSuccessListener { results ->
                 products.clear()
                 results.forEach { product -> products.add(product.toObject(Product::class.java)) }
-                fillProductTypes()
             }
             .addOnFailureListener { exception ->
                 Log.w("shops", "Error getting documents.", exception)
@@ -61,17 +64,13 @@ object NewDatabaseHelper : DatabaseHelperInterface {
         return products
     }
 
+    fun setProducts(newProducts: ArrayList<Product>) {
+        products = newProducts
+    }
+
+
     override fun getProductsInShops() : MutableList<ProductInShop> {
         return productsInShops
     }
-    fun fillProductTypes(){
-        products.forEach {
-            var productType = it.type?.name
-            if (productType != null) {
-                if (productTypes.find { it == productType } == null) {
-                    productTypes.add(productType)
-                }
-            }
-        }
-    }
+
 }

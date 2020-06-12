@@ -4,7 +4,7 @@ import com.annikadietz.shoppy_shoppingbuddy.Model.Product
 import com.annikadietz.shoppy_shoppingbuddy.Model.ProductInShop
 import com.annikadietz.shoppy_shoppingbuddy.Model.Shop
 import com.annikadietz.shoppy_shoppingbuddy.Model.Type
-
+// If you change mock data make sure the tests still run correctly
 class MockDatabaseHelper : DatabaseHelperInterface {
     override fun getShops(): MutableList<Shop> {
         var jumbo = Shop("Jumbo", "7824JA", "Kerspellaan 9")

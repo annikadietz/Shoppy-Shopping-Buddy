@@ -1,9 +1,11 @@
 package com.annikadietz.shoppy_shoppingbuddy.ui.product_search
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
@@ -11,13 +13,15 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.annikadietz.shoppy_shoppingbuddy.DatabaseHelperInterface
+import com.annikadietz.shoppy_shoppingbuddy.ListGenerator
 import com.annikadietz.shoppy_shoppingbuddy.Model.Product
 import com.annikadietz.shoppy_shoppingbuddy.NewDatabaseHelper
 import com.annikadietz.shoppy_shoppingbuddy.R
 
 
-class ProductSearchFragment : Fragment() {
-
+class ProductSearchFragment(dbh: DatabaseHelperInterface) : Fragment() {
+    var databaseHelper: DatabaseHelperInterface = dbh
     lateinit var recyclerView: RecyclerView
     lateinit var recyclerAdapter: RecyclerAdapter
     lateinit var swipeRefreshLayout: SwipeRefreshLayout
@@ -25,14 +29,19 @@ class ProductSearchFragment : Fragment() {
     lateinit var typeSpinner: Spinner
     var productTypes = arrayListOf<String>()
     lateinit var selectedType: String
-    private lateinit var products: List<Product>
-
+    private var products: List<Product> = databaseHelper.getProducts()
+    lateinit var root: View
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val root = inflater.inflate(R.layout.fragment_product_search, container, false)
+        setUp()
+        return root
+    }
+
+    fun setUp(){
         recyclerView = root.findViewById(R.id.recyclerView)
 
         var dividerItemDecoration = DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL)
@@ -68,8 +77,8 @@ class ProductSearchFragment : Fragment() {
 
         })
 
+        fillProductTypes()
         typeSpinner = root.findViewById(R.id.typeSpinner)
-        productTypes = NewDatabaseHelper.productTypes
 
         var typeAdapter = this.context?.let {
             ArrayAdapter<String>(
@@ -83,7 +92,7 @@ class ProductSearchFragment : Fragment() {
         typeSpinner.onItemSelectedListener = object :
             AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>,
-                                        view: View, position: Int, id: Long) {
+                                        view: View?, position: Int, id: Long) {
                 selectedType = productTypes[position]
                 recyclerAdapter.selectedType = selectedType
                 recyclerAdapter.filter.filter(searchView.query)
@@ -93,6 +102,33 @@ class ProductSearchFragment : Fragment() {
             }
         }
 
-        return root
+    }
+
+    fun SearchView.showKeyboard() {
+        this.requestFocus()
+        val inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
+    }
+
+    fun SearchView.hideKeyboard() {
+        val inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(windowToken, 0)
+    }
+
+    fun fillProductTypes(){
+        products.forEach {
+            var productType = it.type?.name
+            if (productType != null) {
+                if (productTypes.find { it == productType } == null) {
+                    productTypes.add(productType)
+                }
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        fillProductTypes()
+        searchView.showKeyboard()
     }
 }
