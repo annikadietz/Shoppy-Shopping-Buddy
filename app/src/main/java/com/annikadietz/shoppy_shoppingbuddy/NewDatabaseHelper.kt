@@ -67,8 +67,9 @@ object NewDatabaseHelper : DatabaseHelperInterface {
                     Log.w("shops", "Error getting documents.", exception)
                 }
     }
-
- var shopsInDatabase = db.collection("myShops")
+    
+    fun deleteMyShop(shop : Shop) {
+        var shopsInDatabase = db.collection("myShops")
             .whereEqualTo("shop.name", shop.name)
             .whereEqualTo("shop.postCode", shop.postCode)
             .whereEqualTo("shop.streetAddress", shop.streetAddress)
@@ -79,6 +80,7 @@ object NewDatabaseHelper : DatabaseHelperInterface {
                 db.collection("myShops").document(it.id).delete()
             }
         }
+    }
 
     fun addMyShop(shop : Shop) {
         val myShop: HashMap<String, Any> = hashMapOf(
