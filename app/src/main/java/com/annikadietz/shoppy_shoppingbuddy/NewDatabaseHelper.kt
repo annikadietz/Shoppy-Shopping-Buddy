@@ -17,55 +17,46 @@ object NewDatabaseHelper : DatabaseHelperInterface {
 
     fun subscribeShops() {
         db.collection("shops")
-            .get()
-            .addOnSuccessListener { results ->
+            .addSnapshotListener  {results, e ->
+
                 shops.clear()
-                results.forEach { shop -> shops.add(shop.toObject(Shop::class.java)) }
+                results?.forEach { shop -> shops.add(shop.toObject(Shop::class.java)) }
             }
-            .addOnFailureListener { exception ->
-                Log.w("shops", "Error getting documents.", exception)
-            }
+
     }
 
     fun subscribeProducts() {
         db.collection("products")
-            .get()
-            .addOnSuccessListener { results ->
+            .addSnapshotListener  {results, e ->
                 products.clear()
-                results.forEach { product -> products.add(product.toObject(Product::class.java)) }
+                results?.forEach { product -> products.add(product.toObject(Product::class.java)) }
             }
-            .addOnFailureListener { exception ->
-                Log.w("shops", "Error getting documents.", exception)
-            }
+
     }
 
     fun subscribeProductInShop() {
         db.collection("productsInShops")
-            .get()
-            .addOnSuccessListener { results ->
+            .addSnapshotListener  {results, e ->
                 productsInShops.clear()
-                results.forEach { product -> productsInShops.add(product.toObject(ProductInShop::class.java)) }
+                results?.forEach { product -> productsInShops.add(product.toObject(ProductInShop::class.java)) }
             }
-            .addOnFailureListener { exception ->
-                Log.w("productsInShops", "Error getting documents.", exception)
-            }
+
+
     }
 
     fun subscribeMyShops() {
     db.collection("myShops")
-                .whereEqualTo("uid", uid)
-                .get()
-                .addOnSuccessListener { results ->
-                    myShops.clear()
-                    results.forEach {
-                        var shopParameters = it["shop"] as HashMap<String, String>
-                        var shop = Shop(shopParameters["name"]!!, shopParameters["postCode"]!!, shopParameters["streetAddress"]!!)
-                        myShops.add(shop)
-                    }
-                }
-                .addOnFailureListener { exception ->
-                    Log.w("shops", "Error getting documents.", exception)
-                }
+        .whereEqualTo("uid", uid)
+        .addSnapshotListener {
+        results, e ->
+            myShops.clear()
+            results?.forEach {
+                var shopParameters = it["shop"] as HashMap<String, String>
+                var shop = Shop(shopParameters["name"]!!, shopParameters["postCode"]!!, shopParameters["streetAddress"]!!)
+                myShops.add(shop)
+            }
+        }
+
     }
     
     fun deleteMyShop(shop : Shop) {
