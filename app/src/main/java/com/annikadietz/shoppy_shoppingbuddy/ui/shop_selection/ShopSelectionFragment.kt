@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -48,6 +49,9 @@ class ShopSelectionFragment : Fragment() {
         recyclerAdapter = ShopRecyclerAdapter(shops, databaseHelper.getMyShops(), databaseHelper)
 
         recyclerView.layoutManager = LinearLayoutManager(this.context)
+
+        var dividerItemDecoration = DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL)
+        recyclerView.addItemDecoration(dividerItemDecoration)
         recyclerView.adapter = recyclerAdapter
 
         swipeRefreshLayout = root.findViewById(R.id.swipeRefreshLayout)
