@@ -4,16 +4,16 @@ import android.util.Log
 import com.annikadietz.shoppy_shoppingbuddy.Model.Product
 import com.annikadietz.shoppy_shoppingbuddy.Model.ProductInShop
 import com.annikadietz.shoppy_shoppingbuddy.Model.Shop
-import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.firestore.ktx.getField
 import com.google.firebase.ktx.Firebase
 
 object NewDatabaseHelper : DatabaseHelperInterface {
-    var db = Firebase.firestore
+    private var db = Firebase.firestore
     private var shops = arrayListOf<Shop>()
+    private var myShops = arrayListOf<Shop>()
     private var products = arrayListOf<Product>()
-    var productsInShops = arrayListOf<ProductInShop>()
+    private var productsInShops= arrayListOf<ProductInShop>()
+    var uid: String = ""
 
     fun subscribeShops() {
         db.collection("shops")
@@ -50,8 +50,54 @@ object NewDatabaseHelper : DatabaseHelperInterface {
                 Log.w("productsInShops", "Error getting documents.", exception)
             }
     }
-//get shops
-    override fun getShops() : MutableList<Shop> {
+
+    fun subscribeMyShops() {
+    db.collection("myShops")
+                .whereEqualTo("uid", uid)
+                .get()
+                .addOnSuccessListener { results ->
+                    myShops.clear()
+                    results.forEach {
+                        var shopParameters = it["shop"] as HashMap<String, String>
+                        var shop = Shop(shopParameters["name"]!!, shopParameters["postCode"]!!, shopParameters["streetAddress"]!!)
+                        myShops.add(shop)
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    Log.w("shops", "Error getting documents.", exception)
+                }
+    }
+
+ var shopsInDatabase = db.collection("myShops")
+            .whereEqualTo("shop.name", shop.name)
+            .whereEqualTo("shop.postCode", shop.postCode)
+            .whereEqualTo("shop.streetAddress", shop.streetAddress)
+            .whereEqualTo("uid", uid)
+            .get()
+        shopsInDatabase.addOnSuccessListener {
+            it.forEach {
+                db.collection("myShops").document(it.id).delete()
+            }
+        }
+
+    fun addMyShop(shop : Shop) {
+        val myShop: HashMap<String, Any> = hashMapOf(
+            "shop" to shop,
+            "uid" to uid
+        )
+        db.collection("myShops").document()
+            .set(myShop)
+            .addOnSuccessListener {
+                Log.d("add my shops", "DocumentSnapshot successfully written!")
+            }
+            .addOnFailureListener { e -> Log.w("add my shops", "Error writing document", e) }
+    }
+
+    override fun getMyShops(): ArrayList<Shop> {
+        return myShops
+    }
+
+    override fun getShops() : ArrayList<Shop> {
         return shops
     }
 
@@ -59,7 +105,7 @@ object NewDatabaseHelper : DatabaseHelperInterface {
         return products
     }
 
-    override fun getProductsInShops() : MutableList<ProductInShop> {
+    override fun getProductsInShops() : ArrayList<ProductInShop> {
         return productsInShops
     }
 }
