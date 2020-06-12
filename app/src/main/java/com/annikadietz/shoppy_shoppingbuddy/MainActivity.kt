@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.ui.AppBarConfiguration
 import com.annikadietz.shoppy_shoppingbuddy.ui.product_search.ProductSearchFragment
 import com.annikadietz.shoppy_shoppingbuddy.ui.shop_selection.ShopSelectionFragment
+import com.annikadietz.shoppy_shoppingbuddy.ui.shopping_combination_information.ShoppingCombinationInformationFragment
 import com.annikadietz.shoppy_shoppingbuddy.ui.shopping_list.ShoppingListFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
@@ -17,7 +18,7 @@ class MainActivity : AppCompatActivity()  {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var bottomNav: BottomNavigationView
     private var productSearchFragment = ProductSearchFragment()
-    private var shoppingListFragment = ShoppingListFragment()
+    private var shoppingListFragment = ShoppingCombinationInformationFragment()
     private var shopSelectionFragment = ShopSelectionFragment()
 
     var uid: String = ""
