@@ -50,7 +50,7 @@ object NewDatabaseHelper : DatabaseHelperInterface {
                 Log.w("productsInShops", "Error getting documents.", exception)
             }
     }
-
+//get shops
     override fun getShops() : MutableList<Shop> {
         return shops
     }
