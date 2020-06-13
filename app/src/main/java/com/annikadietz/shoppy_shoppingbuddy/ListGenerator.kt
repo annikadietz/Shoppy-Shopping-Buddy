@@ -104,6 +104,8 @@ class ListGenerator {
         }
         getFinalCombinations(combos, listAdapter)
 
+        listAdapter.notifyDataSetChanged();
+
         return combos
     }
 

@@ -24,7 +24,7 @@ android:layout_height="match_parent">
     android:fontFamily="@font/roboto_regular"
     android:layout_marginStart="25dp"
     android:layout_marginBottom="50dp"
-    android:layout_above="@id/email"/>
+    android:layout_above="@id/email" />
 
 <EditText
     android:id="@+id/email"
@@ -40,7 +40,8 @@ android:layout_height="match_parent">
     android:background="@drawable/et_custom"
     android:textSize="15sp"
     android:textColor="@color/colorBlack"
-    android:textColorHint="@color/colorGrey"/>
+    android:textColorHint="@color/colorGrey"
+    android:text="stephan@ruiz.com"/>
 
 <EditText
     android:id="@+id/password"
@@ -58,7 +59,7 @@ android:layout_height="match_parent">
     android:textSize="15sp"
     android:textColor="@color/colorBlack"
     android:textColorHint="@color/colorGrey"
-    />
+    android:text="stephan"/>
 
 <Button
     android:id="@+id/btn_login"

@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.annikadietz.shoppy_shoppingbuddy.MainActivity
+import com.annikadietz.shoppy_shoppingbuddy.NewDatabaseHelper
 import com.annikadietz.shoppy_shoppingbuddy.R
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
@@ -65,8 +66,9 @@ class LoginFragment : Fragment() {
             if (task.isSuccessful) {
                 Log.w("auth", task.result.toString())
                 Toast.makeText(activity, "SUCCESS", Toast.LENGTH_LONG).show()
-
-                startActivity(Intent(activity, MainActivity::class.java))
+                NewDatabaseHelper.uid = task.result?.user!!.uid
+                val intent = Intent(this.requireContext(), MainActivity::class.java)
+                startActivity(intent)
                 activity?.finish()
             } else {
                 if (password.text.toString().length < 6) {

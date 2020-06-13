@@ -63,4 +63,12 @@ class MockDatabaseHelper : DatabaseHelperInterface {
         )
         return productsInShops
     }
+
+    override fun getMyShops(): ArrayList<Shop> {
+        var jumbo = Shop("Jumbo", "7824JA", "Kerspellaan 9")
+        var aldi = Shop("Aldi", "7824CP", "Peyserhof 2")
+        var list: ArrayList<Shop> = arrayListOf(jumbo, aldi)
+
+        return list
+    }
 }

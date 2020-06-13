@@ -3,6 +3,7 @@ package com.annikadietz.shoppy_shoppingbuddy
 import android.content.Context
 import com.annikadietz.shoppy_shoppingbuddy.Model.*
 import com.annikadietz.shoppy_shoppingbuddy.Model.Shop
+import com.annikadietz.shoppy_shoppingbuddy.ui.shopping_combination_information.ExpandableShoppingListAdapter
 import org.json.JSONObject
 import org.junit.Assert
 import org.junit.Test
@@ -230,7 +231,8 @@ class ListGeneratorUnitTest {
             add(eggs)
         }
 
-        var result = listGenerator.getCombinationsWithProductsInShops(shops, shoppingList, productsInShops)
+        var adapter = ExpandableShoppingListAdapter(mock(Context::class.java), arrayListOf(), arrayListOf())
+        var result = listGenerator.getCombinationsWithProductsInShops(shops, shoppingList, productsInShops, adapter)
         var combination = result.find { c -> c.shops!!.contains(jumbo) && c.shops!!.contains(aldi) }
 
         print(result)
@@ -426,7 +428,9 @@ class ListGeneratorUnitTest {
         val combo3 = Combination(arrayListOf(Shop(), Shop(), Shop()), arrayListOf(ProductInShop(bananas, lidl,1.5)))
         val combo3_2 = Combination(arrayListOf(Shop(), Shop(), Shop()), arrayListOf(ProductInShop(bananas, lidl,0.5)))
         val combinations = arrayListOf(combo1, combo2, combo3, combo1_2, combo2_2, combo3_2)
-        listGenerator.getFinalCombinations(combinations)
+
+        var adapter = ExpandableShoppingListAdapter(mock(Context::class.java), combinations, combinations)
+        listGenerator.getFinalCombinations(combinations, adapter)
         Assert.assertEquals(combo1_2, listGenerator.oneShopCombination)
         Assert.assertEquals(combo2_2, listGenerator.twoShopCombination)
         Assert.assertEquals(combo3_2, listGenerator.threeShopCombination)
