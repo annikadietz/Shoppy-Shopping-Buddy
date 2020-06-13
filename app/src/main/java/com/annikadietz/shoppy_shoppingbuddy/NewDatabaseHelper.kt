@@ -64,7 +64,8 @@ object NewDatabaseHelper : DatabaseHelperInterface {
 
     fun subscribeMyShoppingList() {
         db.collection("shoppingLists")
-            .whereEqualTo("uid", uid)
+            .document(uid)
+            .collection("shoppingList")
             .addSnapshotListener { results, e ->
                 myShoppingList.clear()
                 results?.forEach { product -> myShoppingList.add(product.toObject(Product::class.java)) }
@@ -139,7 +140,7 @@ object NewDatabaseHelper : DatabaseHelperInterface {
         }
     }
 
-    fun getMyShoppingList(): ArrayList<Product> {
+    override fun getMyShoppingList(): ArrayList<Product> {
         return myShoppingList
     }
 }
