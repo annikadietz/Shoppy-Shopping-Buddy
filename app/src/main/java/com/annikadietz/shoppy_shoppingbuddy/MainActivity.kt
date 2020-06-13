@@ -6,10 +6,10 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.ui.AppBarConfiguration
+import com.annikadietz.shoppy_shoppingbuddy.ui.my_shopping_ist.MyShoppingListFragment
 import com.annikadietz.shoppy_shoppingbuddy.ui.product_search.ProductSearchFragment
 import com.annikadietz.shoppy_shoppingbuddy.ui.shop_selection.ShopSelectionFragment
 import com.annikadietz.shoppy_shoppingbuddy.ui.shopping_combination_information.ShoppingCombinationInformationFragment
-import com.annikadietz.shoppy_shoppingbuddy.ui.shopping_list.ShoppingListFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 
@@ -20,6 +20,7 @@ class MainActivity : AppCompatActivity()  {
     private var productSearchFragment = ProductSearchFragment(NewDatabaseHelper)
     private var shoppingListFragment = ShoppingCombinationInformationFragment()
     private var shopSelectionFragment = ShopSelectionFragment()
+    private var myShoppingListFragment = MyShoppingListFragment(NewDatabaseHelper)
 
     var uid: String = ""
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,7 +53,7 @@ class MainActivity : AppCompatActivity()  {
                 R.id.nav_search -> productSearchFragment
                 R.id.nav_shoppingList -> shoppingListFragment
                 R.id.nav_yourShops -> shopSelectionFragment
-                R.id.nav_shop -> productSearchFragment
+                R.id.nav_shop -> myShoppingListFragment
                 else -> productSearchFragment
             }
             supportFragmentManager.beginTransaction().replace(R.id.fragment_container, selectedFragment).commit()
