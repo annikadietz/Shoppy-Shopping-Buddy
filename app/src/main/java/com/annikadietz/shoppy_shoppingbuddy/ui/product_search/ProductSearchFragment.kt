@@ -36,7 +36,7 @@ class ProductSearchFragment(dbh: DatabaseHelperInterface) : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val root = inflater.inflate(R.layout.fragment_product_search, container, false)
+        root = inflater.inflate(R.layout.fragment_product_search, container, false)
         setUp()
         return root
     }
