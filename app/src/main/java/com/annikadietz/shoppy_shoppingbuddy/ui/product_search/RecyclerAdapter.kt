@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
 import com.annikadietz.shoppy_shoppingbuddy.Model.Product
+import com.annikadietz.shoppy_shoppingbuddy.NewDatabaseHelper
 import com.annikadietz.shoppy_shoppingbuddy.R
 
 public class RecyclerAdapter: RecyclerView.Adapter<RecyclerAdapter.ViewHolder>, Filterable {
@@ -15,6 +16,8 @@ public class RecyclerAdapter: RecyclerView.Adapter<RecyclerAdapter.ViewHolder>, 
     lateinit var products: List<Product>
     lateinit var productsFiltered: ArrayList<Product>
     var selectedType = ""
+    var myShoppingList = NewDatabaseHelper.getMyShoppingList()
+
     private val productFilter = object : Filter() {
         override fun performFiltering(constraint: CharSequence): Filter.FilterResults? {
             var searchResults = arrayListOf<Product>()
@@ -72,20 +75,39 @@ public class RecyclerAdapter: RecyclerView.Adapter<RecyclerAdapter.ViewHolder>, 
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.nameText.text = productsFiltered[position].name
-        holder.typeText.text = productsFiltered[position].type!!.name
+        var productInPosition = productsFiltered[position]
+        holder.nameText.text = productInPosition.name
+        holder.typeText.text = productInPosition.type!!.name
+
+        if(myShoppingList.any{ product -> product.name == productInPosition.name && product.type?.name == productInPosition.type?.name }) {
+            holder.checkBox.isChecked = true
+        }
+        holder.checkBox.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+                NewDatabaseHelper.addProductToMyShoppingList(productInPosition)
+            }
+            else {
+                NewDatabaseHelper.deleteProductFormMyShoppingList(productInPosition)
+            }
+        }
     }
     // Represents a single row in the RecyclerView
-    class ViewHolder : RecyclerView.ViewHolder{
-        lateinit var addButton: Button
+    class ViewHolder : RecyclerView.ViewHolder, View.OnClickListener {
+        lateinit var checkBox: CheckBox
         lateinit var nameText: TextView
         lateinit var typeText: TextView
         constructor(itemView: View) : super(itemView) {
-            addButton = itemView.findViewById(R.id.add_button)
+            checkBox = itemView.findViewById(R.id.is_in_list)
             nameText = itemView.findViewById(R.id.product_name)
             typeText = itemView.findViewById(R.id.product_type)
+            itemView.setOnClickListener(this)
+
         }
 
+        override fun onClick(v: View?) {
+            this.checkBox.isChecked = !this.checkBox.isChecked
+            this.checkBox.callOnClick()
+        }
     }
 
 
