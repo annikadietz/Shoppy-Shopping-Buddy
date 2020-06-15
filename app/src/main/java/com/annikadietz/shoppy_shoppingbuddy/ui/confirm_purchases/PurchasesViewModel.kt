@@ -72,9 +72,9 @@ class PurchasesViewModel : ViewModel() {
 
         val t: Timestamp = Timestamp(Date())
 
-        NewDatabaseHelper.db.collection("shoppingLists")
-            .document(FirebaseAuth.getInstance().uid.toString())
-            .collection("confirmedPurchaces")
-            .add(docData)
+//        NewDatabaseHelper.db.collection("shoppingLists")
+//            .document(FirebaseAuth.getInstance().uid.toString())
+//            .collection("confirmedPurchaces")
+//            .add(docData)
     }
 }
