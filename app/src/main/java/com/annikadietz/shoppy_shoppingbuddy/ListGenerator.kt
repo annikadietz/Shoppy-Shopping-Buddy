@@ -1,12 +1,12 @@
 package com.annikadietz.shoppy_shoppingbuddy
 
+import android.app.PendingIntent.getActivity
 import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import com.annikadietz.shoppy_shoppingbuddy.Model.*
 import com.annikadietz.shoppy_shoppingbuddy.Model.Shop
-import com.annikadietz.shoppy_shoppingbuddy.ui.shopping_combination_information.ExpandableShoppingListAdapter
-import kotlin.collections.ArrayList
+import com.annikadietz.shoppy_shoppingbuddy.ui.your_list.ShopCombinationRecyclerAdapter
 
 
 class ListGenerator {
@@ -14,12 +14,19 @@ class ListGenerator {
     var oneShopCombination: Combination = Combination()
     var twoShopCombination: Combination = Combination()
     var threeShopCombination: Combination = Combination()
+    var combos = arrayListOf<Combination>()
     var myLocation: String
+    lateinit var activity: MainActivity
     lateinit var context: Context
-    constructor(context: Context, myLocation: String){
-        this.context = context
+    constructor(myLocation: String){
         this.myLocation = myLocation
     }
+
+    constructor(activity: MainActivity, myLocation: String){
+        this.myLocation = myLocation
+        this.activity = activity
+    }
+
 
     fun findCheapestStore(shops: ArrayList<Shop>, shoppingList: ArrayList<Product>, productsInShops: ArrayList<ProductInShop>) : ArrayList<ProductInShop> {
 
@@ -92,7 +99,7 @@ class ListGenerator {
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
-    fun getCombinationsWithProductsInShops(shops: ArrayList<Shop>, shoppingList: ArrayList<Product>, products: ArrayList<ProductInShop>, listAdapter: ExpandableShoppingListAdapter) : ArrayList<Combination> {
+    fun getCombinationsWithProductsInShops(shops: ArrayList<Shop>, shoppingList: ArrayList<Product>, products: ArrayList<ProductInShop>, listAdapter: ShopCombinationRecyclerAdapter) : ArrayList<Combination> {
         var combos = findAllPossibleStoreCombinations(shops)
         combos.forEach {
             var combination = it
@@ -159,17 +166,23 @@ class ListGenerator {
         return bestPriceCombination
     }
     @RequiresApi(Build.VERSION_CODES.N)
-    fun getFinalCombinations(combinations: ArrayList<Combination>, listAdapter: ExpandableShoppingListAdapter){
+    fun getFinalCombinations(combinations: ArrayList<Combination>, listAdapter: ShopCombinationRecyclerAdapter){
         oneShopCombination = getCombinationWithBestPrice(combinations, 1)
         twoShopCombination = getCombinationWithBestPrice(combinations, 2)
         threeShopCombination = getCombinationWithBestPrice(combinations, 3)
+        combos.add(oneShopCombination)
+        combos.add(twoShopCombination)
+        combos.add(threeShopCombination)
 
         val apiCallThread = Thread(Runnable {
             try {
                 getDirections(oneShopCombination)
                 getDirections(twoShopCombination)
                 getDirections(threeShopCombination)
-                listAdapter.notifyDataSetChanged();
+                activity?.runOnUiThread(Runnable {
+                    listAdapter.notifyDataSetChanged()
+                })
+
             } catch (e: Exception) {
                 e.printStackTrace()
             }
