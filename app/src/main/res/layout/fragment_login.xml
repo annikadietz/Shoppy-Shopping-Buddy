@@ -24,7 +24,7 @@ android:layout_height="match_parent">
     android:fontFamily="@font/roboto_regular"
     android:layout_marginStart="25dp"
     android:layout_marginBottom="50dp"
-    android:layout_above="@id/email"/>
+    android:layout_above="@id/email" />
 
 <EditText
     android:id="@+id/email"
@@ -61,7 +61,6 @@ android:layout_height="match_parent">
     android:textColorHint="@color/colorGrey"
     android:text="@string/registered_pass"
     />
-
 <Button
     android:id="@+id/btn_login"
     android:layout_width="match_parent"

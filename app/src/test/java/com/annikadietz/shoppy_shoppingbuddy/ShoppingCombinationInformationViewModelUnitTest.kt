@@ -27,9 +27,9 @@ class ShoppingCombinationInformationViewModelUnitTest {
     }
 
     @Test
-    fun findShops_Test() {
-        var result: ArrayList<Shop> = describedClass.findShops()
-        var expectedArray: Array<Shop> = describedClass.databaseHelper.getShops().toTypedArray()
+    fun findMyShops_Test() {
+        var result: ArrayList<Shop> = describedClass.findMyShops()
+        var expectedArray: Array<Shop> = describedClass.databaseHelper.getMyShops().toTypedArray()
 
         result.forEachIndexed{ index, it ->
             Assert.assertEquals(it.name, expectedArray[index].name)

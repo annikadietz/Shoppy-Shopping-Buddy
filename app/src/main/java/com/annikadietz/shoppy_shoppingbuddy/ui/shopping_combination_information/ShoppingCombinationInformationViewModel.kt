@@ -20,12 +20,12 @@ class ShoppingCombinationInformationViewModel(lg: ListGenerator, dbh: DatabaseHe
         return ArrayList(databaseHelper.getProducts())
     }
 
-    fun findShops(): ArrayList<Shop> {
-        return ArrayList(databaseHelper.getShops())
-    }
-
     fun findProductsInShops(): ArrayList<ProductInShop> {
         return ArrayList(databaseHelper.getProductsInShops())
+    }
+
+    fun findMyShops(): ArrayList<Shop> {
+        return databaseHelper.getMyShops()
     }
 
     fun getTopThreeCombinations(): ArrayList<Combination> {
