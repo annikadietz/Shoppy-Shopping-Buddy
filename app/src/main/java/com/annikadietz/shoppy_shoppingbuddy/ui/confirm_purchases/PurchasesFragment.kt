@@ -1,10 +1,14 @@
 package com.annikadietz.shoppy_shoppingbuddy.ui.confirm_purchases
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.graphics.Canvas
 import android.os.Bundle
+import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
@@ -14,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.annikadietz.shoppy_shoppingbuddy.R
 import com.google.android.material.snackbar.Snackbar
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
+
 
 class PurchasesFragment : Fragment(), RecyclerViewClickInterface {
     private lateinit var purchasesViewModel: PurchasesViewModel
@@ -28,8 +33,9 @@ class PurchasesFragment : Fragment(), RecyclerViewClickInterface {
         purchasesViewModel.initList()
 
 
+        // I did it like this because passing view or recycle life is not optimal to pass to ViewModel
         purchasesViewModel.recyclerView = root.findViewById<RecyclerView>(R.id.recyclerView)
-        purchasesViewModel.recyclerAdapter = PurchasesAdapter(purchasesViewModel.moviesList, this)
+        purchasesViewModel.recyclerAdapter = PurchasesAdapter(purchasesViewModel.shoppingList, this)
 //        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         //        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         purchasesViewModel.recyclerView.adapter = purchasesViewModel.recyclerAdapter
@@ -48,6 +54,43 @@ class PurchasesFragment : Fragment(), RecyclerViewClickInterface {
 //        val intent = Intent(activity, NewActivity::class.java)
 //        intent.putExtra("MOVIE_NAME", moviesList.get(position))
 //        startActivity(intent)
+
+
+        AlertDialog.Builder(context)
+            .setTitle("Confirm price")
+            .setMessage("We want to keep  the prices as up to date as possible. \n\nDoes the price ${purchasesViewModel.shoppingList[position]} match") // Specifying a listener allows you to take an action before dismissing the dialog.
+            // The dialog is automatically dismissed when a dialog button is clicked.
+            .setPositiveButton(R.string.confirm_dialog,
+                DialogInterface.OnClickListener { dialog, which ->
+                    // Continue with delete operation
+                }) // A null listener allows the button to dismiss the dialog and take no further action.
+            .setNegativeButton(R.string.un_confirm_dialog, null)
+            .setIcon(android.R.drawable.checkbox_on_background)
+            .show()
+
+
+        // anther version
+
+//        var text = "";
+//
+//        val builder = AlertDialog.Builder(activity)
+//        builder.setTitle("Title")
+//
+//        // Set up the input
+//        val input = EditText(activity)
+//        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+//        input.inputType = InputType.TYPE_CLASS_TEXT
+//        builder.setView(input)
+//
+//        // Set up the buttons
+//        builder.setPositiveButton(
+//            "OK"
+//        ) { dialog, which -> text = input.text.toString() }
+//        builder.setNegativeButton(
+//            "Cancel"
+//        ) { dialog, which -> dialog.cancel() }
+//
+//        builder.show()
     }
 
     override fun onLongItemClick(position: Int) {
@@ -69,8 +112,8 @@ class PurchasesFragment : Fragment(), RecyclerViewClickInterface {
                 val position = viewHolder.adapterPosition
                 when (direction) {
                     ItemTouchHelper.LEFT -> {
-                        purchasesViewModel.deletedMovie = purchasesViewModel.moviesList[position]
-                        purchasesViewModel.moviesList.removeAt(position)
+                        purchasesViewModel.deletedMovie = purchasesViewModel.shoppingList[position]
+                        purchasesViewModel.shoppingList.removeAt(position)
                         purchasesViewModel.recyclerAdapter.notifyItemRemoved(position)
                         Snackbar.make(
                             purchasesViewModel.recyclerView,
@@ -78,7 +121,7 @@ class PurchasesFragment : Fragment(), RecyclerViewClickInterface {
                             Snackbar.LENGTH_LONG
                         )
                             .setAction("Undo") {
-                                purchasesViewModel.moviesList.add(
+                                purchasesViewModel.shoppingList.add(
                                     position,
                                     purchasesViewModel.deletedMovie
                                 )
@@ -86,9 +129,9 @@ class PurchasesFragment : Fragment(), RecyclerViewClickInterface {
                             }.show()
                     }
                     ItemTouchHelper.RIGHT -> {
-                        val movieName = purchasesViewModel.moviesList[position]
+                        val movieName = purchasesViewModel.shoppingList[position]
                         purchasesViewModel.archivedMovies.add(movieName)
-                        purchasesViewModel.moviesList.removeAt(position)
+                        purchasesViewModel.shoppingList.removeAt(position)
                         purchasesViewModel.recyclerAdapter.notifyItemRemoved(position)
                         Snackbar.make(
                             purchasesViewModel.recyclerView,
@@ -101,7 +144,7 @@ class PurchasesFragment : Fragment(), RecyclerViewClickInterface {
                                         movieName
                                     )
                                 )
-                                purchasesViewModel.moviesList.add(position, movieName)
+                                purchasesViewModel.shoppingList.add(position, movieName)
                                 purchasesViewModel.recyclerAdapter.notifyItemInserted(position)
                             }.show()
                     }

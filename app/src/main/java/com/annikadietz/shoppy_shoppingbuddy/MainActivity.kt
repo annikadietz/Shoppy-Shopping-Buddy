@@ -47,8 +47,8 @@ class MainActivity : AppCompatActivity()  {
             var selectedFragment: Fragment = when(menuItem.itemId) {
                 R.id.nav_search -> productSearchFragment
                 R.id.nav_shoppingList -> shoppingCombinationInformationFragment
-                R.id.nav_yourShops -> confirm
-                R.id.nav_shop -> productSearchFragment
+                R.id.nav_yourShops -> productSearchFragment
+                R.id.nav_shop -> confirm
                 else -> productSearchFragment
             }
             supportFragmentManager.beginTransaction().replace(R.id.fragment_container, selectedFragment).commit()
