@@ -170,9 +170,11 @@ class ListGenerator {
         oneShopCombination = getCombinationWithBestPrice(combinations, 1)
         twoShopCombination = getCombinationWithBestPrice(combinations, 2)
         threeShopCombination = getCombinationWithBestPrice(combinations, 3)
+        combos.clear()
         combos.add(oneShopCombination)
         combos.add(twoShopCombination)
         combos.add(threeShopCombination)
+
 
         val apiCallThread = Thread(Runnable {
             try {

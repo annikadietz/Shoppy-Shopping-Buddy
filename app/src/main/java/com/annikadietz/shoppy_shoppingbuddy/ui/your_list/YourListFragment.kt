@@ -14,6 +14,8 @@ import com.annikadietz.shoppy_shoppingbuddy.NewDatabaseHelper
 import com.annikadietz.shoppy_shoppingbuddy.R
 
 class YourListFragment(val listener: (Combination) -> Unit, val activity: MainActivity) : Fragment() {
+    var listGenerator = ListGenerator(this.activity,"Hoitingeslag%2029,%207824%20KG")
+    lateinit var recyclerAdapter: ShopCombinationRecyclerAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -27,22 +29,26 @@ class YourListFragment(val listener: (Combination) -> Unit, val activity: MainAc
     ): View? {
         // Inflate the layout for this fragment
         var root = inflater.inflate(R.layout.fragment_your_list, container, false)
-        var listGenerator = ListGenerator(this.activity,"Hoitingeslag%2029,%207824%20KG")
-        var recyclerAdapter = ShopCombinationRecyclerAdapter({combo:Combination ->listener(combo) }, listGenerator.combos)
 
+        recyclerAdapter = ShopCombinationRecyclerAdapter({combo:Combination ->listener(combo) }, listGenerator.combos)
+        updateCombos()
         var comboRecyclerView = root.findViewById<RecyclerView>(R.id.combos)
         comboRecyclerView.layoutManager = LinearLayoutManager(this.context)
         comboRecyclerView.adapter = recyclerAdapter
+
+
+        var shoppingListRecyclerAdapter = ShoppingListRecyclerAdapter(NewDatabaseHelper.getMyShoppingList(), {updateCombos()})
+        var shoppingListRecyclerView = root.findViewById<RecyclerView>(R.id.product_list)
+        shoppingListRecyclerView.layoutManager = LinearLayoutManager(this.context)
+        shoppingListRecyclerView.adapter = shoppingListRecyclerAdapter
+        return root
+    }
+
+    fun updateCombos(){
         listGenerator.getCombinationsWithProductsInShops(
             NewDatabaseHelper.getMyShops(),
             NewDatabaseHelper.getMyShoppingList(),
             NewDatabaseHelper.getProductsInShops(),
             recyclerAdapter)
-
-        var shoppingListRecyclerAdapter = ShoppingListRecyclerAdapter(NewDatabaseHelper.getMyShoppingList())
-        var shoppingListRecyclerView = root.findViewById<RecyclerView>(R.id.product_list)
-        shoppingListRecyclerView.layoutManager = LinearLayoutManager(this.context)
-        shoppingListRecyclerView.adapter = shoppingListRecyclerAdapter
-        return root
     }
 }

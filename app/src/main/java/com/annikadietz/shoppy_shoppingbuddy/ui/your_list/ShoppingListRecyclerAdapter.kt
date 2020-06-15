@@ -1,24 +1,17 @@
 package com.annikadietz.shoppy_shoppingbuddy.ui.your_list
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
-import com.annikadietz.shoppy_shoppingbuddy.Model.Combination
 import com.annikadietz.shoppy_shoppingbuddy.Model.Product
 import com.annikadietz.shoppy_shoppingbuddy.NewDatabaseHelper
 import com.annikadietz.shoppy_shoppingbuddy.R
-import kotlin.math.roundToInt
-import kotlin.math.roundToLong
 
-public class ShoppingListRecyclerAdapter: RecyclerView.Adapter<ShoppingListRecyclerAdapter.ViewHolder> {
-    private var shoppingList: ArrayList<Product>
+public class ShoppingListRecyclerAdapter(var shoppingList: ArrayList<Product>, var updateCombos: () -> Unit): RecyclerView.Adapter<ShoppingListRecyclerAdapter.ViewHolder>() {
 
-    constructor(shoppingList: ArrayList<Product>) : super() {
-        this.shoppingList = shoppingList
-    }
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         var layoutInflater:LayoutInflater = LayoutInflater.from(parent.context)
@@ -40,6 +33,7 @@ public class ShoppingListRecyclerAdapter: RecyclerView.Adapter<ShoppingListRecyc
             NewDatabaseHelper.deleteProductFormMyShoppingList(productInPosition)
             shoppingList.remove(productInPosition)
             notifyDataSetChanged()
+            updateCombos.invoke()
         }
     }
     // Represents a single row in the RecyclerView
