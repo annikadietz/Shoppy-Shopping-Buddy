@@ -1,6 +1,8 @@
 package com.annikadietz.shoppy_shoppingbuddy
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import com.annikadietz.shoppy_shoppingbuddy.Model.*
 import com.annikadietz.shoppy_shoppingbuddy.Model.Shop
 import com.google.firebase.firestore.ktx.firestore
@@ -15,6 +17,7 @@ object NewDatabaseHelper {
     lateinit var productsInShops: ArrayList<ProductInShop>
     lateinit var productsInShopsWithPrices: ArrayList<ProductInShopWithPrices>
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun subscribeShops() {
         productsInShops = ArrayList()
         db.collection("shops")
@@ -28,13 +31,14 @@ object NewDatabaseHelper {
             }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun subscribeProducts() {
         db.collection("products")
             .get()
             .addOnSuccessListener { result ->
                 products = result.toObjects(Product::class.java)
-                subscribeProductInShop()
-             //   subscribeProductInShopWithPrices()
+               // subscribeProductInShop()
+              //subscribeProductInShopWithPrices()
                // subscribePrices()
             }
             .addOnFailureListener { exception ->
@@ -77,6 +81,7 @@ object NewDatabaseHelper {
                 Log.w("shops", "Error getting documents.", exception)
             }
     }
+    @RequiresApi(Build.VERSION_CODES.O)
     fun subscribeProductInShopWithPrices() {
         db.collection("productsInShopsWithPrices")
             .get()
@@ -89,10 +94,10 @@ object NewDatabaseHelper {
                     examplePrices.forEach{
                         var price = it?.price
                         var counter = it?.counter
-                        var prices=SuggestionPrice(price,counter)
-                        suggestionPrices.add(prices)
+                       var prices=SuggestionPrice(price,counter)
+                       suggestionPrices.add(prices)
                     }
-                    var price = it.getField<Double>("price")
+                    var price = it.getField<SuggestionPrice>("price")
                     var shop = shops.find { s -> s.name == exampleShop["name"] && s.postCode == exampleShop["postCode"] && s.streetAddress == exampleShop["streetAddress"] }
                     var product = products.find { p -> p.name == exampleProduct["name"]}
 

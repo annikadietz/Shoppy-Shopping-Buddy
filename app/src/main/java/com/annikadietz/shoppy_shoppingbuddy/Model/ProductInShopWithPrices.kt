@@ -3,10 +3,11 @@ package com.annikadietz.shoppy_shoppingbuddy.Model
 class ProductInShopWithPrices {
     var product: Product
     var shop: Shop
-    var price: Double
+    var price: SuggestionPrice
     var suggestionPrices: ArrayList<SuggestionPrice?>
 
-    constructor(product: Product, shop: Shop, price: Double, suggestionPrices: ArrayList<SuggestionPrice?>){
+
+    constructor(product: Product, shop: Shop, price: SuggestionPrice, suggestionPrices: ArrayList<SuggestionPrice?>){
         this.product = product;
         this.shop = shop
         this.price = price
@@ -16,7 +17,7 @@ class ProductInShopWithPrices {
     constructor(){
         this.product = Product();
         this.shop = Shop()
-        this.price = Double.MAX_VALUE
+        this.price = SuggestionPrice()
         this.suggestionPrices= arrayListOf<SuggestionPrice?>()
     }
 
