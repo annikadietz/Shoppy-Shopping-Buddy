@@ -12,4 +12,6 @@ interface DatabaseHelperInterface {
     fun getProductsInShops(): ArrayList<ProductInShop>
 
     fun getMyShops(): ArrayList<Shop>
+
+    fun getMyShoppingList(): ArrayList<Product>
 }

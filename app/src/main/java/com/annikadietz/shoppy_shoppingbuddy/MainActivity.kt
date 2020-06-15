@@ -5,19 +5,22 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.navigation.ui.AppBarConfiguration
+import com.annikadietz.shoppy_shoppingbuddy.Model.Combination
+import com.annikadietz.shoppy_shoppingbuddy.ui.my_shopping_ist.MyShoppingListFragment
 import com.annikadietz.shoppy_shoppingbuddy.ui.product_search.ProductSearchFragment
 import com.annikadietz.shoppy_shoppingbuddy.ui.shop_selection.ShopSelectionFragment
-import com.annikadietz.shoppy_shoppingbuddy.ui.shopping_combination_information.ShoppingCombinationInformationFragment
+import com.annikadietz.shoppy_shoppingbuddy.ui.your_list.YourListFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 
 
 class MainActivity : AppCompatActivity()  {
     private lateinit var bottomNav: BottomNavigationView
-    private var productSearchFragment = ProductSearchFragment()
-    private var shoppingListFragment = ShoppingCombinationInformationFragment()
+    private var productSearchFragment = ProductSearchFragment(NewDatabaseHelper)
+    private var yourListFragment = YourListFragment({combo:Combination ->openGoShopping(combo) }, this@MainActivity)
     private var shopSelectionFragment = ShopSelectionFragment()
+    private var myShoppingListFragment = MyShoppingListFragment(NewDatabaseHelper)
+
 
     var uid: String = ""
 
@@ -30,14 +33,12 @@ class MainActivity : AppCompatActivity()  {
         bottomNav = findViewById(R.id.bottom_navigation)
         bottomNav.setOnNavigationItemSelectedListener(navListener)
         supportFragmentManager.beginTransaction().replace(R.id.fragment_container, productSearchFragment).commit()
-        DatabaseHelper.subscribeShops()
-        DatabaseHelper.subscribeProducts()
-        DatabaseHelper.subscribeCategories()
 
         NewDatabaseHelper.subscribeShops()
         NewDatabaseHelper.subscribeProducts()
         NewDatabaseHelper.subscribeProductInShop()
         NewDatabaseHelper.subscribeMyShops()
+        NewDatabaseHelper.subscribeMyShoppingList()
     }
 
     private var navListener = BottomNavigationView.OnNavigationItemSelectedListener(object :
@@ -48,9 +49,9 @@ class MainActivity : AppCompatActivity()  {
         override fun invoke(menuItem: MenuItem): Boolean {
             var selectedFragment: Fragment = when(menuItem.itemId) {
                 R.id.nav_search -> productSearchFragment
-                R.id.nav_shoppingList -> shoppingListFragment
+                R.id.nav_shoppingList -> yourListFragment
                 R.id.nav_yourShops -> shopSelectionFragment
-                R.id.nav_shop -> productSearchFragment
+                R.id.nav_shop -> myShoppingListFragment
                 else -> productSearchFragment
             }
             supportFragmentManager.beginTransaction().replace(R.id.fragment_container, selectedFragment).commit()
@@ -62,5 +63,12 @@ class MainActivity : AppCompatActivity()  {
         FirebaseAuth.getInstance().signOut()
         startActivity(Intent(this, AuthActivity::class.java))
     }
+
+    fun openGoShopping(combo: Combination) {
+        print(combo.shops.size)
+        // TODO: 15/06/2020 Make this function set the combination in the your list fragment
+        bottomNav.selectedItemId = R.id.nav_search
+    }
+
 
 }

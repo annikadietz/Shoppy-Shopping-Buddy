@@ -1,7 +1,6 @@
 package com.annikadietz.shoppy_shoppingbuddy.ui.shopping_combination_information
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -39,7 +38,7 @@ class ShoppingCombinationInformationFragment : Fragment() {
             inflater.inflate(R.layout.fragment_shopping_combination_information, container, false)
 
         // TODO get my real location
-        listGenerator = ListGenerator(root.context, "Hoitingeslag%2029,%207824%20KG")
+        listGenerator = ListGenerator("Hoitingeslag%2029,%207824%20KG")
         databaseHelper = NewDatabaseHelper
         viewModel = ShoppingCombinationInformationViewModel(listGenerator, databaseHelper)
 
@@ -47,7 +46,7 @@ class ShoppingCombinationInformationFragment : Fragment() {
 
         var adapter = ExpandableShoppingListAdapter(root.context, arrayListOf(Combination()), arrayListOf(Combination()))
 
-        listGenerator.getCombinationsWithProductsInShops(databaseHelper.getMyShops(), databaseHelper.getProducts(), databaseHelper.getProductsInShops(), adapter)
+      //  listGenerator.getCombinationsWithProductsInShops(databaseHelper.getMyShops(), databaseHelper.getProducts(), databaseHelper.getProductsInShops(), adapter)
 
         var topCombinations = viewModel.getTopThreeCombinations()
         adapter = ExpandableShoppingListAdapter(root.context, topCombinations, topCombinations)
