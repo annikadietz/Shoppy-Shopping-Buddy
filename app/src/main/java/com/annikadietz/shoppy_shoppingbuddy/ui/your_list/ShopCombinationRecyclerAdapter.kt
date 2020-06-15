@@ -29,43 +29,53 @@ public class ShopCombinationRecyclerAdapter(var listener: (Combination) -> Unit,
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         var comboInPosition = combinations[position]
+
         var name = when(comboInPosition.shops.size) {
             1 -> "One Shop"
             2 -> "Two Shops"
             3 -> "Three Shops"
-            else -> "More shops"
+            else -> "No data"
         }
-        var shops = ""
-        comboInPosition.shops.forEachIndexed { index, shop ->
-            shops += shop.streetAddress
-            if (index < comboInPosition.shops.size - 1 ){
-                shops += " > "
+
+        if(name == "No data"){
+            holder.name.text = "-"
+            holder.shops.text = "-"
+            holder.price.text = "-"
+            holder.distance.text = "-"
+        } else{
+            var shops = ""
+            comboInPosition.shops.forEachIndexed { index, shop ->
+                shops += shop.streetAddress
+                if (index < comboInPosition.shops.size - 1 ){
+                    shops += " > "
+                }
             }
+
+            var distancetoTravel = comboInPosition.
+            directions?.
+            distancetoTravel?.
+            div(1000)
+
+            var distancetoTravelString = "%.2f".format(distancetoTravel) + " km"
+
+            var timeToTravel = comboInPosition.
+            directions?.
+            timeToTravel?.
+            div(60)?.toInt()
+            var timeToTravelString = "$name - $timeToTravel min"
+
+            var price = 0.0
+            comboInPosition.productsInShops.forEach {
+                price += it.price
+            }
+
+
+            var priceString = "€" + "%.2f".format(price)
+            holder.name.text = timeToTravelString
+            holder.shops.text = shops
+            holder.price.text = priceString
+            holder.distance.text = distancetoTravelString
         }
-
-        var distancetoTravel = comboInPosition.
-        directions?.
-        distancetoTravel?.
-        div(1000)
-
-        var distancetoTravelString = "%.2f".format(distancetoTravel) + " km"
-
-        var timeToTravel = comboInPosition.
-        directions?.
-        timeToTravel?.
-        div(60)?.toInt()
-        var timeToTravelString = "$name - $timeToTravel min"
-
-        var price = 0.0
-        comboInPosition.productsInShops.forEach {
-            price += it.price
-        }
-
-        var priceString = "€" + "%.2f".format(price)
-        holder.name.text = timeToTravelString
-        holder.shops.text = shops
-        holder.price.text = price.toString()
-        holder.distance.text = distancetoTravelString
 
     }
     // Represents a single row in the RecyclerView
