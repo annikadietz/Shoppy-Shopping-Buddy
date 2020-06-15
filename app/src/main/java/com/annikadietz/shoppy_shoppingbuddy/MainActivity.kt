@@ -17,7 +17,7 @@ import com.google.firebase.auth.FirebaseAuth
 class MainActivity : AppCompatActivity()  {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var bottomNav: BottomNavigationView
-    private var productSearchFragment = ProductSearchFragment()
+    private var productSearchFragment = ProductSearchFragment(NewDatabaseHelper)
     private var shoppingListFragment = ShoppingCombinationInformationFragment()
     private var shopSelectionFragment = ShopSelectionFragment()
 
