@@ -1,17 +1,23 @@
 package com.annikadietz.shoppy_shoppingbuddy
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.annikadietz.shoppy_shoppingbuddy.Model.Combination
+import com.annikadietz.shoppy_shoppingbuddy.Model.Price
+import com.annikadietz.shoppy_shoppingbuddy.Model.ShoppingItem
+import com.annikadietz.shoppy_shoppingbuddy.ui.confirm_purchases.ShopFragment
 import com.annikadietz.shoppy_shoppingbuddy.ui.my_shopping_ist.MyShoppingListFragment
 import com.annikadietz.shoppy_shoppingbuddy.ui.product_search.ProductSearchFragment
 import com.annikadietz.shoppy_shoppingbuddy.ui.shop_selection.ShopSelectionFragment
 import com.annikadietz.shoppy_shoppingbuddy.ui.your_list.YourListFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
+import java.time.LocalDateTime
 
 
 class MainActivity : AppCompatActivity()  {
@@ -19,8 +25,8 @@ class MainActivity : AppCompatActivity()  {
     private var productSearchFragment = ProductSearchFragment(NewDatabaseHelper)
     private var yourListFragment = YourListFragment({combo:Combination ->openGoShopping(combo) }, this@MainActivity)
     private var shopSelectionFragment = ShopSelectionFragment()
-    private var myShoppingListFragment = MyShoppingListFragment(NewDatabaseHelper)
-
+    //private var myShoppingListFragment = MyShoppingListFragment(NewDatabaseHelper)
+    private var purchasesFragment = ShopFragment()
 
     var uid: String = ""
 
@@ -39,6 +45,8 @@ class MainActivity : AppCompatActivity()  {
         NewDatabaseHelper.subscribeProductInShop()
         NewDatabaseHelper.subscribeMyShops()
         NewDatabaseHelper.subscribeMyShoppingList()
+        NewDatabaseHelper.subscribeMyShoppingItems()
+
     }
 
     private var navListener = BottomNavigationView.OnNavigationItemSelectedListener(object :
@@ -51,7 +59,7 @@ class MainActivity : AppCompatActivity()  {
                 R.id.nav_search -> productSearchFragment
                 R.id.nav_shoppingList -> yourListFragment
                 R.id.nav_yourShops -> shopSelectionFragment
-                R.id.nav_shop -> myShoppingListFragment
+                R.id.nav_shop -> purchasesFragment
                 else -> productSearchFragment
             }
             supportFragmentManager.beginTransaction().replace(R.id.fragment_container, selectedFragment).commit()
@@ -64,10 +72,17 @@ class MainActivity : AppCompatActivity()  {
         startActivity(Intent(this, AuthActivity::class.java))
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun openGoShopping(combo: Combination) {
         print(combo.shops.size)
+        purchasesFragment.combo = combo
+        var array = arrayListOf<ShoppingItem>()
+        combo.productsInShops.forEach {
+            var newShoppingItem = ShoppingItem(it.product, it.shop, Price(LocalDateTime.now().toString(), it.price, 0))
+            NewDatabaseHelper.addMyShoppingItem(newShoppingItem)
+        }
         // TODO: 15/06/2020 Make this function set the combination in the your list fragment
-        bottomNav.selectedItemId = R.id.nav_search
+        bottomNav.selectedItemId = R.id.nav_shop
     }
 
 

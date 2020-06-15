@@ -1,8 +1,7 @@
 package com.annikadietz.shoppy_shoppingbuddy
 
 import android.util.Log
-import com.annikadietz.shoppy_shoppingbuddy.Model.Product
-import com.annikadietz.shoppy_shoppingbuddy.Model.ProductInShop
+import com.annikadietz.shoppy_shoppingbuddy.Model.*
 import com.annikadietz.shoppy_shoppingbuddy.Model.Shop
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -14,6 +13,7 @@ object NewDatabaseHelper : DatabaseHelperInterface {
     private var products = arrayListOf<Product>()
     private var productsInShops = arrayListOf<ProductInShop>()
     private var myShoppingList = arrayListOf<Product>()
+    private var myShoppingItems = arrayListOf<ShoppingItem>()
     var uid: String = ""
 
     fun subscribeShops() {
@@ -70,6 +70,57 @@ object NewDatabaseHelper : DatabaseHelperInterface {
                 myShoppingList.clear()
                 results?.forEach { product -> myShoppingList.add(product.toObject(Product::class.java)) }
             }
+
+    }
+
+    fun subscribeMyShoppingItems() {
+        db.collection("user1Data")
+            .document(uid)
+            .collection("shoppingItems")
+            .addSnapshotListener { results, e ->
+                myShoppingItems.clear()
+                results?.forEach { item -> myShoppingItems.add(item.toObject(ShoppingItem::class.java)) }
+            }
+
+    }
+
+
+    fun deleteMyShoppingItem(shoppingItem: ShoppingItem) {
+        var shopsItemsInDatabase = db.collection("user1Data")
+            .document(uid)
+            .collection("shoppingItems")
+            .whereEqualTo("price.price", shoppingItem.price.price)
+            .whereEqualTo("price.lastConfirmed", shoppingItem.price.lastConfirmed)
+            .whereEqualTo("product.name", shoppingItem.product.name)
+            .get()
+        shopsItemsInDatabase.addOnSuccessListener {
+            it.forEach {
+                db  .collection("userData")
+                    .document(uid)
+                    .collection("shoppingItems")
+                    .document(it.id).delete()
+            }
+        }
+    }
+
+    fun addMyShoppingItem(combo: Combination) {
+        combo.productsInShops.forEach {
+
+        }
+//        db.collection("userData")
+//            .document(uid)
+//            .collection("shoppingItems")
+//            .whereEqualTo("shop.streetAddress", shop.streetAddress)
+//            .whereEqualTo("shop.name", shop.name)
+//            .get().addOnSuccessListener {
+//                results ->
+//                if(results.size() == 0){
+//                    db  .collection("userData")
+//                        .document(uid)
+//                        .collection("shoppingItems")
+//                        .delete(shoppingItem)
+//                }
+//            }
 
     }
 
@@ -143,4 +194,9 @@ object NewDatabaseHelper : DatabaseHelperInterface {
     override fun getMyShoppingList(): ArrayList<Product> {
         return myShoppingList
     }
+
+    override fun getMyShoppingItems(): ArrayList<ShoppingItem> {
+        return myShoppingItems
+    }
+
 }

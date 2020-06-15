@@ -47,34 +47,15 @@ class PurchasesViewModel : ViewModel() {
         })
     }
 
-    fun setupSwipingDeleteAndArchieve(simpleCallback: ItemTouchHelper.SimpleCallback) {
+    fun setupSwipingDeleteAndConfirm(simpleCallback: ItemTouchHelper.SimpleCallback) {
         val itemTouchHelper = ItemTouchHelper(simpleCallback)
         itemTouchHelper.attachToRecyclerView(recyclerView)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun confirmPurchase() {
-        val docData = hashMapOf(
-            "stringExample" to "Hello world!",
-            "booleanExample" to true,
-            "numberExample" to 3.14159265,
-            "dateExample" to Timestamp(Date()),
-            "listExample" to arrayListOf(1, 2, 3),
-            "nullExample" to null
-        )
-
-        val nestedData = hashMapOf(
-            "a" to 5,
-            "b" to true
-        )
-
-        docData["objectExample"] = nestedData
 
         val t: Timestamp = Timestamp(Date())
 
-//        NewDatabaseHelper.db.collection("shoppingLists")
-//            .document(FirebaseAuth.getInstance().uid.toString())
-//            .collection("confirmedPurchaces")
-//            .add(docData)
     }
 }
