@@ -1,5 +1,6 @@
 package com.annikadietz.shoppy_shoppingbuddy
 
+import android.app.Activity
 import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -15,41 +16,43 @@ class ListGenerator {
     var threeShopCombination: Combination = Combination()
     var combos = arrayListOf<Combination>()
     var myLocation: String
-    lateinit var activity: MainActivity
+    lateinit var activity: Activity
     lateinit var context: Context
     constructor(myLocation: String){
         this.myLocation = myLocation
     }
 
-    constructor(activity: MainActivity, myLocation: String){
+    constructor(activity: Activity, myLocation: String){
         this.myLocation = myLocation
         this.activity = activity
     }
 
 
-    fun findCheapestStore(shops: ArrayList<Shop>, shoppingList: ArrayList<Product>, productsInShops: ArrayList<ProductInShop>) : ArrayList<ProductInShop> {
+    fun findCheapestStore(shops: ArrayList<Shop>,
+                          shoppingList: ArrayList<Product>,
+                          productsInShops: ArrayList<ShoppingItem>) : ArrayList<ShoppingItem> {
 
         // TODO: Replace all this with actual data from the database!!!!
 
         //var cheapestShop: Shop
-        var finalShoppingList = arrayListOf<ProductInShop>()
+        var finalShoppingList = arrayListOf<ShoppingItem>()
         var cheapestPrice: Double = Double.MAX_VALUE
         shops.forEach{
             var shop = it
             var price = 0.0;
-            var productsFound = arrayListOf<ProductInShop?>()
+            var productsFound = arrayListOf<ShoppingItem>()
             shoppingList.forEach { it ->
                 var product = it
                 var productInShop = productsInShops.find { p ->p.shop.streetAddress == shop.streetAddress && p.shop.name == shop.name && p.product.name == product.name}
                 if (productInShop != null) {
-                    price += productInShop.price
+                    price += productInShop.price.price
                     productsFound.add(productInShop)
                 }
             }
 
             if (price < cheapestPrice) {
                 cheapestPrice = price
-                finalShoppingList = productsFound.clone() as ArrayList<ProductInShop>
+                finalShoppingList = productsFound.clone() as ArrayList<ShoppingItem>
             }
         }
         return finalShoppingList
@@ -98,7 +101,10 @@ class ListGenerator {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun getCombinationsWithProductsInShops(shops: ArrayList<Shop>, shoppingList: ArrayList<Product>, shoppingItems: ArrayList<ShoppingItem>, listAdapter: ShopCombinationRecyclerAdapter) : ArrayList<Combination> {
+    fun getCombinationsWithProductsInShops(shops: ArrayList<Shop>,
+                                           shoppingList: ArrayList<Product>,
+                                           shoppingItems: ArrayList<ShoppingItem>,
+                                           listAdapter: ShopCombinationRecyclerAdapter) : ArrayList<Combination> {
         var combos = findAllPossibleStoreCombinations(shops)
         combos.forEach {
             var combination = it
@@ -167,7 +173,7 @@ class ListGenerator {
 
         return bestPriceCombination
     }
-    @RequiresApi(Build.VERSION_CODES.N)
+    @RequiresApi(Build.VERSION_CODES.O)
     fun getFinalCombinations(combinations: ArrayList<Combination>, listAdapter: ShopCombinationRecyclerAdapter){
         oneShopCombination = getCombinationWithBestPrice(combinations, 1)
         twoShopCombination = getCombinationWithBestPrice(combinations, 2)
