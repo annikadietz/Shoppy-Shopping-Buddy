@@ -5,6 +5,7 @@ import com.annikadietz.shoppy_shoppingbuddy.Model.*
 import com.annikadietz.shoppy_shoppingbuddy.Model.Shop
 import com.annikadietz.shoppy_shoppingbuddy.ui.your_list.ShopCombinationRecyclerAdapter
 import com.annikadietz.shoppy_shoppingbuddy.ui.your_list.ShoppingListRecyclerAdapter
+import com.google.firebase.FirebaseApp
 import org.json.JSONObject
 import org.junit.Assert
 import org.junit.Test
@@ -578,4 +579,9 @@ class ListGeneratorUnitTest {
             Assert.assertEquals(combo2_2.directions!!.timeToTravel!!, 192.0, 0.001)
             Assert.assertEquals(combo3_2.directions!!.timeToTravel!!, 192.0, 0.001)
         }
+
+    @Test
+    fun test() {
+        NewDatabaseHelper.confirmPrice(potatoesInJumbo)
+    }
 }

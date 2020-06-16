@@ -74,6 +74,18 @@ class ShopFragment : Fragment() {
                 setUpRecyclerView(root.findViewById(R.id.third_shop_recyclerview), shoppingItems)
             }
         }
+
+
+
+        recyclerView = root.findViewById<RecyclerView>(R.id.recyclerView)
+//        recyclerAdapter = PurchasesAdapter()
+        recyclerView.layoutManager = LinearLayoutManager(this.context)
+        recyclerView.adapter = recyclerAdapter
+//        val dividerItemDecoration =
+//            DividerItemDecoration(activity, DividerItemDecoration.VERTICAL)
+//        recyclerView.addItemDecoration(dividerItemDecoration)
+
+        setupSwipingDeleteAndConfirm()
         return root
     }
 
@@ -116,6 +128,11 @@ class ShopFragment : Fragment() {
             R.id.third_shop_address,
             R.id.third_shop_directions
         )
+    }
+
+    fun setupSwipingDeleteAndConfirm() {
+        val itemTouchHelper = ItemTouchHelper(simpleCallback)
+        itemTouchHelper.attachToRecyclerView(recyclerView)
     }
 
     private var simpleCallback: ItemTouchHelper.SimpleCallback =
@@ -208,10 +225,5 @@ class ShopFragment : Fragment() {
                 )
             }
         }
-
-    fun setupSwipingDeleteAndConfirm(simpleCallback: ItemTouchHelper.SimpleCallback) {
-        val itemTouchHelper = ItemTouchHelper(simpleCallback)
-        itemTouchHelper.attachToRecyclerView(recyclerView)
-    }
 
 }
