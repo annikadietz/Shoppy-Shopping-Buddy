@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.annotation.RequiresApi
 import androidx.core.widget.doAfterTextChanged
 import androidx.core.widget.doOnTextChanged
@@ -37,7 +38,8 @@ class YourListFragment(val listener: (Combination) -> Unit, val activity: MainAc
         var root = inflater.inflate(R.layout.fragment_your_list, container, false)
 
         var yourAddressField = root.findViewById<TextInputEditText>(R.id.your_address_text_input)
-        yourAddressField.doAfterTextChanged {
+        var updateButton = root.findViewById<Button>(R.id.update_with_address)
+        updateButton.setOnClickListener {
             listGenerator.myLocation = yourAddressField.text.toString()
             updateCombos()
         }
