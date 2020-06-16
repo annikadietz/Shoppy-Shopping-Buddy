@@ -5,6 +5,8 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import com.annikadietz.shoppy_shoppingbuddy.Model.*
 import com.annikadietz.shoppy_shoppingbuddy.Model.Shop
+import com.google.android.gms.tasks.Task
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
@@ -170,6 +172,19 @@ object NewDatabaseHelper : DatabaseHelperInterface {
             }
         }
     }
+
+    fun saveMyCombo(combo: Combination){
+        db  .collection("userData")
+            .document(uid)
+            .set(combo)
+    }
+
+    fun getMyCombo(): Task<DocumentSnapshot> {
+        return db.collection("userData")
+            .document(uid)
+            .get()
+    }
+
 
     fun addMyShoppingItem(combo: Combination) {
         combo.shoppingItems.forEach {

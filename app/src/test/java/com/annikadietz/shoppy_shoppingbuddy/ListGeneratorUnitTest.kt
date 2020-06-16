@@ -3,7 +3,7 @@ package com.annikadietz.shoppy_shoppingbuddy
 import android.content.Context
 import com.annikadietz.shoppy_shoppingbuddy.Model.*
 import com.annikadietz.shoppy_shoppingbuddy.Model.Shop
-import com.annikadietz.shoppy_shoppingbuddy.ui.shopping_combination_information.ExpandableShoppingListAdapter
+import com.annikadietz.shoppy_shoppingbuddy.ui.creen shopping_combination_information.ExpandableShoppingListAdapter
 import org.json.JSONObject
 import org.junit.Assert
 import org.junit.Test

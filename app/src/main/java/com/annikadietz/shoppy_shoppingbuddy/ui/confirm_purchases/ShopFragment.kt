@@ -11,7 +11,9 @@ import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.annikadietz.shoppy_shoppingbuddy.Model.*
@@ -28,7 +30,6 @@ class ShopFragment : Fragment() {
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
     var shoppingItems = NewDatabaseHelper.getShoppingItems()
     private lateinit var root: View
-    var combo = Combination()
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,40 +37,85 @@ class ShopFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         root = inflater.inflate(R.layout.fragment_shopping_list, container, false)
-//recyclerView = root.findViewById<RecyclerView>(R.id.recyclerView)
-//        recyclerAdapter = PurchasesAdapter(combo)
-//        recyclerView.layoutManager = LinearLayoutManager(this.context)
-//        recyclerView.adapter = recyclerAdapter
-//        val dividerItemDecoration =
-//            DividerItemDecoration(activity, DividerItemDecoration.VERTICAL)
-//        recyclerView.addItemDecoration(dividerItemDecoration)
-//        var shoppingItem = ShoppingItem(Product(
-//            "",
-//            Type()),
-//            Shop("Jumbo","RT75774","Gadkkd 122"),
-//            Price(4.2)
-//        )
-//        firstShop = root.findViewById<ConstraintLayout>(R.id.first_shop)
-//        setUpShop(shoppingItem)
-
-
-       //setupSwipeRefresh(root)
-        //setupSwipingDeleteAndConfirm(simpleCallback)
-
+        var combo: Combination
+        NewDatabaseHelper.getMyCombo().addOnSuccessListener {
+            combo = it.toObject(Combination::class.java)!!
+            if (combo.shops.size > 0){
+                var shop = combo.shops[0]
+                setUpFirstShop(shop)
+                var shoppingItems = arrayListOf<ShoppingItem>()
+                combo.shoppingItems.forEach {
+                    if(it.shop.name == shop.name && it.shop.streetAddress == shop.streetAddress&& it.shop.postCode == shop.postCode){
+                        shoppingItems.add(it)
+                    }
+                }
+                setUpRecyclerView(root.findViewById(R.id.first_shop_recyclerview), shoppingItems)
+            }
+            if (combo.shops.size > 1){
+                var shop = combo.shops[1]
+                setUpSecondShop(shop)
+                var shoppingItems = arrayListOf<ShoppingItem>()
+                combo.shoppingItems.forEach {
+                    if(it.shop.name == shop.name && it.shop.streetAddress == shop.streetAddress&& it.shop.postCode == shop.postCode){
+                        shoppingItems.add(it)
+                    }
+                }
+                setUpRecyclerView(root.findViewById(R.id.second_shop_recyclerview), shoppingItems)
+            }
+            if (combo.shops.size > 2){
+                var shop = combo.shops[2]
+                setUpThirdShop(shop)
+                var shoppingItems = arrayListOf<ShoppingItem>()
+                combo.shoppingItems.forEach {
+                    if(it.shop.name == shop.name && it.shop.streetAddress == shop.streetAddress&& it.shop.postCode == shop.postCode){
+                        shoppingItems.add(it)
+                    }
+                }
+                setUpRecyclerView(root.findViewById(R.id.third_shop_recyclerview), shoppingItems)
+            }
+        }
         return root
     }
 
-    fun setUpShop(shoppingItem: ShoppingItem){
-        var shopDirectionsFragment = ShopDirectionsManager(
+    fun setUpFirstShop(shop: Shop){
+        ShopDirectionsManager(
             "Hoitingeslag%2029,%207824%20KG",
-            shoppingItem.shop,
+            shop,
             root,
             R.id.first_shop_name,
             R.id.first_shop_address,
             R.id.first_shop_directions
         )
+    }
 
+    fun setUpRecyclerView(recyclerView: RecyclerView, shoppingItems: ArrayList<ShoppingItem>){
+        recyclerView.adapter = PurchasesAdapter(shoppingItems)
+        var dividerItemDecoration = DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL)
+        recyclerView.addItemDecoration(dividerItemDecoration)
+        recyclerView.layoutManager = LinearLayoutManager(this.context)
 
+    }
+
+    fun setUpSecondShop(shop: Shop){
+        ShopDirectionsManager(
+            "Hoitingeslag%2029,%207824%20KG",
+            shop,
+            root,
+            R.id.second_shop_name,
+            R.id.second_shop_address,
+            R.id.second_shop_directions
+        )
+    }
+
+    fun setUpThirdShop(shop: Shop){
+        ShopDirectionsManager(
+            "Hoitingeslag%2029,%207824%20KG",
+            shop,
+            root,
+            R.id.third_shop_name,
+            R.id.third_shop_address,
+            R.id.third_shop_directions
+        )
     }
 
     private var simpleCallback: ItemTouchHelper.SimpleCallback =

@@ -8,13 +8,17 @@ import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.annikadietz.shoppy_shoppingbuddy.Model.Combination
+import com.annikadietz.shoppy_shoppingbuddy.Model.ShoppingItem
 import com.annikadietz.shoppy_shoppingbuddy.NewDatabaseHelper
 import com.annikadietz.shoppy_shoppingbuddy.R
+import java.time.Duration
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.Period
 import java.time.format.DateTimeFormatter
 
-class PurchasesAdapter(var combo: Combination) :
+class PurchasesAdapter(var shoppingItems: ArrayList<ShoppingItem>) :
     RecyclerView.Adapter<PurchasesAdapter.ViewHolder>() {
-    var shoppingItems = NewDatabaseHelper.getShoppingItems()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val view: View = layoutInflater.inflate(R.layout.fragment_shopping_list_row_item_with_price, parent, false)
@@ -27,8 +31,21 @@ class PurchasesAdapter(var combo: Combination) :
         var itemInPosition = shoppingItems[position]
         holder.productName.text = itemInPosition.product.name
         holder.productType.text = itemInPosition.product.type.name
-        holder.productPrice.text = itemInPosition.price.price.toString()
-        holder.lastConfirmed.text = itemInPosition.price.lastConfirmed.format(DateTimeFormatter.ISO_DATE).toString()
+        holder.productPrice.text = "€ " + itemInPosition.price.price.toString()
+        var lastConfirmed = LocalDateTime.parse(itemInPosition.price.lastConfirmed)
+        var period: Duration =  Duration.between(lastConfirmed, LocalDateTime.now())
+        if (period.toDays() < 1) {
+            if (period.toHours().toInt() == 1) {
+                holder.lastConfirmed.text = period.toHours().toString() + " hour ago"
+            } else {
+                holder.lastConfirmed.text = period.toHours().toString() + " hours ago"
+            }
+        } else if (period.toDays().toInt() == 1){
+            holder.lastConfirmed.text = "One day ago"
+        } else {
+            holder.lastConfirmed.text = period.toDays().toString() + " days ago"
+        }
+
     }
 
     override fun getItemCount(): Int {

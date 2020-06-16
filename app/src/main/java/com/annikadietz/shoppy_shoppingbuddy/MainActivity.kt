@@ -22,7 +22,8 @@ import java.time.LocalDateTime
 class MainActivity : AppCompatActivity()  {
     private lateinit var bottomNav: BottomNavigationView
     private var productSearchFragment = ProductSearchFragment(NewDatabaseHelper)
-    private var yourListFragment = YourListFragment({combo:Combination ->openGoShopping(combo) }, this@MainActivity)
+    @RequiresApi(Build.VERSION_CODES.O)
+    private var yourListFragment = YourListFragment({ combo:Combination ->openGoShopping(combo) }, this@MainActivity)
     private var shopSelectionFragment = ShopSelectionFragment()
     //private var myShoppingListFragment = MyShoppingListFragment(NewDatabaseHelper)
     private var purchasesFragment = ShopFragment()
@@ -74,7 +75,8 @@ class MainActivity : AppCompatActivity()  {
     @RequiresApi(Build.VERSION_CODES.O)
     fun openGoShopping(combo: Combination) {
         print(combo.shops.size)
-        purchasesFragment.combo = combo
+
+        NewDatabaseHelper.saveMyCombo(combo)
 //        var array = arrayListOf<ShoppingItem>()
 //        combo.productsInShops.forEach {
 //            var newShoppingItem = ShoppingItem(it.product, Price(LocalDateTime.now().toString(), it.price, 0))
