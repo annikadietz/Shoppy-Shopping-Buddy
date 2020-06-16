@@ -1,7 +1,6 @@
 package com.annikadietz.shoppy_shoppingbuddy
 
 import android.app.Activity
-import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import com.annikadietz.shoppy_shoppingbuddy.Model.*
@@ -17,7 +16,6 @@ class ListGenerator {
     var combos = arrayListOf<Combination>()
     var myLocation: String
     lateinit var activity: Activity
-    lateinit var context: Context
     constructor(myLocation: String){
         this.myLocation = myLocation
     }
