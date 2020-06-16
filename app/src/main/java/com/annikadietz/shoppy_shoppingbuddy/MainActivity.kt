@@ -11,7 +11,6 @@ import com.annikadietz.shoppy_shoppingbuddy.Model.Combination
 import com.annikadietz.shoppy_shoppingbuddy.Model.Price
 import com.annikadietz.shoppy_shoppingbuddy.Model.ShoppingItem
 import com.annikadietz.shoppy_shoppingbuddy.ui.confirm_purchases.ShopFragment
-import com.annikadietz.shoppy_shoppingbuddy.ui.my_shopping_ist.MyShoppingListFragment
 import com.annikadietz.shoppy_shoppingbuddy.ui.product_search.ProductSearchFragment
 import com.annikadietz.shoppy_shoppingbuddy.ui.shop_selection.ShopSelectionFragment
 import com.annikadietz.shoppy_shoppingbuddy.ui.your_list.YourListFragment
@@ -42,7 +41,7 @@ class MainActivity : AppCompatActivity()  {
 
         NewDatabaseHelper.subscribeShops()
         NewDatabaseHelper.subscribeProducts()
-        NewDatabaseHelper.subscribeProductInShop()
+        NewDatabaseHelper.subscribeShoppingItems()
         NewDatabaseHelper.subscribeMyShops()
         NewDatabaseHelper.subscribeMyShoppingList()
         NewDatabaseHelper.subscribeMyShoppingItems()
@@ -76,11 +75,11 @@ class MainActivity : AppCompatActivity()  {
     fun openGoShopping(combo: Combination) {
         print(combo.shops.size)
         purchasesFragment.combo = combo
-        var array = arrayListOf<ShoppingItem>()
-        combo.productsInShops.forEach {
-            var newShoppingItem = ShoppingItem(it.product, it.shop, Price(LocalDateTime.now().toString(), it.price, 0))
-            NewDatabaseHelper.addMyShoppingItem(newShoppingItem)
-        }
+//        var array = arrayListOf<ShoppingItem>()
+//        combo.productsInShops.forEach {
+//            var newShoppingItem = ShoppingItem(it.product, Price(LocalDateTime.now().toString(), it.price, 0))
+//            NewDatabaseHelper.addMyShoppingItem(newShoppingItem)
+//        }
         // TODO: 15/06/2020 Make this function set the combination in the your list fragment
         bottomNav.selectedItemId = R.id.nav_shop
     }

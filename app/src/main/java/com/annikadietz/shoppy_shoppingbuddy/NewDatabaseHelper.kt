@@ -1,6 +1,8 @@
 package com.annikadietz.shoppy_shoppingbuddy
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import com.annikadietz.shoppy_shoppingbuddy.Model.*
 import com.annikadietz.shoppy_shoppingbuddy.Model.Shop
 import com.google.firebase.firestore.ktx.firestore
@@ -11,13 +13,79 @@ object NewDatabaseHelper : DatabaseHelperInterface {
     private var shops = arrayListOf<Shop>()
     private var myShops = arrayListOf<Shop>()
     private var products = arrayListOf<Product>()
-    private var productsInShops = arrayListOf<ProductInShop>()
+    private var shoppingItems = arrayListOf<ShoppingItem>()
     private var myShoppingList = arrayListOf<Product>()
     private var myShoppingItems = arrayListOf<ShoppingItem>()
     var uid: String = ""
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun newData () {
+        var jumbo = Shop("Jumbo", "7824JA", "Kerspellaan 9")
+        var aldi = Shop("Aldi", "7824CP", "Peyserhof 2")
+        var lidl = Shop("Lidl", "7823PH", "Houtweg 151")
+        var albert = Shop("Albert Heijn", "7824CS", "Statenweg 33")
+
+        db.collection("newShops").add(jumbo)
+        db.collection("newShops").add(aldi)
+        db.collection("newShops").add(lidl)
+        db.collection("newShops").add(albert)
+
+        var potatoes = Product("Potatoes - 1kg", Type("Vegetables"))
+        var pizza = Product("Pizza - Italia", Type("Frozen"))
+        var bananas = Product("Bananas - 1kg", Type("Fruits"))
+        var eggs = Product("Large eggs", Type("Dairy, eggs, and butter"))
+
+        db.collection("newProducts").add(potatoes)
+        db.collection("newProducts").add(pizza)
+        db.collection("newProducts").add(bananas)
+        db.collection("newProducts").add(eggs)
+
+        // jumbo
+        var potatoesInJumbo = ShoppingItem(potatoes, jumbo, 3.0)
+        var pizzaInJumbo = ShoppingItem(pizza, jumbo, 2.0)
+        var bananasInJumbo = ShoppingItem(bananas, jumbo, 1.0)
+        var eggsInJumbo = ShoppingItem(eggs, jumbo, 4.0)
+
+        db.collection("shoppingItems").add(potatoesInJumbo)
+        db.collection("shoppingItems").add(pizzaInJumbo)
+        db.collection("shoppingItems").add(bananasInJumbo)
+        db.collection("shoppingItems").add(eggsInJumbo)
+
+        // aldi
+        var potatoesInAldi = ShoppingItem(potatoes, aldi, 2.0)
+        var pizzaInAldi = ShoppingItem(pizza, aldi, 3.0)
+        var bananasInAldi = ShoppingItem(bananas, aldi, 1.5)
+        var eggsInAldi = ShoppingItem(eggs, aldi, 3.0)
+
+        db.collection("shoppingItems").add(potatoesInAldi)
+        db.collection("shoppingItems").add(pizzaInAldi)
+        db.collection("shoppingItems").add(bananasInAldi)
+        db.collection("shoppingItems").add(eggsInAldi)
+        // lidl
+        var potatoesInLidl = ShoppingItem(potatoes, lidl, 2.5)
+        var pizzaInLidl = ShoppingItem(pizza, lidl, 3.0)
+        var bananasInLidl = ShoppingItem(bananas, lidl, 4.0)
+        var eggsInLidl = ShoppingItem(eggs, lidl, 2.2)
+
+        db.collection("shoppingItems").add(potatoesInLidl)
+        db.collection("shoppingItems").add(pizzaInLidl)
+        db.collection("shoppingItems").add(bananasInLidl)
+        db.collection("shoppingItems").add(eggsInLidl)
+
+        // albert
+        var potatoesInAlbert = ShoppingItem(potatoes, albert, 4.3)
+        var pizzaInAlbert = ShoppingItem(pizza, albert, 2.6)
+        var bananasInAlbert = ShoppingItem(bananas, albert, 1.7)
+        var eggsInAlbert = ShoppingItem(eggs, albert, 2.2)
+        db.collection("shoppingItems").add(potatoesInAlbert)
+        db.collection("shoppingItems").add(pizzaInAlbert)
+        db.collection("shoppingItems").add(bananasInAlbert)
+        db.collection("shoppingItems").add(eggsInAlbert)
+
+
+    }
     fun subscribeShops() {
-        db.collection("shops")
+        db.collection("newShops")
             .addSnapshotListener { results, e ->
 
                 shops.clear()
@@ -27,7 +95,7 @@ object NewDatabaseHelper : DatabaseHelperInterface {
     }
 
     fun subscribeProducts() {
-        db.collection("products")
+        db.collection("newProducts")
             .addSnapshotListener { results, e ->
                 products.clear()
                 results?.forEach { product -> products.add(product.toObject(Product::class.java)) }
@@ -35,11 +103,11 @@ object NewDatabaseHelper : DatabaseHelperInterface {
 
     }
 
-    fun subscribeProductInShop() {
-        db.collection("productsInShops")
+    fun subscribeShoppingItems() {
+        db.collection("shoppingItems")
             .addSnapshotListener { results, e ->
-                productsInShops.clear()
-                results?.forEach { product -> productsInShops.add(product.toObject(ProductInShop::class.java)) }
+                shoppingItems.clear()
+                results?.forEach { product -> shoppingItems.add(product.toObject(ShoppingItem::class.java)) }
             }
 
     }
@@ -52,9 +120,9 @@ object NewDatabaseHelper : DatabaseHelperInterface {
                 results?.forEach {
                     var shopParameters = it["shop"] as HashMap<String, String>
                     var shop = Shop(
-                        shopParameters["name"]!!,
-                        shopParameters["postCode"]!!,
-                        shopParameters["streetAddress"]!!
+                        shopParameters["name"],
+                        shopParameters["postCode"],
+                        shopParameters["streetAddress"]
                     )
                     myShops.add(shop)
                 }
@@ -104,7 +172,7 @@ object NewDatabaseHelper : DatabaseHelperInterface {
     }
 
     fun addMyShoppingItem(combo: Combination) {
-        combo.productsInShops.forEach {
+        combo.shoppingItems.forEach {
 
         }
 //        db.collection("userData")
@@ -163,8 +231,8 @@ object NewDatabaseHelper : DatabaseHelperInterface {
         return products
     }
 
-    override fun getProductsInShops(): ArrayList<ProductInShop> {
-        return productsInShops
+    override fun getShoppingItems(): ArrayList<ShoppingItem> {
+        return shoppingItems
     }
 
     fun addProductToMyShoppingList(product: Product) {
@@ -195,8 +263,5 @@ object NewDatabaseHelper : DatabaseHelperInterface {
         return myShoppingList
     }
 
-    override fun getMyShoppingItems(): ArrayList<ShoppingItem> {
-        return myShoppingItems
-    }
 
 }

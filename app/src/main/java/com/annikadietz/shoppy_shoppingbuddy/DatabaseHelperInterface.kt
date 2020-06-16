@@ -10,10 +10,8 @@ interface DatabaseHelperInterface {
 
     fun getProducts(): ArrayList<Product>
 
-    fun getProductsInShops(): ArrayList<ProductInShop>
-
     fun getMyShops(): ArrayList<Shop>
 
     fun getMyShoppingList(): ArrayList<Product>
-    fun getMyShoppingItems(): ArrayList<ShoppingItem>
+    fun getShoppingItems(): ArrayList<ShoppingItem>
 }

@@ -22,4 +22,11 @@ class Price {
         this.price = 0.0
         this.counter = 0
     }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    constructor(price: Double){
+        this.lastConfirmed = LocalDateTime.now().toString()
+        this.price = price
+        this.counter = 0
+    }
 }

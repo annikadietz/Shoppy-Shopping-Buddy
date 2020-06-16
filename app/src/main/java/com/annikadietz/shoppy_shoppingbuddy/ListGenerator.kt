@@ -1,6 +1,5 @@
 package com.annikadietz.shoppy_shoppingbuddy
 
-import android.app.PendingIntent.getActivity
 import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -98,15 +97,15 @@ class ListGenerator {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.N)
-    fun getCombinationsWithProductsInShops(shops: ArrayList<Shop>, shoppingList: ArrayList<Product>, products: ArrayList<ProductInShop>, listAdapter: ShopCombinationRecyclerAdapter) : ArrayList<Combination> {
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun getCombinationsWithProductsInShops(shops: ArrayList<Shop>, shoppingList: ArrayList<Product>, shoppingItems: ArrayList<ShoppingItem>, listAdapter: ShopCombinationRecyclerAdapter) : ArrayList<Combination> {
         var combos = findAllPossibleStoreCombinations(shops)
         combos.forEach {
             var combination = it
             shoppingList.forEach {
                 var product = it
-                var price = findBestPriceInShopCombination(product, combination, products)
-                combination.productsInShops?.add(price)
+                var price = findBestPriceInShopCombination(product, combination, shoppingItems)
+                combination.shoppingItems?.add(price)
             }
         }
         getFinalCombinations(combos, listAdapter)
@@ -116,11 +115,12 @@ class ListGenerator {
         return combos
     }
 
-    fun findBestPriceInShopCombination(product: Product, combination: Combination, products: ArrayList<ProductInShop>) : ProductInShop {
-        var lowestProductInShop = ProductInShop(product, Shop("Fake shop", "Fake address", "Fake address"), Double.MAX_VALUE)
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun findBestPriceInShopCombination(product: Product, combination: Combination, products: ArrayList<ShoppingItem>) : ShoppingItem {
+        var lowestProductInShop = ShoppingItem(product, Shop("Fake shop", "Fake address", "Fake address"), Double.MAX_VALUE)
         combination.shops?.forEach {
             var priceInShop = findPriceInShop(it, product, products)
-            if (priceInShop.price < lowestProductInShop.price) {
+            if (priceInShop.price.price < lowestProductInShop.price.price) {
                 if (priceInShop != null) {
                     lowestProductInShop = priceInShop
                 }
@@ -130,27 +130,29 @@ class ListGenerator {
         return lowestProductInShop
     }
 
-    fun findPriceInShop(shop: Shop, product: Product, products: ArrayList<ProductInShop>) : ProductInShop {
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun findPriceInShop(shop: Shop, product: Product, products: ArrayList<ShoppingItem>) : ShoppingItem {
         var result = products.find { p -> p.shop.streetAddress == shop.streetAddress && p.shop.name == shop.name && p.product.name == product.name }
         if (result != null) {
             return result
         }
         else {
-            return ProductInShop(product, Shop("Fake shop", "Fake address", "Fake address"), Double.MAX_VALUE)
+            return ShoppingItem(product, Shop("Fake shop", "Fake address", "Fake address"), Double.MAX_VALUE)
         }
     }
 
     fun getPriceFromCombination (combination: Combination): Double {
         var fullPrice = 0.0
-        combination.productsInShops?.forEach {
-                fullPrice += it.price
+        combination.shoppingItems?.forEach {
+                fullPrice += it.price.price
         }
         return fullPrice
     }
+    @RequiresApi(Build.VERSION_CODES.O)
     fun getCombinationWithBestPrice(combinations:ArrayList<Combination>, shopCount: Int) : Combination {
         var bestPriceCombination: Combination = Combination()
-        bestPriceCombination.productsInShops = ArrayList<ProductInShop>()
-        bestPriceCombination.productsInShops?.add(ProductInShop(Product(), Shop(), Double.MAX_VALUE))
+        bestPriceCombination.shoppingItems = ArrayList<ShoppingItem>()
+        bestPriceCombination.shoppingItems.add(ShoppingItem(Product(), Shop(), Double.MAX_VALUE))
         combinations.forEach{
             var combination = it
             if (combination.shops?.size == shopCount) {

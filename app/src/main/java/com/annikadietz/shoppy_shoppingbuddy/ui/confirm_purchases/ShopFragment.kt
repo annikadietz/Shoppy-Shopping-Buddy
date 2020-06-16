@@ -1,7 +1,5 @@
 package com.annikadietz.shoppy_shoppingbuddy.ui.confirm_purchases
 
-import android.app.AlertDialog
-import android.content.DialogInterface
 import android.graphics.Canvas
 import android.os.Build
 import android.os.Bundle
@@ -13,20 +11,13 @@ import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentContainer
-import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.annikadietz.shoppy_shoppingbuddy.Model.*
 import com.annikadietz.shoppy_shoppingbuddy.NewDatabaseHelper
 import com.annikadietz.shoppy_shoppingbuddy.R
-import com.google.android.material.snackbar.Snackbar
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
-import kotlinx.android.synthetic.main.activity_main.view.*
-import java.time.LocalDateTime
 
 
 class ShopFragment : Fragment() {
@@ -35,7 +26,7 @@ class ShopFragment : Fragment() {
     lateinit var recyclerAdapter: PurchasesAdapter
     lateinit var firstShop: ConstraintLayout
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
-    var shoppingItems = NewDatabaseHelper.getMyShoppingItems()
+    var shoppingItems = NewDatabaseHelper.getShoppingItems()
     private lateinit var root: View
     var combo = Combination()
     @RequiresApi(Build.VERSION_CODES.O)
@@ -52,14 +43,14 @@ class ShopFragment : Fragment() {
 //        val dividerItemDecoration =
 //            DividerItemDecoration(activity, DividerItemDecoration.VERTICAL)
 //        recyclerView.addItemDecoration(dividerItemDecoration)
-        var shoppingItem = ShoppingItem(Product(
-            "",
-            Type()),
-            Shop("Jumbo","RT75774","Gadkkd 122"),
-            Price(LocalDateTime.now().toString(),4.2, 2)
-        )
-        firstShop = root.findViewById<ConstraintLayout>(R.id.first_shop)
-        setUpShop(shoppingItem)
+//        var shoppingItem = ShoppingItem(Product(
+//            "",
+//            Type()),
+//            Shop("Jumbo","RT75774","Gadkkd 122"),
+//            Price(4.2)
+//        )
+//        firstShop = root.findViewById<ConstraintLayout>(R.id.first_shop)
+//        setUpShop(shoppingItem)
 
 
        //setupSwipeRefresh(root)

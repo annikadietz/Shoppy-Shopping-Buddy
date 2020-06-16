@@ -8,14 +8,13 @@ import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.annikadietz.shoppy_shoppingbuddy.Model.Combination
-import com.annikadietz.shoppy_shoppingbuddy.Model.ShoppingItem
 import com.annikadietz.shoppy_shoppingbuddy.NewDatabaseHelper
 import com.annikadietz.shoppy_shoppingbuddy.R
 import java.time.format.DateTimeFormatter
 
 class PurchasesAdapter(var combo: Combination) :
     RecyclerView.Adapter<PurchasesAdapter.ViewHolder>() {
-    var shoppingItems = NewDatabaseHelper.getMyShoppingItems()
+    var shoppingItems = NewDatabaseHelper.getShoppingItems()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val view: View = layoutInflater.inflate(R.layout.fragment_shopping_list_row_item_with_price, parent, false)

@@ -236,10 +236,10 @@ class ListGeneratorUnitTest {
         var combination = result.find { c -> c.shops!!.contains(jumbo) && c.shops!!.contains(aldi) }
 
         print(result)
-        Assert.assertTrue(combination?.productsInShops!!.contains(pizzaInJumbo))
-        Assert.assertTrue(combination?.productsInShops!!.contains(bananasInAldi))
-        Assert.assertTrue(combination?.productsInShops!!.contains(potatoesInJumbo))
-        Assert.assertTrue(combination?.productsInShops!!.contains(eggsInAldi))
+        Assert.assertTrue(combination?.shoppingItems!!.contains(pizzaInJumbo))
+        Assert.assertTrue(combination?.shoppingItems!!.contains(bananasInAldi))
+        Assert.assertTrue(combination?.shoppingItems!!.contains(potatoesInJumbo))
+        Assert.assertTrue(combination?.shoppingItems!!.contains(eggsInAldi))
     }
 
     @Test
@@ -269,10 +269,10 @@ class ListGeneratorUnitTest {
         pizzaInJumbo.price = 2.00
         bananasInJumbo.price = 1.00
 
-        combo4.productsInShops?.add(potatoesInJumbo)
-        combo4.productsInShops?.add(eggsInJumbo)
-        combo4.productsInShops?.add(pizzaInJumbo)
-        combo4.productsInShops?.add(bananasInJumbo)
+        combo4.shoppingItems?.add(potatoesInJumbo)
+        combo4.shoppingItems?.add(eggsInJumbo)
+        combo4.shoppingItems?.add(pizzaInJumbo)
+        combo4.shoppingItems?.add(bananasInJumbo)
         val ans = listGenerator.getPriceFromCombination(combo4)
         Assert.assertEquals(ans, 6.00, 0.0001)
     }
