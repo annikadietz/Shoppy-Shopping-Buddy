@@ -575,9 +575,4 @@ class ListGeneratorUnitTest {
             Assert.assertEquals(combo2_2, listGenerator.twoShopCombination)
             Assert.assertEquals(combo3_2, listGenerator.threeShopCombination)
         }
-
-    @Test
-    fun test() {
-        NewDatabaseHelper.confirmPrice(potatoesInJumbo)
-    }
 }
