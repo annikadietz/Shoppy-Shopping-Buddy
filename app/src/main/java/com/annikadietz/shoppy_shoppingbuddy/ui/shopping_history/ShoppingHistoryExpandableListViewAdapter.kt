@@ -11,10 +11,11 @@ import com.annikadietz.shoppy_shoppingbuddy.Model.PurchasedProduct
 import com.annikadietz.shoppy_shoppingbuddy.R
 import kotlinx.android.synthetic.main.shopping_history_group_header.view.*
 import kotlinx.android.synthetic.main.shopping_history_line.view.*
+import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-class ShoppingHistoryExpandableListViewAdapter(val _context: Context, var _listDataHeader: ArrayList<ShoppingHistoryFragment.DatePurchasedCollection>, private val _listChild: List<ShoppingHistoryFragment.DatePurchasedCollection>
+class ShoppingHistoryExpandableListViewAdapter(val _context: Context, var _listDataHeader: ArrayList<ShoppingHistoryFragment.DatePurchasedCollection>, val _startDate: Date, val _endDate: Date
 ) : BaseExpandableListAdapter() {
 
 
@@ -22,8 +23,18 @@ class ShoppingHistoryExpandableListViewAdapter(val _context: Context, var _listD
     var _listDataHeaderOriginal = ArrayList<ShoppingHistoryFragment.DatePurchasedCollection>()
 
     init {
-        _listDataHeaderFiltered = _listDataHeader
+        _listDataHeaderFiltered = filterData()
         _listDataHeaderOriginal.addAll(_listDataHeader)
+    }
+
+    fun filterData() : ArrayList<ShoppingHistoryFragment.DatePurchasedCollection> {
+        var filtered = arrayListOf<ShoppingHistoryFragment.DatePurchasedCollection>()
+        _listDataHeader.forEach {
+            if(it.date > _startDate && it.date < _endDate) {
+                filtered.add(it)
+            }
+        }
+        return filtered
     }
 
     override fun getChild(groupPosition: Int, childPosititon: Int): ArrayList<PurchasedProduct> {
@@ -68,8 +79,8 @@ class ShoppingHistoryExpandableListViewAdapter(val _context: Context, var _listD
         return 1
     }
 
-    override fun getGroup(groupPosition: Int): Date {
-        return this._listDataHeaderFiltered[groupPosition].date
+    override fun getGroup(groupPosition: Int): ShoppingHistoryFragment.DatePurchasedCollection {
+        return this._listDataHeaderFiltered[groupPosition]
     }
 
     override fun getGroupCount(): Int {
@@ -83,16 +94,22 @@ class ShoppingHistoryExpandableListViewAdapter(val _context: Context, var _listD
     override fun getGroupView(groupPosition: Int, isExpanded: Boolean,
                               convertView: View?, parent: ViewGroup): View {
         var convertView = convertView
-        val headerTitle = getGroup(groupPosition).toString()
+        val datePurchasedCollection = getGroup(groupPosition)
         if (convertView == null) {
             val infalInflater = this._context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             convertView = infalInflater.inflate(R.layout.shopping_history_group_header, null)
         }
 
-        convertView!!.date_text_view.text = headerTitle
+        val myFormat = "dd-MM-YYYY" //In which you need put here
+        val sdf = SimpleDateFormat(myFormat, Locale.US)
+
+        convertView!!.date_text_view.text = sdf.format(datePurchasedCollection.date)
+        convertView!!.total_items.text = "Items bought: " + datePurchasedCollection.purchased.size
+        convertView!!.total_amount.text = "Total price: " + datePurchasedCollection.purchased.sumByDouble { product -> product.item.price.price } + "€"
 
         return convertView!!
+
     }
 
     override fun hasStableIds(): Boolean {
