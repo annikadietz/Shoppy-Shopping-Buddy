@@ -99,6 +99,7 @@ class ShoppingHistoryExpandableListViewAdapter(val _context: Context, var _listD
             val infalInflater = this._context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             convertView = infalInflater.inflate(R.layout.shopping_history_group_header, null)
+            
         }
 
         val myFormat = "dd-MM-YYYY" //In which you need put here
