@@ -74,6 +74,15 @@ android:layout_height="match_parent">
     android:textColor="@android:color/white"
     android:text="@string/login"/>
 
+    <TextView
+        android:id="@+id/reset_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_login"
+        android:layout_marginTop="50dp"
+        android:text="Reset password"
+        android:textAlignment="center" />
+
 <ImageView
     android:layout_width="30dp"
     android:layout_height="30dp"
@@ -100,5 +109,7 @@ android:layout_height="match_parent">
         android:layout_height="wrap_content"
         android:max="100"
         android:progress="50" />
+
+
 
 </RelativeLayout>
