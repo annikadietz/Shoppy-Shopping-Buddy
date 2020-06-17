@@ -23,6 +23,7 @@ import com.annikadietz.shoppy_shoppingbuddy.Model.ShoppingItem
 import com.annikadietz.shoppy_shoppingbuddy.NewDatabaseHelper
 import com.annikadietz.shoppy_shoppingbuddy.R
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.textfield.TextInputEditText
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 
 
@@ -49,7 +50,7 @@ class ShopFragment : Fragment() {
             combo = it.toObject(Combination::class.java)!!
             if (combo.shops.size > 0){
                 val shop = combo.shops[0]
-                setUpFirstShop(shop, "Hoitingeslag%2029,%207824%20KG")
+                setUpFirstShop(shop, NewDatabaseHelper.address)
                 val shoppingItems = arrayListOf<ShoppingItem>()
                 combo.shoppingItems.forEach {
                     if(it.shop.name == shop.name && it.shop.streetAddress == shop.streetAddress&& it.shop.postCode == shop.postCode){
