@@ -7,6 +7,7 @@ import com.annikadietz.shoppy_shoppingbuddy.Model.*
 import com.annikadietz.shoppy_shoppingbuddy.Model.Shop
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.QuerySnapshot
@@ -216,6 +217,26 @@ object NewDatabaseHelper : DatabaseHelperInterface {
             .document(uid)
             .collection("confirmedPurchases")
             .add(shoppingItem)
+    }
+
+    fun requestPriceChange(shoppingItem: ShoppingItem) {
+        Firebase
+        val docs = db.collection("shoppingItems")
+            .whereEqualTo("product.name", shoppingItem.product.name)
+            .whereEqualTo("shop.name", shoppingItem.shop.name)
+            .whereEqualTo("shop.postCode", shoppingItem.shop.postCode)
+            .whereEqualTo("shop.streetAddress", shoppingItem.shop.streetAddress)
+            .get()
+
+//        docs.addOnCompleteListener { it ->
+//            it.result?.documents?.forEach {
+//                val updates = hashMapOf(
+//                    "price.counter" to FieldValue.increment(1),
+//                    "price.lastConfirmed" to LocalDateTime.now().toString()
+//                )
+//                it.reference.update(updates)
+//            }
+//        }
     }
 
 
