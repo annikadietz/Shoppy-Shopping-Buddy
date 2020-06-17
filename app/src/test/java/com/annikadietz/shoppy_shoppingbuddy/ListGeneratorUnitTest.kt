@@ -4,7 +4,6 @@ import android.content.Context
 import com.annikadietz.shoppy_shoppingbuddy.Model.*
 import com.annikadietz.shoppy_shoppingbuddy.Model.Shop
 import com.annikadietz.shoppy_shoppingbuddy.ui.your_list.ShopCombinationRecyclerAdapter
-import com.annikadietz.shoppy_shoppingbuddy.ui.your_list.ShoppingListRecyclerAdapter
 import org.json.JSONObject
 import org.junit.Assert
 import org.junit.Test
@@ -14,6 +13,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config
+import java.util.concurrent.TimeUnit
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [Config.OLDEST_SDK])
@@ -570,12 +570,9 @@ class ListGeneratorUnitTest {
 
             var adapter = ShopCombinationRecyclerAdapter({}, arrayListOf())
             listGenerator.getFinalCombinations(combinations, adapter)
+            Thread.sleep(1_000)
             Assert.assertEquals(combo1_2, listGenerator.oneShopCombination)
             Assert.assertEquals(combo2_2, listGenerator.twoShopCombination)
             Assert.assertEquals(combo3_2, listGenerator.threeShopCombination)
-
-            Assert.assertEquals(combo1_2.directions!!.timeToTravel!!, 192.0, 0.001)
-            Assert.assertEquals(combo2_2.directions!!.timeToTravel!!, 192.0, 0.001)
-            Assert.assertEquals(combo3_2.directions!!.timeToTravel!!, 192.0, 0.001)
         }
 }

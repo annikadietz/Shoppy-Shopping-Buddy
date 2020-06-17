@@ -3,6 +3,7 @@ package com.annikadietz.shoppy_shoppingbuddy.ui.confirm_purchases
 import android.graphics.Canvas
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,9 +17,12 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.annikadietz.shoppy_shoppingbuddy.Model.*
+import com.annikadietz.shoppy_shoppingbuddy.Model.Combination
+import com.annikadietz.shoppy_shoppingbuddy.Model.Shop
+import com.annikadietz.shoppy_shoppingbuddy.Model.ShoppingItem
 import com.annikadietz.shoppy_shoppingbuddy.NewDatabaseHelper
 import com.annikadietz.shoppy_shoppingbuddy.R
+import com.google.android.material.snackbar.Snackbar
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 
 
@@ -30,6 +34,9 @@ class ShopFragment : Fragment() {
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
     var shoppingItems = NewDatabaseHelper.getShoppingItems()
     private lateinit var root: View
+    private lateinit var shoppingItemDeleted: ShoppingItem
+
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -41,9 +48,9 @@ class ShopFragment : Fragment() {
         NewDatabaseHelper.getMyCombo().addOnSuccessListener {
             combo = it.toObject(Combination::class.java)!!
             if (combo.shops.size > 0){
-                var shop = combo.shops[0]
-                setUpFirstShop(shop)
-                var shoppingItems = arrayListOf<ShoppingItem>()
+                val shop = combo.shops[0]
+                setUpFirstShop(shop, "Hoitingeslag%2029,%207824%20KG")
+                val shoppingItems = arrayListOf<ShoppingItem>()
                 combo.shoppingItems.forEach {
                     if(it.shop.name == shop.name && it.shop.streetAddress == shop.streetAddress&& it.shop.postCode == shop.postCode){
                         shoppingItems.add(it)
@@ -52,9 +59,9 @@ class ShopFragment : Fragment() {
                 setUpRecyclerView(root.findViewById(R.id.first_shop_recyclerview), shoppingItems)
             }
             if (combo.shops.size > 1){
-                var shop = combo.shops[1]
-                setUpSecondShop(shop)
-                var shoppingItems = arrayListOf<ShoppingItem>()
+                val shop = combo.shops[1]
+                setUpSecondShop(shop, combo.shops[0].streetAddress + ", " + combo.shops[0].postCode)
+                val shoppingItems = arrayListOf<ShoppingItem>()
                 combo.shoppingItems.forEach {
                     if(it.shop.name == shop.name && it.shop.streetAddress == shop.streetAddress&& it.shop.postCode == shop.postCode){
                         shoppingItems.add(it)
@@ -63,9 +70,9 @@ class ShopFragment : Fragment() {
                 setUpRecyclerView(root.findViewById(R.id.second_shop_recyclerview), shoppingItems)
             }
             if (combo.shops.size > 2){
-                var shop = combo.shops[2]
-                setUpThirdShop(shop)
-                var shoppingItems = arrayListOf<ShoppingItem>()
+                val shop = combo.shops[2]
+                setUpThirdShop(shop, combo.shops[1].streetAddress + ", " + combo.shops[1].postCode)
+                val shoppingItems = arrayListOf<ShoppingItem>()
                 combo.shoppingItems.forEach {
                     if(it.shop.name == shop.name && it.shop.streetAddress == shop.streetAddress&& it.shop.postCode == shop.postCode){
                         shoppingItems.add(it)
@@ -74,12 +81,13 @@ class ShopFragment : Fragment() {
                 setUpRecyclerView(root.findViewById(R.id.third_shop_recyclerview), shoppingItems)
             }
         }
+
         return root
     }
 
-    fun setUpFirstShop(shop: Shop){
+    private fun setUpFirstShop(shop: Shop, startingLoc: String){
         ShopDirectionsManager(
-            "Hoitingeslag%2029,%207824%20KG",
+            startingLoc,
             shop,
             root,
             R.id.first_shop_name,
@@ -88,17 +96,9 @@ class ShopFragment : Fragment() {
         )
     }
 
-    fun setUpRecyclerView(recyclerView: RecyclerView, shoppingItems: ArrayList<ShoppingItem>){
-        recyclerView.adapter = PurchasesAdapter(shoppingItems)
-        var dividerItemDecoration = DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL)
-        recyclerView.addItemDecoration(dividerItemDecoration)
-        recyclerView.layoutManager = LinearLayoutManager(this.context)
-
-    }
-
-    fun setUpSecondShop(shop: Shop){
+    private fun setUpSecondShop(shop: Shop, startingLoc: String?){
         ShopDirectionsManager(
-            "Hoitingeslag%2029,%207824%20KG",
+            startingLoc,
             shop,
             root,
             R.id.second_shop_name,
@@ -107,9 +107,9 @@ class ShopFragment : Fragment() {
         )
     }
 
-    fun setUpThirdShop(shop: Shop){
+    private fun setUpThirdShop(shop: Shop, startingLoc: String){
         ShopDirectionsManager(
-            "Hoitingeslag%2029,%207824%20KG",
+            startingLoc,
             shop,
             root,
             R.id.third_shop_name,
@@ -118,100 +118,222 @@ class ShopFragment : Fragment() {
         )
     }
 
-    private var simpleCallback: ItemTouchHelper.SimpleCallback =
-        object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
-            override fun onMove(
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder,
-                target: RecyclerView.ViewHolder
-            ): Boolean {
-                return false
-            }
+    fun setUpRecyclerView(recyclerView: RecyclerView, shoppingItems: ArrayList<ShoppingItem>){
+        val pa = PurchasesAdapter(shoppingItems)
+        recyclerView.adapter = pa
+        val dividerItemDecoration = DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL)
+        recyclerView.addItemDecoration(dividerItemDecoration)
+        recyclerView.layoutManager = LinearLayoutManager(this.context)
 
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val position = viewHolder.adapterPosition
-                when (direction) {
-                    ItemTouchHelper.LEFT -> {
 
-//                        Snackbar.make(
-//                            purchasesViewModel.recyclerView,
-//                            purchasesViewModel.deletedMovie!!,
-//                            Snackbar.LENGTH_LONG
-//                        )
-//                            .setAction("Undo") {
-//                                purchasesViewModel.shoppingList.add(
-//                                    position,
-//                                    purchasesViewModel.deletedMovie
-//                                )
-//                                purchasesViewModel.recyclerAdapter.notifyItemInserted(position)
-//                            }.show()
-                    }
-                    ItemTouchHelper.RIGHT -> {
-//                        val movieName = purchasesViewModel.shoppingList[position]
+        setupSwipingDeleteAndConfirm(recyclerView, shoppingItems, pa)
+    }
 
-//                        Snackbar.make(
-//                            purchasesViewModel.recyclerView,
-//                            "$movieName, Archived.",
-//                            Snackbar.LENGTH_LONG
-//                        )
+    private fun setupSwipingDeleteAndConfirm(recyclerView: RecyclerView, shoppingItems: ArrayList<ShoppingItem>, pa: PurchasesAdapter) {
+        val simpleCallback: ItemTouchHelper.SimpleCallback =
+            object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+
+
+                override fun onMove(
+                    recyclerView: RecyclerView,
+                    viewHolder: RecyclerView.ViewHolder,
+                    target: RecyclerView.ViewHolder
+                ): Boolean {
+                    return false
+                }
+
+                @RequiresApi(Build.VERSION_CODES.O)
+                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                    val position = viewHolder.adapterPosition
+                    when (direction) {
+                        ItemTouchHelper.LEFT -> {
+                            Log.w("IndexP", position.toString())
+                        shoppingItemDeleted = shoppingItems[position]
+                        shoppingItems.removeAt(position)
+                            pa.notifyItemRemoved(position)
+//
+                        Snackbar.make(
+                            root,
+                            shoppingItemDeleted.product.name,
+                            Snackbar.LENGTH_LONG
+                        )
+                            .setAction("Undo") {
+                                shoppingItems.add(
+                                    position,
+                                    shoppingItemDeleted
+                                )
+                                pa.notifyItemInserted(position)
+                            }.show()
+                        }
+                        ItemTouchHelper.RIGHT -> {
+                        val shoppingItemCurrent = shoppingItems[position]
+                        NewDatabaseHelper.confirmPurchase(shoppingItemCurrent)
+                        NewDatabaseHelper.confirmPrice(shoppingItemCurrent)
+
+                        shoppingItems.removeAt(position)
+                        pa.notifyItemRemoved(position)
+                        Snackbar.make(
+                            root,
+                            "${shoppingItemCurrent.product.name} confirmed",
+                            Snackbar.LENGTH_LONG
+                        )
 //                            .setAction("Undo") {
 //
 //
-//                            }.show()
+//                            }
+//
+                            .show()
+                        }
                     }
+                }
+
+                override fun onChildDraw(
+                    c: Canvas,
+                    recyclerView: RecyclerView,
+                    viewHolder: RecyclerView.ViewHolder,
+                    dX: Float,
+                    dY: Float,
+                    actionState: Int,
+                    isCurrentlyActive: Boolean
+                ) {
+                    RecyclerViewSwipeDecorator.Builder(
+                        activity,
+                        c,
+                        recyclerView,
+                        viewHolder,
+                        dX,
+                        dY,
+                        actionState,
+                        isCurrentlyActive
+                    )
+                        .addSwipeLeftBackgroundColor(
+                            ContextCompat.getColor(activity!!.applicationContext, R.color.colorAccent)
+                        )
+                        .addSwipeLeftActionIcon(R.drawable.ic_delete_black_24dp)
+                        .addSwipeRightBackgroundColor(
+                            ContextCompat.getColor(activity!!.applicationContext, R.color.colorPrimaryDark)
+                        )
+                        .addSwipeRightActionIcon(R.drawable.ic_archive_black_24dp)
+                        .setActionIconTint(
+                            ContextCompat.getColor(
+                                recyclerView.context,
+                                android.R.color.white
+                            )
+                        )
+                        .create()
+                        .decorate()
+                    super.onChildDraw(
+                        c,
+                        recyclerView,
+                        viewHolder,
+                        dX,
+                        dY,
+                        actionState,
+                        isCurrentlyActive
+                    )
                 }
             }
 
-            override fun onChildDraw(
-                c: Canvas,
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder,
-                dX: Float,
-                dY: Float,
-                actionState: Int,
-                isCurrentlyActive: Boolean
-            ) {
-                RecyclerViewSwipeDecorator.Builder(
-                    activity,
-                    c,
-                    recyclerView,
-                    viewHolder,
-                    dX,
-                    dY,
-                    actionState,
-                    isCurrentlyActive
-                )
-                    .addSwipeLeftBackgroundColor(
-                        ContextCompat.getColor(activity!!.applicationContext, R.color.colorAccent)
-                    )
-                    .addSwipeLeftActionIcon(R.drawable.ic_delete_black_24dp)
-                    .addSwipeRightBackgroundColor(
-                        ContextCompat.getColor(activity!!.applicationContext, R.color.colorPrimaryDark)
-                    )
-                    .addSwipeRightActionIcon(R.drawable.ic_archive_black_24dp)
-                    .setActionIconTint(
-                        ContextCompat.getColor(
-                            recyclerView.context,
-                            android.R.color.white
-                        )
-                    )
-                    .create()
-                    .decorate()
-                super.onChildDraw(
-                    c,
-                    recyclerView,
-                    viewHolder,
-                    dX,
-                    dY,
-                    actionState,
-                    isCurrentlyActive
-                )
-            }
-        }
-
-    fun setupSwipingDeleteAndConfirm(simpleCallback: ItemTouchHelper.SimpleCallback) {
         val itemTouchHelper = ItemTouchHelper(simpleCallback)
         itemTouchHelper.attachToRecyclerView(recyclerView)
+
     }
+
+//    private var simpleCallback: ItemTouchHelper.SimpleCallback =
+//        object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+//
+//
+//            override fun onMove(
+//                recyclerView: RecyclerView,
+//                viewHolder: RecyclerView.ViewHolder,
+//                target: RecyclerView.ViewHolder
+//            ): Boolean {
+//                return false
+//            }
+//
+//            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+//                val position = viewHolder.adapterPosition
+//                when (direction) {
+//                    ItemTouchHelper.LEFT -> {
+//                        Log.w("IndexP", position.toString())
+////                        shoppingItem = moviesList.get(position)
+////                        moviesList.removeAt(position)
+////                        recyclerAdapter.notifyItemRemoved(position)
+////
+////                        Snackbar.make(
+////                            root,
+////                            purchasesViewModel.deletedMovie!!,
+////                            Snackbar.LENGTH_LONG
+////                        )
+////                            .setAction("Undo") {
+////                                purchasesViewModel.shoppingList.add(
+////                                    position,
+////                                    purchasesViewModel.deletedMovie
+////                                )
+////                                purchasesViewModel.recyclerAdapter.notifyItemInserted(position)
+////                            }.show()
+//                    }
+//                    ItemTouchHelper.RIGHT -> {
+////                        val movieName = purchasesViewModel.shoppingList[position]
+//
+////                        Snackbar.make(
+////                            purchasesViewModel.recyclerView,
+////                            "$movieName, Archived.",
+////                            Snackbar.LENGTH_LONG
+////                        )
+////                            .setAction("Undo") {
+////
+////
+////                            }.show()
+//                    }
+//                }
+//            }
+//
+//            override fun onChildDraw(
+//                c: Canvas,
+//                recyclerView: RecyclerView,
+//                viewHolder: RecyclerView.ViewHolder,
+//                dX: Float,
+//                dY: Float,
+//                actionState: Int,
+//                isCurrentlyActive: Boolean
+//            ) {
+//                RecyclerViewSwipeDecorator.Builder(
+//                    activity,
+//                    c,
+//                    recyclerView,
+//                    viewHolder,
+//                    dX,
+//                    dY,
+//                    actionState,
+//                    isCurrentlyActive
+//                )
+//                    .addSwipeLeftBackgroundColor(
+//                        ContextCompat.getColor(activity!!.applicationContext, R.color.colorAccent)
+//                    )
+//                    .addSwipeLeftActionIcon(R.drawable.ic_delete_black_24dp)
+//                    .addSwipeRightBackgroundColor(
+//                        ContextCompat.getColor(activity!!.applicationContext, R.color.colorPrimaryDark)
+//                    )
+//                    .addSwipeRightActionIcon(R.drawable.ic_archive_black_24dp)
+//                    .setActionIconTint(
+//                        ContextCompat.getColor(
+//                            recyclerView.context,
+//                            android.R.color.white
+//                        )
+//                    )
+//                    .create()
+//                    .decorate()
+//                super.onChildDraw(
+//                    c,
+//                    recyclerView,
+//                    viewHolder,
+//                    dX,
+//                    dY,
+//                    actionState,
+//                    isCurrentlyActive
+//                )
+//            }
+//        }
 
 }

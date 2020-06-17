@@ -7,9 +7,7 @@ import android.view.MenuItem
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.annikadietz.shoppy_shoppingbuddy.Model.Combination
-import com.annikadietz.shoppy_shoppingbuddy.Model.Price
-import com.annikadietz.shoppy_shoppingbuddy.Model.ShoppingItem
+import com.annikadietz.shoppy_shoppingbuddy.Model.*
 import com.annikadietz.shoppy_shoppingbuddy.ui.confirm_purchases.ShopFragment
 import com.annikadietz.shoppy_shoppingbuddy.ui.product_search.ProductSearchFragment
 import com.annikadietz.shoppy_shoppingbuddy.ui.shop_selection.ShopSelectionFragment
@@ -30,6 +28,7 @@ class MainActivity : AppCompatActivity()  {
 
     var uid: String = ""
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val uid = intent.getStringExtra("UID")
@@ -47,6 +46,10 @@ class MainActivity : AppCompatActivity()  {
         NewDatabaseHelper.subscribeMyShoppingList()
         NewDatabaseHelper.subscribeMyShoppingItems()
 
+
+//        val shoppingItem = ShoppingItem(Product("Pizza - Italia", Type("Frozen")), Shop("Aldi", "7824JA", "Kerspellaan 9"), 3.0)
+//        NewDatabaseHelper.confirmPrice(shoppingItem)
+//        NewDatabaseHelper.confirmPurchase(shoppingItem)
     }
 
     private var navListener = BottomNavigationView.OnNavigationItemSelectedListener(object :
@@ -54,6 +57,7 @@ class MainActivity : AppCompatActivity()  {
         override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
             return true
         }
+        @RequiresApi(Build.VERSION_CODES.O)
         override fun invoke(menuItem: MenuItem): Boolean {
             var selectedFragment: Fragment = when(menuItem.itemId) {
                 R.id.nav_search -> productSearchFragment
