@@ -45,41 +45,45 @@ class ShopFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         root = inflater.inflate(R.layout.fragment_shopping_list, container, false)
-        var combo: Combination
         NewDatabaseHelper.getMyCombo().addOnSuccessListener {
-            combo = it.toObject(Combination::class.java)!!
-            if (combo.shops.size > 0){
-                val shop = combo.shops[0]
-                setUpFirstShop(shop, NewDatabaseHelper.address)
-                val shoppingItems = arrayListOf<ShoppingItem>()
-                combo.shoppingItems.forEach {
-                    if(it.shop.name == shop.name && it.shop.streetAddress == shop.streetAddress&& it.shop.postCode == shop.postCode){
-                        shoppingItems.add(it)
+
+            if (it != null) {
+                var combo = it.toObject(Combination::class.java)
+                if (combo != null) {
+                    if (combo!!.shops.size > 0){
+                        val shop = combo!!.shops[0]
+                        setUpFirstShop(shop, NewDatabaseHelper.address)
+                        val shoppingItems = arrayListOf<ShoppingItem>()
+                        combo!!.shoppingItems.forEach {
+                            if(it.shop.name == shop.name && it.shop.streetAddress == shop.streetAddress&& it.shop.postCode == shop.postCode){
+                                shoppingItems.add(it)
+                            }
+                        }
+                        setUpRecyclerView(root.findViewById(R.id.first_shop_recyclerview), shoppingItems)
+                    }
+                    if (combo!!.shops.size > 1){
+                        val shop = combo!!.shops[1]
+                        setUpSecondShop(shop, combo!!.shops[0].streetAddress + ", " + combo!!.shops[0].postCode)
+                        val shoppingItems = arrayListOf<ShoppingItem>()
+                        combo!!.shoppingItems.forEach {
+                            if(it.shop.name == shop.name && it.shop.streetAddress == shop.streetAddress&& it.shop.postCode == shop.postCode){
+                                shoppingItems.add(it)
+                            }
+                        }
+                        setUpRecyclerView(root.findViewById(R.id.second_shop_recyclerview), shoppingItems)
+                    }
+                    if (combo!!.shops.size > 2){
+                        val shop = combo!!.shops[2]
+                        setUpThirdShop(shop, combo!!.shops[1].streetAddress + ", " + combo!!.shops[1].postCode)
+                        val shoppingItems = arrayListOf<ShoppingItem>()
+                        combo!!.shoppingItems.forEach {
+                            if(it.shop.name == shop.name && it.shop.streetAddress == shop.streetAddress&& it.shop.postCode == shop.postCode){
+                                shoppingItems.add(it)
+                            }
+                        }
+                        setUpRecyclerView(root.findViewById(R.id.third_shop_recyclerview), shoppingItems)
                     }
                 }
-                setUpRecyclerView(root.findViewById(R.id.first_shop_recyclerview), shoppingItems)
-            }
-            if (combo.shops.size > 1){
-                val shop = combo.shops[1]
-                setUpSecondShop(shop, combo.shops[0].streetAddress + ", " + combo.shops[0].postCode)
-                val shoppingItems = arrayListOf<ShoppingItem>()
-                combo.shoppingItems.forEach {
-                    if(it.shop.name == shop.name && it.shop.streetAddress == shop.streetAddress&& it.shop.postCode == shop.postCode){
-                        shoppingItems.add(it)
-                    }
-                }
-                setUpRecyclerView(root.findViewById(R.id.second_shop_recyclerview), shoppingItems)
-            }
-            if (combo.shops.size > 2){
-                val shop = combo.shops[2]
-                setUpThirdShop(shop, combo.shops[1].streetAddress + ", " + combo.shops[1].postCode)
-                val shoppingItems = arrayListOf<ShoppingItem>()
-                combo.shoppingItems.forEach {
-                    if(it.shop.name == shop.name && it.shop.streetAddress == shop.streetAddress&& it.shop.postCode == shop.postCode){
-                        shoppingItems.add(it)
-                    }
-                }
-                setUpRecyclerView(root.findViewById(R.id.third_shop_recyclerview), shoppingItems)
             }
         }
 
