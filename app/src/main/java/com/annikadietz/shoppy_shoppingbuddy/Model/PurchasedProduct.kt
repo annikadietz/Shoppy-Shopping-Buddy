@@ -5,17 +5,17 @@ import androidx.annotation.RequiresApi
 import java.util.*
 
 class PurchasedProduct {
-    var buyedAt: Date
+    var boughtAt: Date
     var item: ShoppingItem
 
     constructor(buyedAt: Date, item: ShoppingItem){
-        this.buyedAt = buyedAt
+        this.boughtAt = buyedAt
         this.item = item
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     constructor(){
-        this.buyedAt = Date()
+        this.boughtAt = Date()
         this.item = ShoppingItem()
     }
 }

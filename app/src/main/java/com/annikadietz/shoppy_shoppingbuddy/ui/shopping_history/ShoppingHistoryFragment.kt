@@ -70,15 +70,14 @@ class ShoppingHistoryFragment : Fragment() {
         purchasedProducts = arrayListOf<DatePurchasedCollection>()
 
         myPurchasedProducts.forEach {
-            calendar.setTime(it.buyedAt)
+            calendar.setTime(it.boughtAt)
             var cal2 = Calendar.getInstance()
             var result = purchasedProducts.find { purchased -> cal2.setTime(purchased.date)
                 cal2.get(Calendar.DAY_OF_YEAR) == calendar.get(Calendar.DAY_OF_YEAR) &&
                         cal2.get(Calendar.YEAR) == calendar.get(Calendar.YEAR)
             }
             if (result == null) {
-                //dates.add(it.buyedAt)
-                var purchased = DatePurchasedCollection(it.buyedAt)
+                var purchased = DatePurchasedCollection(it.boughtAt)
                 purchased.purchased.add(it)
                 purchasedProducts.add(purchased)
             }
