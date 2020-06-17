@@ -192,12 +192,14 @@ object NewDatabaseHelper : DatabaseHelperInterface {
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun confirmPrice(shoppingItem: ShoppingItem) {
-        val doc = db.collection("shoppingItems")
+        val docs = db.collection("shoppingItems")
             .whereEqualTo("product.name", shoppingItem.product.name)
             .whereEqualTo("shop.name", shoppingItem.shop.name)
+            .whereEqualTo("shop.postCode", shoppingItem.shop.postCode)
+            .whereEqualTo("shop.streetAddress", shoppingItem.shop.streetAddress)
             .get()
 
-        doc.addOnCompleteListener { it ->
+        docs.addOnCompleteListener { it ->
             it.result?.documents?.forEach {
                 val updates = hashMapOf(
                     "price.counter" to FieldValue.increment(1),

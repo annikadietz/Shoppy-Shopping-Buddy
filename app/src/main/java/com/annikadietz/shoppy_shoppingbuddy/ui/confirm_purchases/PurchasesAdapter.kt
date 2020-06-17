@@ -19,6 +19,8 @@ import java.time.format.DateTimeFormatter
 
 class PurchasesAdapter(var shoppingItems: ArrayList<ShoppingItem>) :
     RecyclerView.Adapter<PurchasesAdapter.ViewHolder>() {
+
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val view: View = layoutInflater.inflate(R.layout.fragment_shopping_list_row_item_with_price, parent, false)
@@ -41,7 +43,7 @@ class PurchasesAdapter(var shoppingItems: ArrayList<ShoppingItem>) :
                 holder.lastConfirmed.text = period.toHours().toString() + " hours ago"
             }
         } else if (period.toDays().toInt() == 1){
-            holder.lastConfirmed.text = "One day ago"
+            holder.lastConfirmed.text = "A day ago"
         } else {
             holder.lastConfirmed.text = period.toDays().toString() + " days ago"
         }

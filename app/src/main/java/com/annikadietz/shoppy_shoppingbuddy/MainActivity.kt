@@ -47,9 +47,9 @@ class MainActivity : AppCompatActivity()  {
         NewDatabaseHelper.subscribeMyShoppingItems()
 
 
-        val shoppingItem = ShoppingItem(Product("Pizza - Italia", Type("Frozen")), Shop("Aldi", "7824JA", "Kerspellaan 9"), 3.0)
+//        val shoppingItem = ShoppingItem(Product("Pizza - Italia", Type("Frozen")), Shop("Aldi", "7824JA", "Kerspellaan 9"), 3.0)
 //        NewDatabaseHelper.confirmPrice(shoppingItem)
-        NewDatabaseHelper.confirmPurchase(shoppingItem)
+//        NewDatabaseHelper.confirmPurchase(shoppingItem)
     }
 
     private var navListener = BottomNavigationView.OnNavigationItemSelectedListener(object :
