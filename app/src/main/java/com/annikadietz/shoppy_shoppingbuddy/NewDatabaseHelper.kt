@@ -24,6 +24,7 @@ object NewDatabaseHelper : DatabaseHelperInterface {
     private var myShoppingList = arrayListOf<Product>()
     private var myShoppingItems = arrayListOf<ShoppingItem>()
     var uid: String = ""
+    var address: String = "Hoitingeslag%29,%207824%20KG"
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun newData () {

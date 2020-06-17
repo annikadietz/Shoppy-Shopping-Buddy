@@ -41,6 +41,7 @@ class YourListFragment(val listener: (Combination) -> Unit, val activity: MainAc
         var updateButton = root.findViewById<Button>(R.id.update_with_address)
         updateButton.setOnClickListener {
             listGenerator.myLocation = yourAddressField.text.toString()
+            NewDatabaseHelper.address = yourAddressField.text.toString()
             updateCombos()
         }
 
