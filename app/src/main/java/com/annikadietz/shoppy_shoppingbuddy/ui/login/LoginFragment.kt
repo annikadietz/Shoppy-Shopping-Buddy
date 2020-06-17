@@ -61,15 +61,19 @@ class LoginFragment : Fragment() {
         }
 
         progressBar.visibility = View.VISIBLE
-        loginUser(email, password)?.addOnCompleteListener(OnCompleteListener<AuthResult?> { task ->
-            progressBar.visibility = View.GONE
+        loginUser(email, password)?.addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                Log.w("auth", task.result.toString())
-                Toast.makeText(activity, "SUCCESS", Toast.LENGTH_LONG).show()
-                NewDatabaseHelper.uid = task.result?.user!!.uid
-                val intent = Intent(this.requireContext(), MainActivity::class.java)
-                startActivity(intent)
-                activity?.finish()
+                if(task.result?.user!!.isEmailVerified){
+                    Toast.makeText(activity, "Logged in!", Toast.LENGTH_SHORT).show()
+                    NewDatabaseHelper.uid = task.result?.user!!.uid
+                    val intent = Intent(this.requireContext(), MainActivity::class.java)
+                    startActivity(intent)
+                    activity?.finish()
+                } else {
+                    Toast.makeText(activity, "Verify your email and try again.", Toast.LENGTH_SHORT).show()
+                }
+                progressBar.visibility = View.GONE
+
             } else {
                 if (password.text.toString().length < 6) {
                     password.error = getString(R.string.minimum_password)
@@ -77,8 +81,9 @@ class LoginFragment : Fragment() {
                     Log.w("auth", task.exception.toString())
                     Toast.makeText(activity, "FAILED", Toast.LENGTH_LONG).show()
                 }
+                progressBar.visibility = View.GONE
             }
-        })
+        }
     }
 
     fun loginUser(email: EditText, password: EditText): Task<AuthResult>? {

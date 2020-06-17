@@ -20,7 +20,7 @@ import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.fragment_register.*
 
 class RegisterFragment : Fragment() {
-    private var mAuth: FirebaseAuth? = null
+    private var mAuth: FirebaseAuth = FirebaseAuth.getInstance()
 
     companion object {
         fun newInstance() =
@@ -44,9 +44,6 @@ class RegisterFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(RegisterViewModel::class.java)
-
-
-        mAuth = FirebaseAuth.getInstance()
 
         if (mAuth!!.getCurrentUser() != null) {
 //            startActivity(Intent(this, MainActivity::class.java))
@@ -78,22 +75,24 @@ class RegisterFragment : Fragment() {
         if (!passwordMatchCheck("Passwords must match, please enter password again", password.text.toString(), repassword.text.toString())) {
             return
         }
-
         progressBar.visibility = View.VISIBLE
-        registerUser(email, password)!!
-            .addOnCompleteListener(OnCompleteListener<AuthResult?> { task ->
-                progressBar.visibility = View.GONE
-
-                if (task.isSuccessful) {
-                    Toast.makeText(activity, "Authentication success." + task.isSuccessful,
-                        Toast.LENGTH_LONG).show()
-                        startActivity(Intent(activity, MainActivity::class.java))
-                        activity?.finish()
+        mAuth.createUserWithEmailAndPassword(email.text.toString(), password.text.toString())
+            .addOnCompleteListener {
+                var task = it
+                if(task.isSuccessful){
+                    mAuth.currentUser?.sendEmailVerification()?.addOnCompleteListener {
+                        if (it.isSuccessful){
+                            Toast.makeText(activity, "User registered successfully!", Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(activity, "User not registered - problem with you email.", Toast.LENGTH_LONG).show()
+                        }
+                        progressBar.visibility = View.GONE
+                    }
                 } else {
-                    Toast.makeText(activity, "Authentication failed." + task.exception,
-                        Toast.LENGTH_LONG).show()
+                    Toast.makeText(activity, "User not registered.", Toast.LENGTH_LONG).show()
                 }
-            })
+                progressBar.visibility = View.GONE
+            }
     }
 
     private fun passwordMatchCheck(message: String, password: String, repassword: String): Boolean {
