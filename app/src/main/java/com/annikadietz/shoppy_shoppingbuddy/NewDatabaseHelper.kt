@@ -5,10 +5,15 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import com.annikadietz.shoppy_shoppingbuddy.Model.*
 import com.annikadietz.shoppy_shoppingbuddy.Model.Shop
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import java.time.LocalDateTime
+
 
 object NewDatabaseHelper : DatabaseHelperInterface {
     private var db = Firebase.firestore
@@ -183,6 +188,31 @@ object NewDatabaseHelper : DatabaseHelperInterface {
         return db.collection("userData")
             .document(uid)
             .get()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun confirmPrice(shoppingItem: ShoppingItem) {
+        val doc = db.collection("shoppingItems")
+            .whereEqualTo("product.name", shoppingItem.product.name)
+            .whereEqualTo("shop.name", shoppingItem.shop.name)
+            .get()
+
+        doc.addOnCompleteListener { it ->
+            it.result?.documents?.forEach {
+                val updates = hashMapOf(
+                    "price.counter" to FieldValue.increment(1),
+                    "price.lastConfirmed" to LocalDateTime.now().toString()
+                )
+                it.reference.update(updates)
+            }
+        }
+    }
+
+    fun confirmPurchase(shoppingItem: ShoppingItem) {
+        db.collection("userData")
+            .document(uid)
+            .collection("confirmedPurchases")
+            .add(shoppingItem)
     }
 
 

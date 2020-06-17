@@ -4,10 +4,6 @@ import android.content.Context
 import com.annikadietz.shoppy_shoppingbuddy.Model.*
 import com.annikadietz.shoppy_shoppingbuddy.Model.Shop
 import com.annikadietz.shoppy_shoppingbuddy.ui.your_list.ShopCombinationRecyclerAdapter
-import com.annikadietz.shoppy_shoppingbuddy.ui.your_list.ShoppingListRecyclerAdapter
-import com.google.android.gms.tasks.Tasks.await
-import com.google.android.gms.tasks.Task
-import kotlinx.coroutines.android.awaitFrame
 import org.json.JSONObject
 import org.junit.Assert
 import org.junit.Test
@@ -579,4 +575,9 @@ class ListGeneratorUnitTest {
             Assert.assertEquals(combo2_2, listGenerator.twoShopCombination)
             Assert.assertEquals(combo3_2, listGenerator.threeShopCombination)
         }
+
+    @Test
+    fun test() {
+        NewDatabaseHelper.confirmPrice(potatoesInJumbo)
+    }
 }
