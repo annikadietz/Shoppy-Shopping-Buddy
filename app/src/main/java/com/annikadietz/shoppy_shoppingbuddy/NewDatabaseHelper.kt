@@ -5,14 +5,15 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import com.annikadietz.shoppy_shoppingbuddy.Model.*
 import com.annikadietz.shoppy_shoppingbuddy.Model.Shop
-import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldValue
-import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import java.time.LocalDateTime
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 
 object NewDatabaseHelper : DatabaseHelperInterface {
@@ -23,6 +24,7 @@ object NewDatabaseHelper : DatabaseHelperInterface {
     private var shoppingItems = arrayListOf<ShoppingItem>()
     private var myShoppingList = arrayListOf<Product>()
     private var myShoppingItems = arrayListOf<ShoppingItem>()
+    private var myPurchasedProducts = arrayListOf<PurchasedProduct>()
     var uid: String = ""
     var address: String = "Hoitingeslag 29, 7824 KG"
 
@@ -211,11 +213,23 @@ object NewDatabaseHelper : DatabaseHelperInterface {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun confirmPurchase(shoppingItem: ShoppingItem) {
+        var purchasedProduct = PurchasedProduct(Calendar.getInstance().time, shoppingItem)
         db.collection("userData")
             .document(uid)
             .collection("confirmedPurchases")
-            .add(shoppingItem)
+            .add(purchasedProduct)
+    }
+
+    fun subscribeShoppedProducts() {
+        db.collection("userData")
+            .document(uid)
+            .collection("confirmedPurchases")
+            .addSnapshotListener { results, e ->
+                myPurchasedProducts.clear()
+                results?.forEach { product -> myPurchasedProducts.add(product.toObject(PurchasedProduct::class.java)) }
+            }
     }
 
 
@@ -309,6 +323,10 @@ object NewDatabaseHelper : DatabaseHelperInterface {
 
     override fun getMyShoppingList(): ArrayList<Product> {
         return myShoppingList
+    }
+
+    fun getPurchasedProducts(): ArrayList<PurchasedProduct> {
+        return myPurchasedProducts
     }
 
 
