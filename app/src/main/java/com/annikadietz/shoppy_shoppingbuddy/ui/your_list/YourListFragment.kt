@@ -20,7 +20,7 @@ import com.annikadietz.shoppy_shoppingbuddy.R
 import com.google.android.material.textfield.TextInputEditText
 
 class YourListFragment(val listener: (Combination) -> Unit, val activity: MainActivity) : Fragment() {
-    var listGenerator = ListGenerator(this.activity,"Hoitingeslag%29,%207824%20KG")
+    var listGenerator = ListGenerator(this.activity,"Hoitingeslag 29, 7824 KG")
     lateinit var recyclerAdapter: ShopCombinationRecyclerAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
