@@ -38,7 +38,7 @@ class ProductSearchFragmentUnitTest {
     @Test
     fun filter_test() {
         var dbh = MockDatabaseHelper()
-        var adapter = RecyclerAdapter(dbh.getProducts())
+        var adapter = RecyclerAdapter(dbh)
 
         adapter.filter.filter("pizza")
         assertTrue(adapter.productsFiltered[0].name?.contains("Pizza")!! && adapter.productsFiltered.size == 1)
@@ -50,7 +50,7 @@ class ProductSearchFragmentUnitTest {
     @Test
     fun filterWithType_test() {
         var dbh = MockDatabaseHelper()
-        var adapter = RecyclerAdapter(dbh.getProducts())
+        var adapter = RecyclerAdapter(dbh)
         adapter.selectedType = "Frozen"
         adapter.filter.filter("pizza")
         assertTrue(adapter.productsFiltered[0].name?.contains("Pizza")!! && adapter.productsFiltered.size == 1)

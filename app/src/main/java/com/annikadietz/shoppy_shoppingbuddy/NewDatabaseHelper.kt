@@ -283,13 +283,13 @@ object NewDatabaseHelper : DatabaseHelperInterface {
         return shoppingItems
     }
 
-    fun addProductToMyShoppingList(product: Product) {
+    override fun addProductToMyShoppingList(product: Product) {
         db.collection("shoppingLists")
             .document(uid)
             .collection("shoppingList")
             .add(product)
     }
-    fun deleteProductFormMyShoppingList(product: Product) {
+    override fun deleteProductFormMyShoppingList(product: Product) {
         var matchingShoppingListEntries = db.collection("shoppingLists")
             .document(uid)
             .collection("shoppingList")

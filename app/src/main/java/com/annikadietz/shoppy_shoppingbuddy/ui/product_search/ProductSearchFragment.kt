@@ -49,7 +49,7 @@ class ProductSearchFragment(dbh: DatabaseHelperInterface) : Fragment() {
 
         products = NewDatabaseHelper.getProducts()
 
-        recyclerAdapter = RecyclerAdapter(products)
+        recyclerAdapter = RecyclerAdapter(NewDatabaseHelper)
 
         recyclerView.layoutManager = LinearLayoutManager(this.context)
         recyclerView.adapter = recyclerAdapter

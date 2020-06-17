@@ -6,17 +6,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
+import com.annikadietz.shoppy_shoppingbuddy.DatabaseHelperInterface
 import com.annikadietz.shoppy_shoppingbuddy.Model.Product
 import com.annikadietz.shoppy_shoppingbuddy.NewDatabaseHelper
 import com.annikadietz.shoppy_shoppingbuddy.R
 
-public class RecyclerAdapter: RecyclerView.Adapter<RecyclerAdapter.ViewHolder>, Filterable {
+public class RecyclerAdapter(var databaseHelper: DatabaseHelperInterface): RecyclerView.Adapter<RecyclerAdapter.ViewHolder>(), Filterable {
     var logTag = "RecyclerAdapter.onCreateViewHolder"
     var count = 0
     lateinit var products: List<Product>
     lateinit var productsFiltered: ArrayList<Product>
     var selectedType = ""
-    var myShoppingList = NewDatabaseHelper.getMyShoppingList()
+    var myShoppingList = databaseHelper.getMyShoppingList()
 
     private val productFilter = object : Filter() {
         override fun performFiltering(constraint: CharSequence): Filter.FilterResults? {
@@ -57,8 +58,8 @@ public class RecyclerAdapter: RecyclerView.Adapter<RecyclerAdapter.ViewHolder>, 
     override fun getFilter(): Filter {
         return productFilter
     }
-    constructor(productList: List<Product>) : super() {
-        products = productList
+    init {
+        products = databaseHelper.getProducts()
         productsFiltered = ArrayList(products)
     }
 
@@ -84,10 +85,10 @@ public class RecyclerAdapter: RecyclerView.Adapter<RecyclerAdapter.ViewHolder>, 
         }
         holder.checkBox.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
-                NewDatabaseHelper.addProductToMyShoppingList(productInPosition)
+                databaseHelper.addProductToMyShoppingList(productInPosition)
             }
             else {
-                NewDatabaseHelper.deleteProductFormMyShoppingList(productInPosition)
+                databaseHelper.deleteProductFormMyShoppingList(productInPosition)
             }
         }
     }
