@@ -5,7 +5,7 @@ class Shop {
     var postCode: String?
     var streetAddress: String?
 
-    constructor(name:String, postCode: String, streetAddress: String){
+    constructor(name:String?, postCode: String?, streetAddress: String?){
         this.name = name
         this.postCode = postCode
         this.streetAddress = streetAddress

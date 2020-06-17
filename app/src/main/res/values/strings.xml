@@ -43,4 +43,8 @@
     <string name="registered_email">stephan@ruiz.com</string>
     <string name="registered_pass">stephan</string>
 
+
+    <string name="confirm_dialog">Yes</string>
+    <string name="un_confirm_dialog">No</string>
+
 </resources>

@@ -48,7 +48,7 @@ class YourListFragment(val listener: (Combination) -> Unit, val activity: MainAc
         listGenerator.getCombinationsWithProductsInShops(
             NewDatabaseHelper.getMyShops(),
             NewDatabaseHelper.getMyShoppingList(),
-            NewDatabaseHelper.getProductsInShops(),
+            NewDatabaseHelper.getShoppingItems(),
             recyclerAdapter)
     }
 }

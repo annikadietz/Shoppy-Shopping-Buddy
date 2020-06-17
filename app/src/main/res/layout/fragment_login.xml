@@ -41,7 +41,7 @@ android:layout_height="match_parent">
     android:textSize="15sp"
     android:textColor="@color/colorBlack"
     android:textColorHint="@color/colorGrey"
-    android:text="stephan@ruiz.com"/>
+    android:text="@string/registered_email"/>
 
 <EditText
     android:id="@+id/password"
@@ -59,8 +59,8 @@ android:layout_height="match_parent">
     android:textSize="15sp"
     android:textColor="@color/colorBlack"
     android:textColorHint="@color/colorGrey"
-    android:text="stephan"/>
-
+    android:text="@string/registered_pass"
+    />
 <Button
     android:id="@+id/btn_login"
     android:layout_width="match_parent"

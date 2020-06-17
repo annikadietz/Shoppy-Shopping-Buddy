@@ -17,7 +17,7 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
-import kotlinx.android.synthetic.main.register_fragment.*
+import kotlinx.android.synthetic.main.fragment_register.*
 
 class RegisterFragment : Fragment() {
     private var mAuth: FirebaseAuth? = null
@@ -33,7 +33,7 @@ class RegisterFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val root = inflater.inflate(R.layout.register_fragment, container, false)
+        val root = inflater.inflate(R.layout.fragment_register, container, false)
         val addProductButton: Button = root.findViewById(R.id.btn_register)
         addProductButton.setOnClickListener {
             register()

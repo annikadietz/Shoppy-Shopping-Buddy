@@ -7,8 +7,6 @@ import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
 import com.annikadietz.shoppy_shoppingbuddy.Model.Combination
 import com.annikadietz.shoppy_shoppingbuddy.R
-import kotlin.math.roundToInt
-import kotlin.math.roundToLong
 
 public class ShopCombinationRecyclerAdapter(var listener: (Combination) -> Unit,
                                             var combinations: ArrayList<Combination>): RecyclerView.Adapter<ShopCombinationRecyclerAdapter.ViewHolder>() {
@@ -65,8 +63,8 @@ public class ShopCombinationRecyclerAdapter(var listener: (Combination) -> Unit,
             var timeToTravelString = "$name - $timeToTravel min"
 
             var price = 0.0
-            comboInPosition.productsInShops.forEach {
-                price += it.price
+            comboInPosition.shoppingItems.forEach {
+                price += it.price.price
             }
 
 
