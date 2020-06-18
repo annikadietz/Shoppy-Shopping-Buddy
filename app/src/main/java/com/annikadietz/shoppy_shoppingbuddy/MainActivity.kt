@@ -41,7 +41,6 @@ class MainActivity : AppCompatActivity()  {
     private var locationManager : LocationManager? = null
 
     private val locationListener: LocationListener = object : LocationListener {
-        @RequiresApi(Build.VERSION_CODES.O)
         override fun onLocationChanged(location: Location) {
             var address = Geocoder(this@MainActivity.applicationContext).getFromLocation(location.latitude, location.longitude, 1).first()
             NewDatabaseHelper.address = address.getAddressLine(0)
