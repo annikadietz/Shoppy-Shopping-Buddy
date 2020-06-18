@@ -8,6 +8,7 @@ import android.os.Build
 import android.os.Bundle
 import android.text.InputType
 import android.util.Log
+import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +17,7 @@ import android.widget.LinearLayout
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -191,8 +193,8 @@ class ShopFragment : Fragment() {
 
 
                             AlertDialog.Builder(context)
-                                .setTitle("Confirm price for ${shoppingItemCurrent.product.name}")
-                                .setMessage("We want to keep  the prices as up to date as possible. \n\nDoes the price ${shoppingItemCurrent.price.price} match") // Specifying a listener allows you to take an action before dismissing the dialog.
+                                .setTitle("Is the price really €${shoppingItemCurrent.price.price} ?")
+                                // Specifying a listener allows you to take an action before dismissing the dialog.
                                 // The dialog is automatically dismissed when a dialog button is clicked.
                                 .setPositiveButton(R.string.confirm_dialog,
                                     DialogInterface.OnClickListener { dialog, which ->
@@ -208,7 +210,7 @@ class ShopFragment : Fragment() {
                                         input.inputType = InputType.TYPE_NUMBER_FLAG_DECIMAL
                                         input.setRawInputType(Configuration.KEYBOARD_12KEY)
 
-                                        AlertDialog.Builder(context)
+                                        val dialog: AlertDialog = AlertDialog.Builder(context)
                                             .setTitle("Please enter correct price for ${shoppingItemCurrent.product.name}")
                                             .setView(input)
                                             .setPositiveButton(
@@ -239,15 +241,23 @@ class ShopFragment : Fragment() {
                                                         shoppingItemDeleted
                                                     )
                                                     pa.notifyItemInserted(position)
-                                                })
-                                            .setIcon(android.R.drawable.btn_dialog)
-                                            .show()
+                                                }).create()
+
+                                        dialog.show()
+                                        input.doOnTextChanged { text, start, count, after ->
+                                            var textString = text.toString()
+                                            dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled =
+                                                textString.toDoubleOrNull() != null
+                                        }
+                                        dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = false
                                     })
-                                .setIcon(android.R.drawable.checkbox_on_background)
                                 .show()
                         }
                     }
                 }
+
+                val EditText.doubleValue: Double
+                    get() = text.toString().toDoubleOrNull() ?: 0.0
 
                 override fun onChildDraw(
                     c: Canvas,
@@ -282,8 +292,7 @@ class ShopFragment : Fragment() {
                             )
                         )
                         .addSwipeRightActionIcon(
-//                            R.drawable.ic_archive_black_24dp
-                            android.R.drawable.checkbox_on_background
+                            R.drawable.ic_baseline_shopping_basket_24
                         )
                         .setActionIconTint(
                             ContextCompat.getColor(
