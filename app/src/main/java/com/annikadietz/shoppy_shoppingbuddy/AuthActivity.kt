@@ -44,7 +44,7 @@ class AuthActivity : FragmentActivity() {
         @RequiresApi(Build.VERSION_CODES.O)
         override fun createFragment(position: Int): Fragment {
 //            val shoppingItem = ShoppingItem(Product("Pizza - Italia", Type("Frozen")), Shop("Jumbo", "7824JA", "Kerspellaan 9"), 3.0)
-//            NewDatabaseHelper.requestPriceChange(shoppingItem)
+//            NewDatabaseHelper.requestPriceChange(shoppingItem, 5.5)
             return fragmentList[position]
         }
 

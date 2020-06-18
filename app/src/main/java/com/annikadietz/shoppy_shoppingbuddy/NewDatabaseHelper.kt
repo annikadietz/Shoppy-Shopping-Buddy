@@ -234,11 +234,42 @@ object NewDatabaseHelper : DatabaseHelperInterface {
 
         docs.addOnCompleteListener { it ->
             it.result?.documents?.forEach { documentSnapshot ->
-                val updatePrice = Price(LocalDateTime.now().toString(), newPrice, 1)
-                val updates: Map<String, Any> = hashMapOf(
-                    "priceSuggestions" to FieldValue.arrayUnion(updatePrice)
-                )
-                documentSnapshot.reference.update(updates)
+                val shoppingItem = documentSnapshot.toObject(ShoppingItem::class.java)
+                if (shoppingItem != null) {
+
+                    var flag = false
+                    shoppingItem.priceSuggestions.forEach lit@{
+                        if (it.price == newPrice) {
+                            var currentCounter = it.counter
+                            val updatePrice = Price(LocalDateTime.now().toString(), newPrice, currentCounter)
+
+                            val remove: Map<String, Any> = hashMapOf(
+                                "priceSuggestions" to FieldValue.arrayRemove(it)
+                            )
+                            documentSnapshot.reference.update(remove)
+
+                            updatePrice.counter = currentCounter + 1
+
+                            val updates: Map<String, Any> = hashMapOf(
+                                "priceSuggestions" to FieldValue.arrayUnion(updatePrice)
+                            )
+                            documentSnapshot.reference.update(updates)
+                            flag = true
+                            return@lit
+                        }
+                    }
+
+                    if (!flag) {
+                        documentSnapshot.id
+                        val updatePrice = Price(LocalDateTime.now().toString(), newPrice, 1)
+                        val updates: Map<String, Any> = hashMapOf(
+                            "priceSuggestions" to FieldValue.arrayUnion(updatePrice)
+                        )
+                        documentSnapshot.reference.update(updates)
+
+                    }
+
+                }
             }
         }
     }
