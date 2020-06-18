@@ -63,6 +63,14 @@ class MockDatabaseHelper : DatabaseHelperInterface {
         return productsInShops
     }
 
+    override fun addProductToMyShoppingList(product: Product) {
+        TODO("Not yet implemented")
+    }
+
+    override fun deleteProductFormMyShoppingList(position: Product) {
+        TODO("Not yet implemented")
+    }
+
     override fun getMyShops(): ArrayList<Shop> {
         var jumbo = Shop("Jumbo", "7824JA", "Kerspellaan 9")
         var aldi = Shop("Aldi", "7824CP", "Peyserhof 2")
@@ -72,6 +80,6 @@ class MockDatabaseHelper : DatabaseHelperInterface {
     }
 
     override fun getMyShoppingList(): ArrayList<Product> {
-        TODO("Not yet implemented")
+        return arrayListOf()
     }
 }

@@ -14,4 +14,6 @@ interface DatabaseHelperInterface {
 
     fun getMyShoppingList(): ArrayList<Product>
     fun getShoppingItems(): ArrayList<ShoppingItem>
+    fun addProductToMyShoppingList(product: Product)
+    fun deleteProductFormMyShoppingList(position: Product)
 }

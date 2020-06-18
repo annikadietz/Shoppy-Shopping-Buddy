@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="match_parent"
-android:layout_height="match_parent">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@id/tv_subtitle"
         android:layout_marginStart="25dp"
-        android:layout_marginBottom="50dp"
+        android:layout_marginBottom="30dp"
         android:fontFamily="@font/indigo_daisy"
         android:text="@string/app_name"
-        android:textSize="50sp" />
+        android:textSize="50sp"
+        android:layout_marginTop="60dp"/>
 
     <TextView
     android:id="@+id/tv_subtitle"
@@ -23,8 +25,8 @@ android:layout_height="match_parent">
     android:textSize="17sp"
     android:fontFamily="@font/roboto_regular"
     android:layout_marginStart="25dp"
-    android:layout_marginBottom="50dp"
-    android:layout_above="@id/email" />
+    android:layout_marginEnd="25dp"
+    android:layout_marginBottom="50dp" />
 
 <EditText
     android:id="@+id/email"
@@ -61,37 +63,28 @@ android:layout_height="match_parent">
     android:textColorHint="@color/colorGrey"
     android:text="@string/registered_pass"
     />
-<Button
-    android:id="@+id/btn_login"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_below="@id/password"
-    android:background="@drawable/btn_custom"
-    android:layout_marginLeft="20dp"
-    android:layout_marginRight="20dp"
-    android:layout_marginTop="15dp"
-    android:fontFamily="@font/roboto_regular"
-    android:textColor="@android:color/white"
-    android:text="@string/login"/>
 
-<ImageView
-    android:layout_width="30dp"
-    android:layout_height="30dp"
-    android:src="@drawable/ic_arrow_right"
-    android:layout_above="@id/swipeRight"
-    android:layout_centerHorizontal="true"/>
+    <Button
+        android:id="@+id/btn_login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/password"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/btn_custom"
+        android:fontFamily="@font/roboto_regular"
+        android:text="@string/login"
+        android:textColor="@android:color/white" />
 
-<TextView
-    android:id="@+id/swipeRight"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="@string/swipe_left_for_register"
-    android:textSize="15sp"
-    android:fontFamily="@font/roboto_regular"
-    android:layout_centerHorizontal="true"
-    android:layout_alignParentBottom="true"
-    android:layout_marginBottom="20dp"/>
-
+    <TextView
+        android:id="@+id/reset_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_login"
+        android:layout_marginTop="50dp"
+        android:text="Reset password"
+        android:textAlignment="center" />
     <ProgressBar
         android:id="@+id/progressBar"
         android:visibility="invisible"
@@ -101,4 +94,30 @@ android:layout_height="match_parent">
         android:max="100"
         android:progress="50" />
 
-</RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_arrow_right"
+            android:layout_above="@id/swipeRight"
+            android:layout_centerHorizontal="true"/>
+
+        <TextView
+            android:id="@+id/swipeRight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/swipe_right_for_login"
+            android:textSize="15sp"
+            android:fontFamily="@font/roboto_regular"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="20dp" />
+
+
+    </RelativeLayout>
+
+</LinearLayout>
