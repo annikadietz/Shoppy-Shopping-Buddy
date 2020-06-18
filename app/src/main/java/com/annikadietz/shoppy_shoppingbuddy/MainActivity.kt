@@ -11,6 +11,7 @@ import com.annikadietz.shoppy_shoppingbuddy.Model.*
 import com.annikadietz.shoppy_shoppingbuddy.ui.confirm_purchases.ShopFragment
 import com.annikadietz.shoppy_shoppingbuddy.ui.product_search.ProductSearchFragment
 import com.annikadietz.shoppy_shoppingbuddy.ui.shop_selection.ShopSelectionFragment
+import com.annikadietz.shoppy_shoppingbuddy.ui.shopping_history.ShoppingHistoryFragment
 import com.annikadietz.shoppy_shoppingbuddy.ui.your_list.YourListFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
@@ -25,6 +26,7 @@ class MainActivity : AppCompatActivity()  {
     private var shopSelectionFragment = ShopSelectionFragment()
     //private var myShoppingListFragment = MyShoppingListFragment(NewDatabaseHelper)
     private var purchasesFragment = ShopFragment()
+    private var historyFragment = ShoppingHistoryFragment()
 
     var uid: String = ""
 
@@ -45,6 +47,7 @@ class MainActivity : AppCompatActivity()  {
         NewDatabaseHelper.subscribeMyShops()
         NewDatabaseHelper.subscribeMyShoppingList()
         NewDatabaseHelper.subscribeMyShoppingItems()
+        NewDatabaseHelper.subscribeShoppedProducts()
 
 
 //        val shoppingItem = ShoppingItem(Product("Pizza - Italia", Type("Frozen")), Shop("Aldi", "7824JA", "Kerspellaan 9"), 3.0)
@@ -64,6 +67,7 @@ class MainActivity : AppCompatActivity()  {
                 R.id.nav_shoppingList -> yourListFragment
                 R.id.nav_yourShops -> shopSelectionFragment
                 R.id.nav_shop -> purchasesFragment
+                R.id.nav_history -> historyFragment
                 else -> productSearchFragment
             }
             supportFragmentManager.beginTransaction().replace(R.id.fragment_container, selectedFragment).commit()

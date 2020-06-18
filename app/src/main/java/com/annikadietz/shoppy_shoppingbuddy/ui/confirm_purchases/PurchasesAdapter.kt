@@ -7,15 +7,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
-import com.annikadietz.shoppy_shoppingbuddy.Model.Combination
 import com.annikadietz.shoppy_shoppingbuddy.Model.ShoppingItem
-import com.annikadietz.shoppy_shoppingbuddy.NewDatabaseHelper
 import com.annikadietz.shoppy_shoppingbuddy.R
 import java.time.Duration
-import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.Period
-import java.time.format.DateTimeFormatter
 
 class PurchasesAdapter(var shoppingItems: ArrayList<ShoppingItem>) :
     RecyclerView.Adapter<PurchasesAdapter.ViewHolder>() {
