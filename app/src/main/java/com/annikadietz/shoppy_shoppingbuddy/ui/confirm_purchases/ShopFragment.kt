@@ -159,10 +159,13 @@ class ShopFragment : Fragment() {
                     val position = viewHolder.adapterPosition
                     when (direction) {
                         ItemTouchHelper.LEFT -> {
+                            // TODO maybe even use these last 4 lines before direction, because its the same code anyway
                             Log.w("IndexP", position.toString())
                             shoppingItemDeleted = shoppingItems[position]
                             shoppingItems.removeAt(position)
                             pa.notifyItemRemoved(position)
+
+                            NewDatabaseHelper.deleteProductFormMyShoppingList(shoppingItemDeleted.product)
 //
                             Snackbar.make(
                                 root,
@@ -170,6 +173,7 @@ class ShopFragment : Fragment() {
                                 Snackbar.LENGTH_LONG
                             )
                                 .setAction("Undo") {
+                                    NewDatabaseHelper.addProductToMyShoppingList(shoppingItemDeleted.product)
                                     shoppingItems.add(
                                         position,
                                         shoppingItemDeleted
@@ -183,6 +187,7 @@ class ShopFragment : Fragment() {
                             shoppingItems.removeAt(position)
                             pa.notifyItemRemoved(position)
 
+                            NewDatabaseHelper.deleteProductFormMyShoppingList(shoppingItemDeleted.product)
 
 
                             AlertDialog.Builder(context)
@@ -202,6 +207,7 @@ class ShopFragment : Fragment() {
                                         val input = EditText(context);
                                         input.inputType = InputType.TYPE_NUMBER_FLAG_DECIMAL
                                         input.setRawInputType(Configuration.KEYBOARD_12KEY)
+
                                         AlertDialog.Builder(context)
                                             .setTitle("Please enter correct price for ${shoppingItemCurrent.product.name}")
                                             .setView(input)
@@ -209,16 +215,25 @@ class ShopFragment : Fragment() {
                                                 R.string.confirm_dialog,
                                                 DialogInterface.OnClickListener { dialog, which ->
                                                     // TODO api and method beneath this seem sketch
-                                                    shoppingItemCurrent.price.price =
+
+                                                    Log.w(
+                                                        "newprice",
+                                                        shoppingItemCurrent.price.price.toString()
+                                                    )
+
+                                                    val newPrice =
                                                         input.text.toString().toDouble()
+
+                                                    Log.w("oldprice", newPrice.toString())
                                                     NewDatabaseHelper.requestPriceChange(
-                                                        shoppingItemCurrent
+                                                        shoppingItemCurrent, newPrice
                                                     )
 
                                                 })
                                             .setNegativeButton(
                                                 "Cancel",
                                                 DialogInterface.OnClickListener { dialog, which ->
+                                                    NewDatabaseHelper.addProductToMyShoppingList(shoppingItemDeleted.product)
                                                     shoppingItems.add(
                                                         position,
                                                         shoppingItemDeleted

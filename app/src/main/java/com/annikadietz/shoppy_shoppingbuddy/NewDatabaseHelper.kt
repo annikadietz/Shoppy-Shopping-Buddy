@@ -14,6 +14,9 @@ import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import java.time.LocalDateTime
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 
 object NewDatabaseHelper : DatabaseHelperInterface {
@@ -219,7 +222,8 @@ object NewDatabaseHelper : DatabaseHelperInterface {
             .add(shoppingItem)
     }
 
-    fun requestPriceChange(shoppingItem: ShoppingItem) {
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun requestPriceChange(shoppingItem: ShoppingItem, newPrice: Double) {
         Firebase
         val docs = db.collection("shoppingItems")
             .whereEqualTo("product.name", shoppingItem.product.name)
@@ -228,15 +232,15 @@ object NewDatabaseHelper : DatabaseHelperInterface {
             .whereEqualTo("shop.streetAddress", shoppingItem.shop.streetAddress)
             .get()
 
-//        docs.addOnCompleteListener { it ->
-//            it.result?.documents?.forEach {
-//                val updates = hashMapOf(
-//                    "price.counter" to FieldValue.increment(1),
-//                    "price.lastConfirmed" to LocalDateTime.now().toString()
-//                )
-//                it.reference.update(updates)
-//            }
-//        }
+        docs.addOnCompleteListener { it ->
+            it.result?.documents?.forEach { documentSnapshot ->
+                val updatePrice = Price(LocalDateTime.now().toString(), newPrice, 1)
+                val updates: Map<String, Any> = hashMapOf(
+                    "priceSuggestions" to FieldValue.arrayUnion(updatePrice)
+                )
+                documentSnapshot.reference.update(updates)
+            }
+        }
     }
 
 

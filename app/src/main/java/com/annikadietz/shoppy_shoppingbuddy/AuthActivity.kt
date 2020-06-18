@@ -1,9 +1,15 @@
 package com.annikadietz.shoppy_shoppingbuddy
 
+import android.os.Build
 import android.os.Bundle
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.*
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
+import com.annikadietz.shoppy_shoppingbuddy.Model.Product
+import com.annikadietz.shoppy_shoppingbuddy.Model.ShoppingItem
+import com.annikadietz.shoppy_shoppingbuddy.Model.Type
+import com.annikadietz.shoppy_shoppingbuddy.Model.Shop
 import com.annikadietz.shoppy_shoppingbuddy.ui.login.LoginFragment
 import com.annikadietz.shoppy_shoppingbuddy.ui.register.RegisterFragment
 import java.util.*
@@ -35,7 +41,10 @@ class AuthActivity : FragmentActivity() {
             return fragmentList.size
         }
 
+        @RequiresApi(Build.VERSION_CODES.O)
         override fun createFragment(position: Int): Fragment {
+//            val shoppingItem = ShoppingItem(Product("Pizza - Italia", Type("Frozen")), Shop("Jumbo", "7824JA", "Kerspellaan 9"), 3.0)
+//            NewDatabaseHelper.requestPriceChange(shoppingItem)
             return fragmentList[position]
         }
 
