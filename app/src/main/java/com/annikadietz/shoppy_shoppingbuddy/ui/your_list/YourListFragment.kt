@@ -1,15 +1,18 @@
 package com.annikadietz.shoppy_shoppingbuddy.ui.your_list
 
+import android.content.Context.LOCATION_SERVICE
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
 import android.os.Build
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.annotation.RequiresApi
-import androidx.core.widget.doAfterTextChanged
-import androidx.core.widget.doOnTextChanged
+import androidx.core.content.ContextCompat.getSystemService
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.annikadietz.shoppy_shoppingbuddy.ListGenerator
@@ -19,15 +22,17 @@ import com.annikadietz.shoppy_shoppingbuddy.NewDatabaseHelper
 import com.annikadietz.shoppy_shoppingbuddy.R
 import com.google.android.material.textfield.TextInputEditText
 
+
 class YourListFragment(val listener: (Combination) -> Unit, val activity: MainActivity) : Fragment() {
     var listGenerator = ListGenerator(this.activity,NewDatabaseHelper.address)
     lateinit var recyclerAdapter: ShopCombinationRecyclerAdapter
+    lateinit var yourAddressField: TextInputEditText
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
         }
     }
-
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
@@ -36,8 +41,9 @@ class YourListFragment(val listener: (Combination) -> Unit, val activity: MainAc
     ): View? {
         // Inflate the layout for this fragment
         var root = inflater.inflate(R.layout.fragment_your_list, container, false)
-
-        var yourAddressField = root.findViewById<TextInputEditText>(R.id.your_address_text_input)
+        updateAddressField()
+        yourAddressField = root.findViewById<TextInputEditText>(R.id.your_address_text_input)
+        yourAddressField.setText(NewDatabaseHelper.address)
         var updateButton = root.findViewById<Button>(R.id.update_with_address)
         updateButton.setOnClickListener {
             listGenerator.myLocation = yourAddressField.text.toString()
@@ -57,6 +63,13 @@ class YourListFragment(val listener: (Combination) -> Unit, val activity: MainAc
         shoppingListRecyclerView.layoutManager = LinearLayoutManager(this.context)
         shoppingListRecyclerView.adapter = shoppingListRecyclerAdapter
         return root
+    }
+
+    fun updateAddressField() {
+        if(this::yourAddressField.isInitialized) {
+            yourAddressField.setText(NewDatabaseHelper.address)
+        }
+        listGenerator.myLocation = NewDatabaseHelper.address
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
