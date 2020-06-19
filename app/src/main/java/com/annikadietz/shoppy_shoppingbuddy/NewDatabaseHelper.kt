@@ -248,6 +248,7 @@ object NewDatabaseHelper : DatabaseHelperInterface {
                 val shoppingItem = documentSnapshot.toObject(ShoppingItem::class.java)
                 if (shoppingItem != null) {
 
+                    // checks whether price is already suggested. if flag is false: suggestion doesn't exist and needs to be created
                     var flag = false
                     shoppingItem.priceSuggestions.forEach lit@{
                         if (it.price == newPrice) {
@@ -261,17 +262,26 @@ object NewDatabaseHelper : DatabaseHelperInterface {
 
                             updatePrice.counter = currentCounter + 1
 
-                            val updates: Map<String, Any> = hashMapOf(
-                                "priceSuggestions" to FieldValue.arrayUnion(updatePrice)
-                            )
-                            documentSnapshot.reference.update(updates)
-                            flag = true
-                            return@lit
+                            if (updatePrice.counter >= 3) {
+                                updatePrice.counter = 3
+                                val updates: Map<String, Any> = hashMapOf(
+                                    "price" to updatePrice
+                                )
+                                documentSnapshot.reference.update(updates)
+                                flag = true
+                            } else {
+                                val updates: Map<String, Any> = hashMapOf(
+                                    "priceSuggestions" to FieldValue.arrayUnion(updatePrice)
+                                )
+                                documentSnapshot.reference.update(updates)
+                                flag = true
+                                return@lit
+                            }
+
                         }
                     }
 
                     if (!flag) {
-                        documentSnapshot.id
                         val updatePrice = Price(LocalDateTime.now().toString(), newPrice, 1)
                         val updates: Map<String, Any> = hashMapOf(
                             "priceSuggestions" to FieldValue.arrayUnion(updatePrice)
