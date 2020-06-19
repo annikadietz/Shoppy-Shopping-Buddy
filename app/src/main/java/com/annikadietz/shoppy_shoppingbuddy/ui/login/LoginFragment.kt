@@ -1,28 +1,34 @@
 package com.annikadietz.shoppy_shoppingbuddy.ui.login
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.text.InputType
 import android.text.TextUtils
 import android.util.Log
+import android.util.Patterns
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.annikadietz.shoppy_shoppingbuddy.MainActivity
 import com.annikadietz.shoppy_shoppingbuddy.NewDatabaseHelper
 import com.annikadietz.shoppy_shoppingbuddy.R
-import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.*
 import kotlinx.android.synthetic.main.fragment_login.*
 
 
 class LoginFragment : Fragment() {
-    private var mAuth: FirebaseAuth? = null
+    private var mAuth: FirebaseAuth? = FirebaseAuth.getInstance()
 
     private lateinit var loginViewModel: LoginViewModel
 
@@ -39,8 +45,10 @@ class LoginFragment : Fragment() {
         addProductButton.setOnClickListener {
             loginButtonClicked()
         }
-
-        mAuth = FirebaseAuth.getInstance()
+        val resetPasswordButton: TextView = root.findViewById(R.id.reset_btn)
+        resetPasswordButton.setOnClickListener {
+            resetPassword()
+        }
 
 
         if (mAuth!!.currentUser != null) {
@@ -52,27 +60,46 @@ class LoginFragment : Fragment() {
 
         return root
     }
+    private fun resetPassword() {
+        val builder: android.app.AlertDialog.Builder = android.app.AlertDialog.Builder(this.context)
 
-    private fun change() {
+        val title = TextView(this.context)
+        title.text = "Enter your email"
+        title.setPadding(10, 70, 10, 70)
+        title.gravity = Gravity.CENTER
+        title.textSize = 20f
+        builder.setCustomTitle(title)
+        val input = EditText(this.context)
 
-        val TAG = "TAG"
-        val user: FirebaseUser = FirebaseAuth.getInstance().currentUser!!
+        input.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
+        builder.setView(input)
 
-        val credential: AuthCredential = EmailAuthProvider.getCredential("username", "password")
-
-        user.reauthenticate(credential).addOnCompleteListener {
-            if (it.isSuccessful) {
-                        user.updatePassword("new passs").addOnCompleteListener {
-                            if (it.isSuccessful()) {
-                                Log.d(TAG, "Password updated");
-                            } else {
-                                Log.d(TAG, "Error password not updated")
-                            }
-                        }
-                    } else {
-                        Log.d(TAG, "Error auth failed")
-                    }
+        builder.setPositiveButton("Reset password"
+        ) { dialog, which ->
+            var email = input.text.toString()
+            mAuth?.sendPasswordResetEmail(email)?.addOnCompleteListener{
+                if (it.isSuccessful){
+                    Toast.makeText(activity, "Success!", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(activity, it.exception.toString(), Toast.LENGTH_SHORT).show()
+                }
+            }
         }
+
+        builder.setNegativeButton("Cancel",
+            DialogInterface.OnClickListener { dialog, which -> dialog.cancel() })
+
+        val dialog: AlertDialog = builder.create()
+
+        input.doOnTextChanged { text, start, count, after ->
+            if(Patterns.EMAIL_ADDRESS.matcher(text).matches()){
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = true
+            } else {
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = false
+            }
+        }
+        dialog.show()
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = false
     }
 
     private fun loginButtonClicked() {
@@ -85,15 +112,19 @@ class LoginFragment : Fragment() {
         }
 
         progressBar.visibility = View.VISIBLE
-        loginUser(email, password)?.addOnCompleteListener(OnCompleteListener<AuthResult?> { task ->
-            progressBar.visibility = View.GONE
+        loginUser(email, password)?.addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                Log.w("auth", task.result.toString())
-                Toast.makeText(activity, "SUCCESS", Toast.LENGTH_LONG).show()
-                NewDatabaseHelper.uid = task.result?.user!!.uid
-                val intent = Intent(this.requireContext(), MainActivity::class.java)
-                startActivity(intent)
-                activity?.finish()
+                if(task.result?.user!!.isEmailVerified){
+                    Toast.makeText(activity, "Logged in!", Toast.LENGTH_SHORT).show()
+                    NewDatabaseHelper.uid = task.result?.user!!.uid
+                    val intent = Intent(this.requireContext(), MainActivity::class.java)
+                    startActivity(intent)
+                    activity?.finish()
+                } else {
+                    Toast.makeText(activity, "Verify your email and try again.", Toast.LENGTH_SHORT).show()
+                }
+                progressBar.visibility = View.GONE
+
             } else {
                 if (password.text.toString().length < 6) {
                     password.error = getString(R.string.minimum_password)
@@ -101,8 +132,9 @@ class LoginFragment : Fragment() {
                     Log.w("auth", task.exception.toString())
                     Toast.makeText(activity, "FAILED", Toast.LENGTH_LONG).show()
                 }
+                progressBar.visibility = View.GONE
             }
-        })
+        }
     }
 
     fun loginUser(email: EditText, password: EditText): Task<AuthResult>? {
