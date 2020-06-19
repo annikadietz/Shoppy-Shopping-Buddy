@@ -6,6 +6,7 @@ import androidx.annotation.RequiresApi
 import com.annikadietz.shoppy_shoppingbuddy.Model.*
 import com.annikadietz.shoppy_shoppingbuddy.Model.Shop
 import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ktx.firestore
@@ -230,6 +231,58 @@ object NewDatabaseHelper : DatabaseHelperInterface {
                 myPurchasedProducts.clear()
                 results?.forEach { product -> myPurchasedProducts.add(product.toObject(PurchasedProduct::class.java)) }
             }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun requestPriceChange(shoppingItem: ShoppingItem, newPrice: Double) {
+        Firebase
+        val docs = db.collection("shoppingItems")
+            .whereEqualTo("product.name", shoppingItem.product.name)
+            .whereEqualTo("shop.name", shoppingItem.shop.name)
+            .whereEqualTo("shop.postCode", shoppingItem.shop.postCode)
+            .whereEqualTo("shop.streetAddress", shoppingItem.shop.streetAddress)
+            .get()
+
+        docs.addOnCompleteListener { it ->
+            it.result?.documents?.forEach { documentSnapshot ->
+                val shoppingItem = documentSnapshot.toObject(ShoppingItem::class.java)
+                if (shoppingItem != null) {
+
+                    var flag = false
+                    shoppingItem.priceSuggestions.forEach lit@{
+                        if (it.price == newPrice) {
+                            var currentCounter = it.counter
+                            val updatePrice = Price(LocalDateTime.now().toString(), newPrice, currentCounter)
+
+                            val remove: Map<String, Any> = hashMapOf(
+                                "priceSuggestions" to FieldValue.arrayRemove(it)
+                            )
+                            documentSnapshot.reference.update(remove)
+
+                            updatePrice.counter = currentCounter + 1
+
+                            val updates: Map<String, Any> = hashMapOf(
+                                "priceSuggestions" to FieldValue.arrayUnion(updatePrice)
+                            )
+                            documentSnapshot.reference.update(updates)
+                            flag = true
+                            return@lit
+                        }
+                    }
+
+                    if (!flag) {
+                        documentSnapshot.id
+                        val updatePrice = Price(LocalDateTime.now().toString(), newPrice, 1)
+                        val updates: Map<String, Any> = hashMapOf(
+                            "priceSuggestions" to FieldValue.arrayUnion(updatePrice)
+                        )
+                        documentSnapshot.reference.update(updates)
+
+                    }
+
+                }
+            }
+        }
     }
 
 

@@ -17,8 +17,7 @@ import com.annikadietz.shoppy_shoppingbuddy.NewDatabaseHelper
 import com.annikadietz.shoppy_shoppingbuddy.R
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
-import com.google.firebase.auth.AuthResult
-import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.*
 import kotlinx.android.synthetic.main.fragment_login.*
 
 
@@ -43,12 +42,37 @@ class LoginFragment : Fragment() {
 
         mAuth = FirebaseAuth.getInstance()
 
+
         if (mAuth!!.currentUser != null) {
 //            startActivity(Intent(this, MainActivity::class.java))
 //            finish()
         }
 
+
+
         return root
+    }
+
+    private fun change() {
+
+        val TAG = "TAG"
+        val user: FirebaseUser = FirebaseAuth.getInstance().currentUser!!
+
+        val credential: AuthCredential = EmailAuthProvider.getCredential("username", "password")
+
+        user.reauthenticate(credential).addOnCompleteListener {
+            if (it.isSuccessful) {
+                        user.updatePassword("new passs").addOnCompleteListener {
+                            if (it.isSuccessful()) {
+                                Log.d(TAG, "Password updated");
+                            } else {
+                                Log.d(TAG, "Error password not updated")
+                            }
+                        }
+                    } else {
+                        Log.d(TAG, "Error auth failed")
+                    }
+        }
     }
 
     private fun loginButtonClicked() {
