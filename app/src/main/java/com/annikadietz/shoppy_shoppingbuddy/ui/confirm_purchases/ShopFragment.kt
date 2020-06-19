@@ -7,8 +7,6 @@ import android.graphics.Canvas
 import android.os.Build
 import android.os.Bundle
 import android.text.InputType
-import android.util.Log
-import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,7 +28,6 @@ import com.annikadietz.shoppy_shoppingbuddy.Model.ShoppingItem
 import com.annikadietz.shoppy_shoppingbuddy.NewDatabaseHelper
 import com.annikadietz.shoppy_shoppingbuddy.R
 import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.textfield.TextInputEditText
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 
 
@@ -57,38 +54,53 @@ class ShopFragment : Fragment() {
             if (it != null) {
                 var combo = it.toObject(Combination::class.java)
                 if (combo != null) {
-                    if (combo!!.shops.size > 0){
-                        val shop = combo!!.shops[0]
+                    if (combo.shops.size > 0) {
+                        val shop = combo.shops[0]
                         setUpFirstShop(shop, NewDatabaseHelper.address)
                         val shoppingItems = arrayListOf<ShoppingItem>()
-                        combo!!.shoppingItems.forEach {
-                            if(it.shop.name == shop.name && it.shop.streetAddress == shop.streetAddress&& it.shop.postCode == shop.postCode){
+                        combo.shoppingItems.forEach {
+                            if (it.shop.name == shop.name && it.shop.streetAddress == shop.streetAddress && it.shop.postCode == shop.postCode) {
                                 shoppingItems.add(it)
                             }
                         }
-                        setUpRecyclerView(root.findViewById(R.id.first_shop_recyclerview), shoppingItems)
+                        setUpRecyclerView(
+                            root.findViewById(R.id.first_shop_recyclerview),
+                            shoppingItems
+                        )
                     }
-                    if (combo!!.shops.size > 1){
-                        val shop = combo!!.shops[1]
-                        setUpSecondShop(shop, combo!!.shops[0].streetAddress + ", " + combo!!.shops[0].postCode)
+                    if (combo.shops.size > 1) {
+                        val shop = combo.shops[1]
+                        setUpSecondShop(
+                            shop,
+                            combo.shops[0].streetAddress + ", " + combo.shops[0].postCode
+                        )
                         val shoppingItems = arrayListOf<ShoppingItem>()
-                        combo!!.shoppingItems.forEach {
-                            if(it.shop.name == shop.name && it.shop.streetAddress == shop.streetAddress&& it.shop.postCode == shop.postCode){
+                        combo.shoppingItems.forEach {
+                            if (it.shop.name == shop.name && it.shop.streetAddress == shop.streetAddress && it.shop.postCode == shop.postCode) {
                                 shoppingItems.add(it)
                             }
                         }
-                        setUpRecyclerView(root.findViewById(R.id.second_shop_recyclerview), shoppingItems)
+                        setUpRecyclerView(
+                            root.findViewById(R.id.second_shop_recyclerview),
+                            shoppingItems
+                        )
                     }
-                    if (combo!!.shops.size > 2){
-                        val shop = combo!!.shops[2]
-                        setUpThirdShop(shop, combo!!.shops[1].streetAddress + ", " + combo!!.shops[1].postCode)
+                    if (combo.shops.size > 2) {
+                        val shop = combo.shops[2]
+                        setUpThirdShop(
+                            shop,
+                            combo.shops[1].streetAddress + ", " + combo.shops[1].postCode
+                        )
                         val shoppingItems = arrayListOf<ShoppingItem>()
-                        combo!!.shoppingItems.forEach {
-                            if(it.shop.name == shop.name && it.shop.streetAddress == shop.streetAddress&& it.shop.postCode == shop.postCode){
+                        combo.shoppingItems.forEach {
+                            if (it.shop.name == shop.name && it.shop.streetAddress == shop.streetAddress && it.shop.postCode == shop.postCode) {
                                 shoppingItems.add(it)
                             }
                         }
-                        setUpRecyclerView(root.findViewById(R.id.third_shop_recyclerview), shoppingItems)
+                        setUpRecyclerView(
+                            root.findViewById(R.id.third_shop_recyclerview),
+                            shoppingItems
+                        )
                     }
                 }
             }
@@ -165,8 +177,6 @@ class ShopFragment : Fragment() {
                     val position = viewHolder.adapterPosition
                     when (direction) {
                         ItemTouchHelper.LEFT -> {
-                            // TODO maybe even use these last 4 lines before direction, because its the same code anyway
-                            Log.w("IndexP", position.toString())
                             shoppingItemDeleted = shoppingItems[position]
                             shoppingItems.removeAt(position)
                             pa.notifyItemRemoved(position)
@@ -176,7 +186,7 @@ class ShopFragment : Fragment() {
                             Snackbar.make(
                                 root,
                                 shoppingItemDeleted.product.name,
-                                Snackbar.LENGTH_LONG
+                                Snackbar.LENGTH_SHORT
                             )
                                 .setAction("Undo") {
                                     NewDatabaseHelper.addProductToMyShoppingList(shoppingItemDeleted.product)
@@ -198,66 +208,69 @@ class ShopFragment : Fragment() {
 
                             AlertDialog.Builder(context)
                                 .setTitle("Is the price really €${shoppingItemCurrent.price.price} ?")
-                                // Specifying a listener allows you to take an action before dismissing the dialog.
-                                // The dialog is automatically dismissed when a dialog button is clicked.
-                                .setPositiveButton(R.string.confirm_dialog,
+                                .setPositiveButton(R.string.yes,
                                     DialogInterface.OnClickListener { dialog, which ->
                                         NewDatabaseHelper.confirmPurchase(shoppingItemCurrent)
                                         NewDatabaseHelper.confirmPrice(shoppingItemCurrent)
 
-                                    }) // A null listener allows the button to dismiss the dialog and take no further action. (currently where the DialogInterface is)
+                                    })
                                 .setNegativeButton(
-                                    R.string.un_confirm_dialog,
+                                    R.string.no,
                                     DialogInterface.OnClickListener { dialog, which ->
-                                        // Continue with delete operation
-                                        val input = EditText(context);
-                                        input.inputType = InputType.TYPE_NUMBER_FLAG_DECIMAL
-                                        input.setRawInputType(Configuration.KEYBOARD_12KEY)
-
-                                        val dialog: AlertDialog = AlertDialog.Builder(context)
-                                            .setTitle("Please enter correct price for ${shoppingItemCurrent.product.name}")
-                                            .setView(input)
-                                            .setPositiveButton(
-                                                R.string.confirm_dialog,
-                                                DialogInterface.OnClickListener { dialog, which ->
-                                                    // TODO api and method beneath this seem sketch
-
-                                                    Log.w(
-                                                        "newprice",
-                                                        shoppingItemCurrent.price.price.toString()
-                                                    )
-
-                                                    val newPrice =
-                                                        input.text.toString().toDouble()
-
-                                                    Log.w("oldprice", newPrice.toString())
-                                                    NewDatabaseHelper.requestPriceChange(
-                                                        shoppingItemCurrent, newPrice
-                                                    )
-
-                                                })
-                                            .setNegativeButton(
-                                                "Cancel",
-                                                DialogInterface.OnClickListener { dialog, which ->
-                                                    NewDatabaseHelper.addProductToMyShoppingList(shoppingItemDeleted.product)
-                                                    shoppingItems.add(
-                                                        position,
-                                                        shoppingItemDeleted
-                                                    )
-                                                    pa.notifyItemInserted(position)
-                                                }).create()
-
-                                        dialog.show()
-                                        input.doOnTextChanged { text, start, count, after ->
-                                            var textString = text.toString()
-                                            dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled =
-                                                textString.toDoubleOrNull() != null
-                                        }
-                                        dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = false
+                                        enterNewPrice(shoppingItemCurrent, position)
                                     })
                                 .show()
                         }
                     }
+                }
+
+                @RequiresApi(Build.VERSION_CODES.O)
+                fun enterNewPrice(shoppingItemCurrent: ShoppingItem, position: Int) {
+                    val input = EditText(context)
+                    input.inputType = InputType.TYPE_NUMBER_FLAG_DECIMAL
+                    input.setRawInputType(Configuration.KEYBOARD_12KEY)
+
+                    val dialog: AlertDialog = AlertDialog.Builder(context)
+                        .setTitle("Please enter correct price for ${shoppingItemCurrent.product.name}")
+                        .setView(input)
+                        .setPositiveButton(
+                            R.string.submit,
+                            DialogInterface.OnClickListener { dialog, which ->
+                                val newPrice =
+                                    input.text.toString().toDouble()
+
+                                NewDatabaseHelper.requestPriceChange(
+                                    shoppingItemCurrent, newPrice
+                                )
+                                Snackbar.make(
+                                    root,
+                                    "New price submitted successfully",
+                                    Snackbar.LENGTH_SHORT
+                                ).show()
+
+
+                            })
+                        .setNegativeButton(
+                            R.string.cancel,
+                            DialogInterface.OnClickListener { dialog, which ->
+                                NewDatabaseHelper.addProductToMyShoppingList(
+                                    shoppingItemDeleted.product
+                                )
+                                shoppingItems.add(
+                                    position,
+                                    shoppingItemDeleted
+                                )
+                                pa.notifyItemInserted(position)
+                            }).create()
+
+                    dialog.show()
+                    input.doOnTextChanged { text, start, count, after ->
+                        var textString = text.toString()
+                        dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled =
+                            textString.toDoubleOrNull() != null
+                    }
+                    dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled =
+                        false
                 }
 
                 val EditText.doubleValue: Double
