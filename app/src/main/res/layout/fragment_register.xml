@@ -14,7 +14,7 @@
         android:textAlignment="center"
         android:textSize="50sp"
         android:layout_marginStart="25dp"
-        android:layout_marginBottom="5dp"
+        android:layout_marginBottom="30dp"
         android:fontFamily="@font/indigo_daisy"
         android:layout_marginTop="60dp"/>
 

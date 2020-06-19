@@ -23,8 +23,7 @@ import com.annikadietz.shoppy_shoppingbuddy.MainActivity
 import com.annikadietz.shoppy_shoppingbuddy.NewDatabaseHelper
 import com.annikadietz.shoppy_shoppingbuddy.R
 import com.google.android.gms.tasks.Task
-import com.google.firebase.auth.AuthResult
-import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.*
 import kotlinx.android.synthetic.main.fragment_login.*
 
 
@@ -51,14 +50,16 @@ class LoginFragment : Fragment() {
             resetPassword()
         }
 
+
         if (mAuth!!.currentUser != null) {
 //            startActivity(Intent(this, MainActivity::class.java))
 //            finish()
         }
 
+
+
         return root
     }
-
     private fun resetPassword() {
         val builder: android.app.AlertDialog.Builder = android.app.AlertDialog.Builder(this.context)
 

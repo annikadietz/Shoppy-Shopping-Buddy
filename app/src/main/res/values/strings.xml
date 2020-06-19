@@ -44,7 +44,9 @@
     <string name="registered_pass">stephan</string>
 
 
-    <string name="confirm_dialog">Yes</string>
-    <string name="un_confirm_dialog">No</string>
+    <string name="submit">Submit</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="cancel">Cancel</string>
 
 </resources>

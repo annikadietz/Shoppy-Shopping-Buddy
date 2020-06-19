@@ -7,15 +7,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
-import com.annikadietz.shoppy_shoppingbuddy.Model.Combination
 import com.annikadietz.shoppy_shoppingbuddy.Model.ShoppingItem
-import com.annikadietz.shoppy_shoppingbuddy.NewDatabaseHelper
 import com.annikadietz.shoppy_shoppingbuddy.R
 import java.time.Duration
-import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.Period
-import java.time.format.DateTimeFormatter
 
 class PurchasesAdapter(var shoppingItems: ArrayList<ShoppingItem>) :
     RecyclerView.Adapter<PurchasesAdapter.ViewHolder>() {
@@ -37,7 +32,11 @@ class PurchasesAdapter(var shoppingItems: ArrayList<ShoppingItem>) :
         var lastConfirmed = LocalDateTime.parse(itemInPosition.price.lastConfirmed)
         var period: Duration =  Duration.between(lastConfirmed, LocalDateTime.now())
         if (period.toDays() < 1) {
-            if (period.toHours().toInt() == 1) {
+            if (period.toMinutes().toInt() < 10 && period.toHours().toInt() < 1) {
+                holder.lastConfirmed.text = "A few minutes ago"
+            } else if (period.toHours().toInt() < 1) {
+                holder.lastConfirmed.text = period.toMinutes().toString() + " minutes ago"
+            } else if (period.toHours().toInt() == 1) {
                 holder.lastConfirmed.text = period.toHours().toString() + " hour ago"
             } else {
                 holder.lastConfirmed.text = period.toHours().toString() + " hours ago"
