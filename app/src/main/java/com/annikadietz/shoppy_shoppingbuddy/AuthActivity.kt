@@ -26,7 +26,7 @@ class AuthActivity : FragmentActivity() {
                 this
             )
         pagerAdapter.addFragmet(LoginFragment())
-        pagerAdapter.addFragmet(RegisterFragment())
+        pagerAdapter.addFragmet(RegisterFragment(viewPager))
         viewPager.adapter = pagerAdapter
     }
 
