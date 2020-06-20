@@ -1,11 +1,18 @@
 package com.annikadietz.shoppy_shoppingbuddy
 
+import android.content.Context
 import android.content.Intent
+import android.location.Geocoder
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.annikadietz.shoppy_shoppingbuddy.Model.*
 import com.annikadietz.shoppy_shoppingbuddy.ui.confirm_purchases.ShopFragment
@@ -30,6 +37,22 @@ class MainActivity : AppCompatActivity()  {
 
     var uid: String = ""
 
+
+    private var locationManager : LocationManager? = null
+
+    private val locationListener: LocationListener = object : LocationListener {
+        @RequiresApi(Build.VERSION_CODES.O)
+        override fun onLocationChanged(location: Location) {
+            var address = Geocoder(this@MainActivity.applicationContext).getFromLocation(location.latitude, location.longitude, 1).first()
+            NewDatabaseHelper.address = address.getAddressLine(0)
+            yourListFragment.updateAddressField()
+        }
+        override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {}
+        override fun onProviderEnabled(provider: String) {}
+        override fun onProviderDisabled(provider: String) {}
+    }
+
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +71,9 @@ class MainActivity : AppCompatActivity()  {
         NewDatabaseHelper.subscribeMyShoppingList()
         NewDatabaseHelper.subscribeMyShoppingItems()
         NewDatabaseHelper.subscribeShoppedProducts()
+
+        locationManager = getSystemService(LOCATION_SERVICE) as LocationManager?
+        updateLocation()
     }
 
     private var navListener = BottomNavigationView.OnNavigationItemSelectedListener(object :
@@ -89,5 +115,14 @@ class MainActivity : AppCompatActivity()  {
         bottomNav.selectedItemId = R.id.nav_shop
     }
 
+    fun updateLocation() {
+        try {
+            // Request location updates
+            locationManager?.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, locationListener, null)
+
+        } catch(ex: SecurityException) {
+            Log.d("location_security", "Security Exception, no location available")
+        }
+    }
 
 }
