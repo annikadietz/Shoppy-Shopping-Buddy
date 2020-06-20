@@ -69,6 +69,7 @@ class YourListFragment(val listener: (Combination) -> Unit, val activity: MainAc
         return root
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun updateAddressField() {
         if(this::yourAddressField.isInitialized) {
             yourAddressField.setText(NewDatabaseHelper.address)

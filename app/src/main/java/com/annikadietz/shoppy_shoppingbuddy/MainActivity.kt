@@ -118,7 +118,8 @@ class MainActivity : AppCompatActivity()  {
     fun updateLocation() {
         try {
             // Request location updates
-            locationManager?.requestSingleUpdate(LocationManager.GPS_PROVIDER, locationListener, null)
+            locationManager?.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, locationListener, null)
+
         } catch(ex: SecurityException) {
             Log.d("location_security", "Security Exception, no location available")
         }
