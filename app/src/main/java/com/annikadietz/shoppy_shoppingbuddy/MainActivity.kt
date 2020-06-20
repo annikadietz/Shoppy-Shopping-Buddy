@@ -41,6 +41,7 @@ class MainActivity : AppCompatActivity()  {
     private var locationManager : LocationManager? = null
 
     private val locationListener: LocationListener = object : LocationListener {
+        @RequiresApi(Build.VERSION_CODES.O)
         override fun onLocationChanged(location: Location) {
             var address = Geocoder(this@MainActivity.applicationContext).getFromLocation(location.latitude, location.longitude, 1).first()
             NewDatabaseHelper.address = address.getAddressLine(0)
@@ -72,15 +73,7 @@ class MainActivity : AppCompatActivity()  {
         NewDatabaseHelper.subscribeShoppedProducts()
 
         locationManager = getSystemService(LOCATION_SERVICE) as LocationManager?
-        try {
-            // Request location updates
-            locationManager?.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0L, 0f, locationListener)
-        } catch(ex: SecurityException) {
-            Log.d("location_security", "Security Exception, no location available")
-        }
-//        val shoppingItem = ShoppingItem(Product("Pizza - Italia", Type("Frozen")), Shop("Aldi", "7824JA", "Kerspellaan 9"), 3.0)
-//        NewDatabaseHelper.confirmPrice(shoppingItem)
-//        NewDatabaseHelper.confirmPurchase(shoppingItem)
+        updateLocation()
     }
 
     private var navListener = BottomNavigationView.OnNavigationItemSelectedListener(object :
@@ -122,5 +115,13 @@ class MainActivity : AppCompatActivity()  {
         bottomNav.selectedItemId = R.id.nav_shop
     }
 
+    fun updateLocation() {
+        try {
+            // Request location updates
+            locationManager?.requestSingleUpdate(LocationManager.GPS_PROVIDER, locationListener, null)
+        } catch(ex: SecurityException) {
+            Log.d("location_security", "Security Exception, no location available")
+        }
+    }
 
 }
