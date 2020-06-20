@@ -75,6 +75,9 @@ class YourListFragment(val listener: (Combination) -> Unit, val activity: MainAc
             yourAddressField.setText(NewDatabaseHelper.address)
         }
         listGenerator.myLocation = NewDatabaseHelper.address
+        if(this::recyclerAdapter.isInitialized) {
+            updateCombos()
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

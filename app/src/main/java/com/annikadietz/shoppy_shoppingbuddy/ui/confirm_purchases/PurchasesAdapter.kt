@@ -32,7 +32,11 @@ class PurchasesAdapter(var shoppingItems: ArrayList<ShoppingItem>) :
         var lastConfirmed = LocalDateTime.parse(itemInPosition.price.lastConfirmed)
         var period: Duration =  Duration.between(lastConfirmed, LocalDateTime.now())
         if (period.toDays() < 1) {
-            if (period.toHours().toInt() == 1) {
+            if (period.toMinutes().toInt() < 10 && period.toHours().toInt() < 1) {
+                holder.lastConfirmed.text = "A few minutes ago"
+            } else if (period.toHours().toInt() < 1) {
+                holder.lastConfirmed.text = period.toMinutes().toString() + " minutes ago"
+            } else if (period.toHours().toInt() == 1) {
                 holder.lastConfirmed.text = period.toHours().toString() + " hour ago"
             } else {
                 holder.lastConfirmed.text = period.toHours().toString() + " hours ago"

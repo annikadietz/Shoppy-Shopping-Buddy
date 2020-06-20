@@ -23,7 +23,8 @@
                 android:id="@+id/update_location_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/ic_update" />
+                android:background="@drawable/ic_update"
+                android:backgroundTint="#FFFFFF" />
         </RelativeLayout>
 
         <RelativeLayout

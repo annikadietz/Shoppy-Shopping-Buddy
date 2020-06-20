@@ -17,9 +17,9 @@ class ShopDirectionsManager(
     var shopDirectionsId: Int
 ){
    init {
-       var shopName = root.findViewById<TextView>(shopNameId)
-       var shopAddress = root.findViewById<TextView>(shopAddressId)
-       var shopDirectionsButton = root.findViewById<Button>(shopDirectionsId)
+       val shopName = root.findViewById<TextView>(shopNameId)
+       val shopAddress = root.findViewById<TextView>(shopAddressId)
+       val shopDirectionsButton = root.findViewById<Button>(shopDirectionsId)
        shopName.text = shop.name
        shopAddress.text = shop.streetAddress
        shopDirectionsButton.setOnClickListener {
@@ -28,11 +28,6 @@ class ShopDirectionsManager(
                Uri.parse("http://maps.google.com/maps?saddr=${startingLocation}&daddr=${shop.streetAddress}, ${shop.postCode}")
            )
            root.context.startActivity(intent)
-//           var googleDirectionsService = GoogleDirectionsService()
-//           var url =
-//               "https://maps.googleapis.com/maps/api/directions/json?origin=${startingLocation}&destination=${shop.streetAddress}%20${shop.postCode}"
-//
-//           print(googleDirectionsService.getDirections(url))
        }
    }
 }
