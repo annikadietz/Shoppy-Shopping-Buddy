@@ -242,6 +242,7 @@ class ShopFragment : Fragment() {
                                 NewDatabaseHelper.requestPriceChange(
                                     shoppingItemCurrent, newPrice
                                 )
+                                NewDatabaseHelper.confirmPurchase(shoppingItemCurrent)
                                 Snackbar.make(
                                     root,
                                     "New price submitted successfully",

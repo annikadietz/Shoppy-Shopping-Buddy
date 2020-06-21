@@ -2,18 +2,15 @@ package com.annikadietz.shoppy_shoppingbuddy
 
 import android.content.Context
 import android.widget.EditText
-import androidx.fragment.app.Fragment
+
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.viewpager2.widget.ViewPager2
-import com.annikadietz.shoppy_shoppingbuddy.NewDatabaseHelper.uid
 import com.annikadietz.shoppy_shoppingbuddy.ui.login.LoginFragment
 import com.annikadietz.shoppy_shoppingbuddy.ui.register.RegisterFragment
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.AuthResult
-import kotlinx.android.synthetic.main.activity_auth.*
-import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -29,7 +26,6 @@ class AuthenticationTest {
 
     @Before
     fun setup() {
-
         instrumentationContext = InstrumentationRegistry.getInstrumentation().context
         FirebaseApp.initializeApp(instrumentationContext);
     }
@@ -40,10 +36,9 @@ class AuthenticationTest {
         email.setText("stephantest@ruiz.com")
         val password = EditText(instrumentationContext)
         password.setText("stephan")
-       var instrumentationContext2 = InstrumentationRegistry.getInstrumentation().context
 
 //Todo it's not working at this moment
-        val viewPager=ViewPager2(instrumentationContext2)
+        val viewPager=ViewPager2(instrumentationContext)
        val registerFrag = RegisterFragment(viewPager)
         val result = registerFrag.registerUser(email, password)
             ?.addOnCompleteListener(OnCompleteListener<AuthResult?> { task ->
