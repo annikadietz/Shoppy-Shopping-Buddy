@@ -25,7 +25,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.annikadietz.shoppy_shoppingbuddy.Model.Combination
 import com.annikadietz.shoppy_shoppingbuddy.Model.Shop
 import com.annikadietz.shoppy_shoppingbuddy.Model.ShoppingItem
-import com.annikadietz.shoppy_shoppingbuddy.NewDatabaseHelper
+import com.annikadietz.shoppy_shoppingbuddy.DatabaseHelper
 import com.annikadietz.shoppy_shoppingbuddy.R
 import com.google.android.material.snackbar.Snackbar
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
@@ -37,7 +37,7 @@ class ShopFragment : Fragment() {
     lateinit var recyclerAdapter: PurchasesAdapter
     lateinit var firstShop: ConstraintLayout
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
-    var shoppingItems = NewDatabaseHelper.getShoppingItems()
+    var shoppingItems = DatabaseHelper.getShoppingItems()
     private lateinit var root: View
     private lateinit var shoppingItemDeleted: ShoppingItem
 
@@ -49,14 +49,14 @@ class ShopFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         root = inflater.inflate(R.layout.fragment_shopping_list, container, false)
-        NewDatabaseHelper.getMyCombo().addOnSuccessListener {
+        DatabaseHelper.getMyCombo().addOnSuccessListener {
 
             if (it != null) {
                 var combo = it.toObject(Combination::class.java)
                 if (combo != null) {
                     if (combo.shops.size > 0) {
                         val shop = combo.shops[0]
-                        setUpFirstShop(shop, NewDatabaseHelper.address)
+                        setUpFirstShop(shop, DatabaseHelper.address)
                         val shoppingItems = arrayListOf<ShoppingItem>()
                         combo.shoppingItems.forEach {
                             if (it.shop.name == shop.name && it.shop.streetAddress == shop.streetAddress && it.shop.postCode == shop.postCode) {
@@ -181,7 +181,7 @@ class ShopFragment : Fragment() {
                             shoppingItems.removeAt(position)
                             pa.notifyItemRemoved(position)
 
-                            NewDatabaseHelper.deleteProductFormMyShoppingList(shoppingItemDeleted.product)
+                            DatabaseHelper.deleteProductFormMyShoppingList(shoppingItemDeleted.product)
 //
                             Snackbar.make(
                                 root,
@@ -189,7 +189,7 @@ class ShopFragment : Fragment() {
                                 Snackbar.LENGTH_SHORT
                             )
                                 .setAction("Undo") {
-                                    NewDatabaseHelper.addProductToMyShoppingList(shoppingItemDeleted.product)
+                                    DatabaseHelper.addProductToMyShoppingList(shoppingItemDeleted.product)
                                     shoppingItems.add(
                                         position,
                                         shoppingItemDeleted
@@ -203,15 +203,15 @@ class ShopFragment : Fragment() {
                             shoppingItems.removeAt(position)
                             pa.notifyItemRemoved(position)
 
-                            NewDatabaseHelper.deleteProductFormMyShoppingList(shoppingItemDeleted.product)
+                            DatabaseHelper.deleteProductFormMyShoppingList(shoppingItemDeleted.product)
 
 
                             AlertDialog.Builder(context)
                                 .setTitle("Is the price really €${shoppingItemCurrent.price.price} ?")
                                 .setPositiveButton(R.string.yes,
                                     DialogInterface.OnClickListener { dialog, which ->
-                                        NewDatabaseHelper.confirmPurchase(shoppingItemCurrent)
-                                        NewDatabaseHelper.confirmPrice(shoppingItemCurrent)
+                                        DatabaseHelper.confirmPurchase(shoppingItemCurrent)
+                                        DatabaseHelper.confirmPrice(shoppingItemCurrent)
 
                                     })
                                 .setNegativeButton(
@@ -239,7 +239,7 @@ class ShopFragment : Fragment() {
                                 val newPrice =
                                     input.text.toString().toDouble()
 
-                                NewDatabaseHelper.requestPriceChange(
+                                DatabaseHelper.requestPriceChange(
                                     shoppingItemCurrent, newPrice
                                 )
                                 NewDatabaseHelper.confirmPurchase(shoppingItemCurrent)
@@ -254,7 +254,7 @@ class ShopFragment : Fragment() {
                         .setNegativeButton(
                             R.string.cancel,
                             DialogInterface.OnClickListener { dialog, which ->
-                                NewDatabaseHelper.addProductToMyShoppingList(
+                                DatabaseHelper.addProductToMyShoppingList(
                                     shoppingItemDeleted.product
                                 )
                                 shoppingItems.add(

@@ -10,7 +10,7 @@ import android.widget.EditText
 import android.widget.ExpandableListView
 import androidx.fragment.app.Fragment
 import com.annikadietz.shoppy_shoppingbuddy.Model.PurchasedProduct
-import com.annikadietz.shoppy_shoppingbuddy.NewDatabaseHelper
+import com.annikadietz.shoppy_shoppingbuddy.DatabaseHelper
 import com.annikadietz.shoppy_shoppingbuddy.R
 import java.text.SimpleDateFormat
 import java.util.*
@@ -37,7 +37,7 @@ class ShoppingHistoryFragment : Fragment() {
         updateLabel(endDatePicker, endCalendar)
 
         val startDateListener =
-            OnDateSetListener { view, year, monthOfYear, dayOfMonth -> // TODO Auto-generated method stub
+            OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
                 startCalendar.set(Calendar.YEAR, year)
                 startCalendar.set(Calendar.MONTH, monthOfYear)
                 startCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
@@ -46,7 +46,7 @@ class ShoppingHistoryFragment : Fragment() {
             }
 
         val endDateListener =
-            OnDateSetListener { view, year, monthOfYear, dayOfMonth -> // TODO Auto-generated method stub
+            OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
                 endCalendar.set(Calendar.YEAR, year)
                 endCalendar.set(Calendar.MONTH, monthOfYear)
                 endCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
@@ -55,24 +55,37 @@ class ShoppingHistoryFragment : Fragment() {
             }
 
         startDatePicker.setOnClickListener {
-            DatePickerDialog(this.requireContext(), startDateListener, startCalendar.get(Calendar.YEAR), startCalendar.get(Calendar.MONTH), startCalendar.get((Calendar.DATE))).show()
+            DatePickerDialog(
+                this.requireContext(),
+                startDateListener,
+                startCalendar.get(Calendar.YEAR),
+                startCalendar.get(Calendar.MONTH),
+                startCalendar.get((Calendar.DATE))
+            ).show()
         }
 
         endDatePicker.setOnClickListener {
-            DatePickerDialog(this.requireContext(), endDateListener, endCalendar.get(Calendar.YEAR), endCalendar.get(Calendar.MONTH), endCalendar.get((Calendar.DATE))).show()
+            DatePickerDialog(
+                this.requireContext(),
+                endDateListener,
+                endCalendar.get(Calendar.YEAR),
+                endCalendar.get(Calendar.MONTH),
+                endCalendar.get((Calendar.DATE))
+            ).show()
         }
 
         list = root.findViewById<ExpandableListView>(R.id.shopping_history_list)
-        var myPurchasedProducts = NewDatabaseHelper.getPurchasedProducts()
+        var myPurchasedProducts = DatabaseHelper.getPurchasedProducts()
         var calendar = Calendar.getInstance()
 
 
         purchasedProducts = arrayListOf<DatePurchasedCollection>()
 
         myPurchasedProducts.forEach {
-            calendar.setTime(it.boughtAt)
+            calendar.time = it.boughtAt
             var cal2 = Calendar.getInstance()
-            var result = purchasedProducts.find { purchased -> cal2.setTime(purchased.date)
+            var result = purchasedProducts.find { purchased ->
+                cal2.time = purchased.date
                 cal2.get(Calendar.DAY_OF_YEAR) == calendar.get(Calendar.DAY_OF_YEAR) &&
                         cal2.get(Calendar.YEAR) == calendar.get(Calendar.YEAR)
             }
@@ -80,8 +93,7 @@ class ShoppingHistoryFragment : Fragment() {
                 var purchased = DatePurchasedCollection(it.boughtAt)
                 purchased.purchased.add(it)
                 purchasedProducts.add(purchased)
-            }
-            else {
+            } else {
                 result.purchased.add(it)
             }
         }
@@ -94,7 +106,12 @@ class ShoppingHistoryFragment : Fragment() {
     }
 
     fun updateList(startCalendar: Calendar, endCalendar: Calendar) {
-        var adapter = ShoppingHistoryExpandableListViewAdapter(this.requireContext(), purchasedProducts, startCalendar.time, endCalendar.time)
+        var adapter = ShoppingHistoryExpandableListViewAdapter(
+            this.requireContext(),
+            purchasedProducts,
+            startCalendar.time,
+            endCalendar.time
+        )
         list.setAdapter(adapter)
     }
 

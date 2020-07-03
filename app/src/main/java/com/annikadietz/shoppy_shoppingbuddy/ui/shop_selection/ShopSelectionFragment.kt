@@ -1,18 +1,17 @@
 package com.annikadietz.shoppy_shoppingbuddy.ui.shop_selection
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.annikadietz.shoppy_shoppingbuddy.MainActivity
 import com.annikadietz.shoppy_shoppingbuddy.Model.Shop
-import com.annikadietz.shoppy_shoppingbuddy.NewDatabaseHelper
+import com.annikadietz.shoppy_shoppingbuddy.DatabaseHelper
 import com.annikadietz.shoppy_shoppingbuddy.R
 
 /**
@@ -27,20 +26,16 @@ class ShopSelectionFragment : Fragment() {
     lateinit var swipeRefreshLayout: SwipeRefreshLayout
     lateinit var searchView: SearchView
     var viewModel = ShopSelectionViewModel()
-    var databaseHelper = NewDatabaseHelper
+    var databaseHelper = DatabaseHelper
 
     private lateinit var shops: List<Shop>
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        var root =  inflater.inflate(R.layout.fragment_shop_selection, container, false)
+        var root = inflater.inflate(R.layout.fragment_shop_selection, container, false)
         searchView = root.findViewById(R.id.searchViewShop)
         recyclerView = root.findViewById(R.id.recyclerViewShop)
 
@@ -50,7 +45,8 @@ class ShopSelectionFragment : Fragment() {
 
         recyclerView.layoutManager = LinearLayoutManager(this.context)
 
-        var dividerItemDecoration = DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL)
+        var dividerItemDecoration =
+            DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL)
         recyclerView.addItemDecoration(dividerItemDecoration)
         recyclerView.adapter = recyclerAdapter
 

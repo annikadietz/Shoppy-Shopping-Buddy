@@ -4,11 +4,12 @@ class Address {
     var postCode: String?
     var streetAddress: String?
 
-    constructor(postCode: String, streetAddress: String){
+    constructor(postCode: String, streetAddress: String) {
         this.postCode = postCode
         this.streetAddress = streetAddress
     }
-    constructor(){
+
+    constructor() {
         this.postCode = null
         this.streetAddress = null
     }

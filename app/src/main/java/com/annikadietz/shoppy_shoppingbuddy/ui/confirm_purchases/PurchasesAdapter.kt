@@ -18,7 +18,11 @@ class PurchasesAdapter(var shoppingItems: ArrayList<ShoppingItem>) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
-        val view: View = layoutInflater.inflate(R.layout.fragment_shopping_list_row_item_with_price, parent, false)
+        val view: View = layoutInflater.inflate(
+            R.layout.fragment_shopping_list_row_item_with_price,
+            parent,
+            false
+        )
 
         return ViewHolder(view)
     }
@@ -30,7 +34,7 @@ class PurchasesAdapter(var shoppingItems: ArrayList<ShoppingItem>) :
         holder.productType.text = itemInPosition.product.type.name
         holder.productPrice.text = "€ " + itemInPosition.price.price.toString()
         var lastConfirmed = LocalDateTime.parse(itemInPosition.price.lastConfirmed)
-        var period: Duration =  Duration.between(lastConfirmed, LocalDateTime.now())
+        var period: Duration = Duration.between(lastConfirmed, LocalDateTime.now())
         if (period.toDays() < 1) {
             if (period.toMinutes().toInt() < 10 && period.toHours().toInt() < 1) {
                 holder.lastConfirmed.text = "A few minutes ago"
@@ -41,7 +45,7 @@ class PurchasesAdapter(var shoppingItems: ArrayList<ShoppingItem>) :
             } else {
                 holder.lastConfirmed.text = period.toHours().toString() + " hours ago"
             }
-        } else if (period.toDays().toInt() == 1){
+        } else if (period.toDays().toInt() == 1) {
             holder.lastConfirmed.text = "A day ago"
         } else {
             holder.lastConfirmed.text = period.toDays().toString() + " days ago"
@@ -58,6 +62,7 @@ class PurchasesAdapter(var shoppingItems: ArrayList<ShoppingItem>) :
         var productType: TextView
         var productPrice: TextView
         var lastConfirmed: TextView
+
         constructor(itemView: View) : super(itemView) {
             productName = itemView.findViewById(R.id.product_name)
             productType = itemView.findViewById(R.id.product_type)

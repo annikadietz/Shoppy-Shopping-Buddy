@@ -6,17 +6,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.SearchView
+import android.widget.Spinner
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.annikadietz.shoppy_shoppingbuddy.DatabaseHelperInterface
-import com.annikadietz.shoppy_shoppingbuddy.ListGenerator
 import com.annikadietz.shoppy_shoppingbuddy.Model.Product
-import com.annikadietz.shoppy_shoppingbuddy.NewDatabaseHelper
+import com.annikadietz.shoppy_shoppingbuddy.DatabaseHelper
 import com.annikadietz.shoppy_shoppingbuddy.R
 
 
@@ -41,15 +42,16 @@ class ProductSearchFragment(dbh: DatabaseHelperInterface) : Fragment() {
         return root
     }
 
-    fun setUp(){
+    fun setUp() {
         recyclerView = root.findViewById(R.id.recyclerView)
 
-        var dividerItemDecoration = DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL)
+        var dividerItemDecoration =
+            DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL)
         recyclerView.addItemDecoration(dividerItemDecoration)
 
-        products = NewDatabaseHelper.getProducts()
+        products = DatabaseHelper.getProducts()
 
-        recyclerAdapter = RecyclerAdapter(NewDatabaseHelper)
+        recyclerAdapter = RecyclerAdapter(DatabaseHelper)
 
         recyclerView.layoutManager = LinearLayoutManager(this.context)
         recyclerView.adapter = recyclerAdapter
@@ -83,7 +85,8 @@ class ProductSearchFragment(dbh: DatabaseHelperInterface) : Fragment() {
         var typeAdapter = this.context?.let {
             ArrayAdapter<String>(
                 it,
-                android.R.layout.simple_spinner_item, productTypes)
+                android.R.layout.simple_spinner_item, productTypes
+            )
         }
         typeAdapter?.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         typeAdapter?.add("")
@@ -91,8 +94,10 @@ class ProductSearchFragment(dbh: DatabaseHelperInterface) : Fragment() {
         typeSpinner.setSelection(0)
         typeSpinner.onItemSelectedListener = object :
             AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>,
-                                        view: View?, position: Int, id: Long) {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View?, position: Int, id: Long
+            ) {
                 selectedType = productTypes[position]
                 recyclerAdapter.selectedType = selectedType
                 recyclerAdapter.filter.filter(searchView.query)
@@ -106,18 +111,20 @@ class ProductSearchFragment(dbh: DatabaseHelperInterface) : Fragment() {
 
     fun SearchView.showKeyboard() {
         this.requestFocus()
-        val inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val inputMethodManager =
+            context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
     }
 
     fun SearchView.hideKeyboard() {
-        val inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val inputMethodManager =
+            context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(windowToken, 0)
     }
 
-    fun fillProductTypes(){
+    fun fillProductTypes() {
         products.forEach {
-            var productType = it.type?.name
+            var productType = it.type.name
             if (productType != null) {
                 if (productTypes.find { it == productType } == null) {
                     productTypes.add(productType)

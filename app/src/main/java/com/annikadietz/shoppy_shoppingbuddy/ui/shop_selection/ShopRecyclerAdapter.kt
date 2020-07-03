@@ -4,27 +4,30 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.CheckBox
+import android.widget.Filter
+import android.widget.Filterable
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.annikadietz.shoppy_shoppingbuddy.Model.Shop
-import com.annikadietz.shoppy_shoppingbuddy.NewDatabaseHelper
+import com.annikadietz.shoppy_shoppingbuddy.DatabaseHelper
 import com.annikadietz.shoppy_shoppingbuddy.R
 
-class ShopRecyclerAdapter: RecyclerView.Adapter<ShopRecyclerAdapter.ViewHolder>, Filterable {
+class ShopRecyclerAdapter : RecyclerView.Adapter<ShopRecyclerAdapter.ViewHolder>, Filterable {
     var logTag = "RecyclerAdapter.onCreateViewHolder"
     var count = 0
     lateinit var selectedShops: List<Shop>
     lateinit var shops: List<Shop>
     lateinit var shopsFiltered: ArrayList<Shop>
-    lateinit var databaseHelper: NewDatabaseHelper
+    lateinit var databaseHelper: DatabaseHelper
     var selectedType = ""
 
     private val shopFilter = object : Filter() {
         override fun performFiltering(constraint: CharSequence): Filter.FilterResults? {
             var searchResults = arrayListOf<Shop>()
-            if(constraint.isNotEmpty() && selectedType.isEmpty()){
+            if (constraint.isNotEmpty() && selectedType.isEmpty()) {
                 shops.forEach {
-                    if(it.name!!.toLowerCase().contains( constraint.toString().toLowerCase())){
+                    if (it.name!!.toLowerCase().contains(constraint.toString().toLowerCase())) {
                         searchResults.add(it)
                     }
                 }
@@ -40,11 +43,16 @@ class ShopRecyclerAdapter: RecyclerView.Adapter<ShopRecyclerAdapter.ViewHolder>,
             notifyDataSetChanged()
         }
     }
+
     override fun getFilter(): Filter {
         return shopFilter
     }
 
-    constructor(shopList: List<Shop>, selectedShopList: List<Shop>, dbh: NewDatabaseHelper) : super() {
+    constructor(
+        shopList: List<Shop>,
+        selectedShopList: List<Shop>,
+        dbh: DatabaseHelper
+    ) : super() {
         shops = shopList
         selectedShops = selectedShopList
         shopsFiltered = ArrayList(shops)
@@ -53,9 +61,9 @@ class ShopRecyclerAdapter: RecyclerView.Adapter<ShopRecyclerAdapter.ViewHolder>,
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         Log.w(logTag, "onCreateViewHolder " + count++)
-        var layoutInflater:LayoutInflater = LayoutInflater.from(parent.context)
+        var layoutInflater: LayoutInflater = LayoutInflater.from(parent.context)
         var view: View = layoutInflater.inflate(R.layout.shop_row_item, parent, false)
-        var viewHolder: ViewHolder = ViewHolder(view);
+        var viewHolder: ViewHolder = ViewHolder(view)
         return viewHolder
     }
 
@@ -67,7 +75,7 @@ class ShopRecyclerAdapter: RecyclerView.Adapter<ShopRecyclerAdapter.ViewHolder>,
         var shop = shopsFiltered[position]
         holder.shopName.text = shop.name
         holder.shopAddress.text = shop.streetAddress + " " + shop.postCode
-        if(selectedShops.any{ selectedShop -> selectedShop.name == shop.name && selectedShop.postCode == shop.postCode && selectedShop.streetAddress == shop.streetAddress }) {
+        if (selectedShops.any { selectedShop -> selectedShop.name == shop.name && selectedShop.postCode == shop.postCode && selectedShop.streetAddress == shop.streetAddress }) {
             holder.checkBox.isChecked = true
         }
 
@@ -75,17 +83,18 @@ class ShopRecyclerAdapter: RecyclerView.Adapter<ShopRecyclerAdapter.ViewHolder>,
         holder.checkBox.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
                 databaseHelper.addMyShop(shop)
-            }
-            else {
+            } else {
                 databaseHelper.deleteMyShop(shop)
             }
         }
     }
+
     // Represents a single row in the RecyclerView
     class ViewHolder : RecyclerView.ViewHolder, View.OnClickListener {
         lateinit var checkBox: CheckBox
         lateinit var shopName: TextView
         lateinit var shopAddress: TextView
+
         constructor(itemView: View) : super(itemView) {
             checkBox = itemView.findViewById(R.id.shop_checkbox)
             shopName = itemView.findViewById(R.id.shop_name)

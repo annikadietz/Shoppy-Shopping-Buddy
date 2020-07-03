@@ -16,32 +16,32 @@ class ListGenerator {
     var combos = arrayListOf<Combination>()
     var myLocation: String
     lateinit var activity: Activity
-    constructor(myLocation: String){
+
+    constructor(myLocation: String) {
         this.myLocation = myLocation
     }
 
-    constructor(activity: Activity, myLocation: String){
+    constructor(activity: Activity, myLocation: String) {
         this.myLocation = myLocation
         this.activity = activity
     }
 
 
-    fun findCheapestStore(shops: ArrayList<Shop>,
-                          shoppingList: ArrayList<Product>,
-                          productsInShops: ArrayList<ShoppingItem>) : ArrayList<ShoppingItem> {
-
-        // TODO: Replace all this with actual data from the database!!!!
-
-        //var cheapestShop: Shop
+    fun findCheapestStore(
+        shops: ArrayList<Shop>,
+        shoppingList: ArrayList<Product>,
+        productsInShops: ArrayList<ShoppingItem>
+    ): ArrayList<ShoppingItem> {
         var finalShoppingList = arrayListOf<ShoppingItem>()
         var cheapestPrice: Double = Double.MAX_VALUE
-        shops.forEach{
+        shops.forEach {
             var shop = it
-            var price = 0.0;
+            var price = 0.0
             var productsFound = arrayListOf<ShoppingItem>()
             shoppingList.forEach { it ->
                 var product = it
-                var productInShop = productsInShops.find { p ->p.shop.streetAddress == shop.streetAddress && p.shop.name == shop.name && p.product.name == product.name}
+                var productInShop =
+                    productsInShops.find { p -> p.shop.streetAddress == shop.streetAddress && p.shop.name == shop.name && p.product.name == product.name }
                 if (productInShop != null) {
                     price += productInShop.price.price
                     productsFound.add(productInShop)
@@ -56,7 +56,7 @@ class ListGenerator {
         return finalShoppingList
     }
 
-    fun findAllPossibleStoreCombinations(shops: ArrayList<Shop>) : ArrayList<Combination> {
+    fun findAllPossibleStoreCombinations(shops: ArrayList<Shop>): ArrayList<Combination> {
         var combos = arrayListOf<Combination>()
 
         addAllCombinations(combos, shops.toTypedArray())
@@ -83,9 +83,9 @@ class ListGenerator {
         if (index == r) {
             var combination = Combination(arrayListOf(), arrayListOf())
             for (j in 0 until r) {
-                combination.shops?.add(data[j])
+                combination.shops.add(data[j])
             }
-            if(combination.shops!!.size > 0) {
+            if (combination.shops.size > 0) {
                 combos.add(combination)
             }
             return
@@ -99,30 +99,40 @@ class ListGenerator {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun getCombinationsWithProductsInShops(shops: ArrayList<Shop>,
-                                           shoppingList: ArrayList<Product>,
-                                           shoppingItems: ArrayList<ShoppingItem>,
-                                           listAdapter: ShopCombinationRecyclerAdapter) : ArrayList<Combination> {
+    fun getCombinationsWithProductsInShops(
+        shops: ArrayList<Shop>,
+        shoppingList: ArrayList<Product>,
+        shoppingItems: ArrayList<ShoppingItem>,
+        listAdapter: ShopCombinationRecyclerAdapter
+    ): ArrayList<Combination> {
         var combos = findAllPossibleStoreCombinations(shops)
         combos.forEach {
             var combination = it
             shoppingList.forEach {
                 var product = it
                 var price = findBestPriceInShopCombination(product, combination, shoppingItems)
-                combination.shoppingItems?.add(price)
+                combination.shoppingItems.add(price)
             }
         }
         getFinalCombinations(combos, listAdapter)
 
-        listAdapter.notifyDataSetChanged();
+        listAdapter.notifyDataSetChanged()
 
         return combos
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun findBestPriceInShopCombination(product: Product, combination: Combination, products: ArrayList<ShoppingItem>) : ShoppingItem {
-        var lowestProductInShop = ShoppingItem(product, Shop("Fake shop", "Fake address", "Fake address"), Double.MAX_VALUE)
-        combination.shops?.forEach {
+    fun findBestPriceInShopCombination(
+        product: Product,
+        combination: Combination,
+        products: ArrayList<ShoppingItem>
+    ): ShoppingItem {
+        var lowestProductInShop = ShoppingItem(
+            product,
+            Shop("Fake shop", "Fake address", "Fake address"),
+            Double.MAX_VALUE
+        )
+        combination.shops.forEach {
             var priceInShop = findPriceInShop(it, product, products)
             if (priceInShop.price.price < lowestProductInShop.price.price) {
                 if (priceInShop != null) {
@@ -135,34 +145,46 @@ class ListGenerator {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun findPriceInShop(shop: Shop, product: Product, products: ArrayList<ShoppingItem>) : ShoppingItem {
-        var result = products.find { p -> p.shop.streetAddress == shop.streetAddress && p.shop.name == shop.name && p.product.name == product.name }
+    fun findPriceInShop(
+        shop: Shop,
+        product: Product,
+        products: ArrayList<ShoppingItem>
+    ): ShoppingItem {
+        var result =
+            products.find { p -> p.shop.streetAddress == shop.streetAddress && p.shop.name == shop.name && p.product.name == product.name }
         if (result != null) {
             return result
-        }
-        else {
-            return ShoppingItem(product, Shop("Fake shop", "Fake address", "Fake address"), Double.MAX_VALUE)
+        } else {
+            return ShoppingItem(
+                product,
+                Shop("Fake shop", "Fake address", "Fake address"),
+                Double.MAX_VALUE
+            )
         }
     }
 
-    fun getPriceFromCombination (combination: Combination): Double {
+    fun getPriceFromCombination(combination: Combination): Double {
         var fullPrice = 0.0
-        combination.shoppingItems?.forEach {
-                fullPrice += it.price.price
+        combination.shoppingItems.forEach {
+            fullPrice += it.price.price
         }
         return fullPrice
     }
+
     @RequiresApi(Build.VERSION_CODES.O)
-    fun getCombinationWithBestPrice(combinations:ArrayList<Combination>, shopCount: Int) : Combination {
+    fun getCombinationWithBestPrice(
+        combinations: ArrayList<Combination>,
+        shopCount: Int
+    ): Combination {
         var bestPriceCombination: Combination = Combination()
         bestPriceCombination.shoppingItems = ArrayList<ShoppingItem>()
         bestPriceCombination.shoppingItems.add(ShoppingItem(Product(), Shop(), Double.MAX_VALUE))
-        combinations.forEach{
+        combinations.forEach {
             var combination = it
-            if (combination.shops?.size == shopCount) {
+            if (combination.shops.size == shopCount) {
                 val new = getPriceFromCombination(combination)
                 val old = getPriceFromCombination(bestPriceCombination)
-                if (new <= old){
+                if (new <= old) {
                     bestPriceCombination = combination
 
                 }
@@ -171,8 +193,12 @@ class ListGenerator {
 
         return bestPriceCombination
     }
+
     @RequiresApi(Build.VERSION_CODES.O)
-    fun getFinalCombinations(combinations: ArrayList<Combination>, listAdapter: ShopCombinationRecyclerAdapter){
+    fun getFinalCombinations(
+        combinations: ArrayList<Combination>,
+        listAdapter: ShopCombinationRecyclerAdapter
+    ) {
         oneShopCombination = getCombinationWithBestPrice(combinations, 1)
         twoShopCombination = getCombinationWithBestPrice(combinations, 2)
         threeShopCombination = getCombinationWithBestPrice(combinations, 3)
@@ -187,7 +213,7 @@ class ListGenerator {
                 getDirections(oneShopCombination)
                 getDirections(twoShopCombination)
                 getDirections(threeShopCombination)
-                activity?.runOnUiThread(Runnable {
+                activity.runOnUiThread(Runnable {
                     listAdapter.notifyDataSetChanged()
                 })
 
@@ -200,27 +226,28 @@ class ListGenerator {
 
     // Takes a combination and adds directions to it
     @RequiresApi(Build.VERSION_CODES.N)
-    fun getDirections(combination: Combination)  {
+    fun getDirections(combination: Combination) {
         var shops = combination.shops
         var origin = myLocation
         var destination = myLocation
         var waypoints = ""
 
-        shops?.forEachIndexed { index, it ->
+        shops.forEachIndexed { index, it ->
             waypoints += it.streetAddress + "%20" + it.postCode
-            if(index != shops.lastIndex) {
+            if (index != shops.lastIndex) {
                 waypoints += "%20|%20"
             }
         }
 
-        val urlDirections = "https://maps.googleapis.com/maps/api/directions/json?origin=${origin}&destination=${destination}&waypoints=optimize:true|${waypoints}&key=AIzaSyAvarQW1FBGHIf3Sr22AQva-J-1dPGHGOI"
+        val urlDirections =
+            "https://maps.googleapis.com/maps/api/directions/json?origin=${origin}&destination=${destination}&waypoints=optimize:true|${waypoints}&key=AIzaSyAvarQW1FBGHIf3Sr22AQva-J-1dPGHGOI"
         var jsonResponse = GoogleDirectionsService.getDirections(urlDirections)
 
         val routes = jsonResponse.getJSONArray("routes")
         val legs = routes.getJSONObject(0)
             .getJSONArray("legs")
-        var totalDistance: Double = 0.0;
-        var totalTime: Double = 0.0;
+        var totalDistance: Double = 0.0
+        var totalTime: Double = 0.0
         for (i in 0 until legs.length()) {
             val distanceValue = legs.getJSONObject(i).getJSONObject("distance").getString("value")
             val timeValue = legs.getJSONObject(i).getJSONObject("duration").getString("value")
@@ -230,6 +257,6 @@ class ListGenerator {
 
         combination.directions = Directions(totalDistance, totalTime)
 
-        }
+    }
 
 }

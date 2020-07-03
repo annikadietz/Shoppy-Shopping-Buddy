@@ -10,21 +10,21 @@ class Price {
     var counter: Int
 
     @RequiresApi(Build.VERSION_CODES.O)
-    constructor(lastConfirmed: String, price: Double, counter:Int){
+    constructor(lastConfirmed: String, price: Double, counter: Int) {
         this.lastConfirmed = lastConfirmed
         this.price = price
         this.counter = counter
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    constructor(){
+    constructor() {
         this.lastConfirmed = LocalDateTime.now().toString()
         this.price = 0.0
         this.counter = 0
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    constructor(price: Double){
+    constructor(price: Double) {
         this.lastConfirmed = LocalDateTime.now().toString()
         this.price = price
         this.counter = 0

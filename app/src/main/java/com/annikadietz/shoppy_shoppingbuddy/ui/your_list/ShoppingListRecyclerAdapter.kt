@@ -3,20 +3,24 @@ package com.annikadietz.shoppy_shoppingbuddy.ui.your_list
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.Button
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.annikadietz.shoppy_shoppingbuddy.Model.Product
-import com.annikadietz.shoppy_shoppingbuddy.NewDatabaseHelper
+import com.annikadietz.shoppy_shoppingbuddy.DatabaseHelper
 import com.annikadietz.shoppy_shoppingbuddy.R
 
-public class ShoppingListRecyclerAdapter(var shoppingList: ArrayList<Product>, var updateCombos: () -> Unit): RecyclerView.Adapter<ShoppingListRecyclerAdapter.ViewHolder>() {
-
+class ShoppingListRecyclerAdapter(
+    var shoppingList: ArrayList<Product>,
+    var updateCombos: () -> Unit
+) : RecyclerView.Adapter<ShoppingListRecyclerAdapter.ViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        var layoutInflater:LayoutInflater = LayoutInflater.from(parent.context)
-        var view: View = layoutInflater.inflate(R.layout.fragment_shopping_list_row_item, parent, false)
-        var viewHolder: ViewHolder = ViewHolder(view);
+        var layoutInflater: LayoutInflater = LayoutInflater.from(parent.context)
+        var view: View =
+            layoutInflater.inflate(R.layout.fragment_shopping_list_row_item, parent, false)
+        var viewHolder: ViewHolder = ViewHolder(view)
         return viewHolder
     }
 
@@ -28,14 +32,15 @@ public class ShoppingListRecyclerAdapter(var shoppingList: ArrayList<Product>, v
         var productInPosition = shoppingList[position]
 
         holder.name.text = productInPosition.name
-        holder.type.text = productInPosition.type?.name
-        holder.deleteButton.setOnClickListener{
-            NewDatabaseHelper.deleteProductFormMyShoppingList(productInPosition)
+        holder.type.text = productInPosition.type.name
+        holder.deleteButton.setOnClickListener {
+            DatabaseHelper.deleteProductFormMyShoppingList(productInPosition)
             shoppingList.remove(productInPosition)
             notifyDataSetChanged()
             updateCombos.invoke()
         }
     }
+
     // Represents a single row in the RecyclerView
     class ViewHolder : RecyclerView.ViewHolder {
         lateinit var name: TextView

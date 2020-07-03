@@ -1,185 +1,360 @@
 package com.annikadietz.shoppy_shoppingbuddy
 
-import android.content.Context
+import android.os.Build
 import android.util.Log
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.Toast
+import androidx.annotation.RequiresApi
+import com.annikadietz.shoppy_shoppingbuddy.Model.*
+import com.annikadietz.shoppy_shoppingbuddy.Model.Shop
+import com.google.android.gms.tasks.Task
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import java.time.LocalDateTime
 import java.util.*
-import com.google.firebase.firestore.*
 
 
-object DatabaseHelper {
-    var db = Firebase.firestore
-    lateinit private var shops: MutableList<DocumentSnapshot>
-    lateinit private var products: MutableList<DocumentSnapshot>
-    lateinit private var categories: MutableList<DocumentSnapshot>
+object DatabaseHelper : DatabaseHelperInterface {
+    private var db = Firebase.firestore
+    private var shops = arrayListOf<Shop>()
+    private var myShops = arrayListOf<Shop>()
+    private var products = arrayListOf<Product>()
+    private var shoppingItems = arrayListOf<ShoppingItem>()
+    private var myShoppingList = arrayListOf<Product>()
+    private var myShoppingItems = arrayListOf<ShoppingItem>()
+    private var myPurchasedProducts = arrayListOf<PurchasedProduct>()
+    var uid: String = ""
+    var address: String = "Hoitingeslag 29, 7824 KG"
 
-    fun writeNewProduct(name: String, category: DocumentSnapshot, price: Double, lastConfirmed: Date, shop: DocumentSnapshot, context: Context) {
-        val product = hashMapOf(
-            "Name" to name,
-            "Price" to price,
-            "Category" to category.reference,
-            "LastConfirmed" to lastConfirmed,
-            "ShopReference" to shop.reference
-        )
+    // Created filler data
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun newData() {
+        var jumbo = Shop("Jumbo", "7824JA", "Kerspellaan 9")
+        var aldi = Shop("Aldi", "7824CP", "Peyserhof 2")
+        var lidl = Shop("Lidl", "7823PH", "Houtweg 151")
+        var albert = Shop("Albert Heijn", "7824CS", "Statenweg 33")
 
-        db.collection("Product")
-            .add(product)
-            .addOnSuccessListener {
-                Log.d("ProductAdding", "DocumentSnapshot added with ID: ${it.id}")
-                Toast.makeText(context, "Product was added.", Toast.LENGTH_LONG).show()
-            }
-            .addOnFailureListener {
-                Log.d("ProductAdding", "DocumentSnapshot added with ID: ${it.message}")
-                Toast.makeText(context, "There was a problem adding your product. Please try again later.", Toast.LENGTH_LONG).show()
-            }
+        db.collection("newShops").add(jumbo)
+        db.collection("newShops").add(aldi)
+        db.collection("newShops").add(lidl)
+        db.collection("newShops").add(albert)
+
+        var potatoes = Product("Potatoes - 1kg", Type("Vegetables"))
+        var pizza = Product("Pizza - Italia", Type("Frozen"))
+        var bananas = Product("Bananas - 1kg", Type("Fruits"))
+        var eggs = Product("Large eggs", Type("Dairy, eggs, and butter"))
+
+        db.collection("newProducts").add(potatoes)
+        db.collection("newProducts").add(pizza)
+        db.collection("newProducts").add(bananas)
+        db.collection("newProducts").add(eggs)
+
+        // jumbo
+        var potatoesInJumbo = ShoppingItem(potatoes, jumbo, 3.0)
+        var pizzaInJumbo = ShoppingItem(pizza, jumbo, 2.0)
+        var bananasInJumbo = ShoppingItem(bananas, jumbo, 1.0)
+        var eggsInJumbo = ShoppingItem(eggs, jumbo, 4.0)
+
+        db.collection("shoppingItems").add(potatoesInJumbo)
+        db.collection("shoppingItems").add(pizzaInJumbo)
+        db.collection("shoppingItems").add(bananasInJumbo)
+        db.collection("shoppingItems").add(eggsInJumbo)
+
+        // aldi
+        var potatoesInAldi = ShoppingItem(potatoes, aldi, 2.0)
+        var pizzaInAldi = ShoppingItem(pizza, aldi, 3.0)
+        var bananasInAldi = ShoppingItem(bananas, aldi, 1.5)
+        var eggsInAldi = ShoppingItem(eggs, aldi, 3.0)
+
+        db.collection("shoppingItems").add(potatoesInAldi)
+        db.collection("shoppingItems").add(pizzaInAldi)
+        db.collection("shoppingItems").add(bananasInAldi)
+        db.collection("shoppingItems").add(eggsInAldi)
+        // lidl
+        var potatoesInLidl = ShoppingItem(potatoes, lidl, 2.5)
+        var pizzaInLidl = ShoppingItem(pizza, lidl, 3.0)
+        var bananasInLidl = ShoppingItem(bananas, lidl, 4.0)
+        var eggsInLidl = ShoppingItem(eggs, lidl, 2.2)
+
+        db.collection("shoppingItems").add(potatoesInLidl)
+        db.collection("shoppingItems").add(pizzaInLidl)
+        db.collection("shoppingItems").add(bananasInLidl)
+        db.collection("shoppingItems").add(eggsInLidl)
+
+        // albert
+        var potatoesInAlbert = ShoppingItem(potatoes, albert, 4.3)
+        var pizzaInAlbert = ShoppingItem(pizza, albert, 2.6)
+        var bananasInAlbert = ShoppingItem(bananas, albert, 1.7)
+        var eggsInAlbert = ShoppingItem(eggs, albert, 2.2)
+        db.collection("shoppingItems").add(potatoesInAlbert)
+        db.collection("shoppingItems").add(pizzaInAlbert)
+        db.collection("shoppingItems").add(bananasInAlbert)
+        db.collection("shoppingItems").add(eggsInAlbert)
     }
 
     fun subscribeShops() {
-        db.collection("Shop")
-            .get()
-            .addOnSuccessListener { result ->
-                shops = result.documents
+        db.collection("newShops")
+            .addSnapshotListener { results, e ->
+
+                shops.clear()
+                results?.forEach { shop -> shops.add(shop.toObject(Shop::class.java)) }
             }
-            .addOnFailureListener { exception ->
-                Log.w("shops", "Error getting documents.", exception)
-            }
+
     }
 
     fun subscribeProducts() {
-        db.collection("Product")
-            .get()
-            .addOnSuccessListener { result ->
-                products = result.documents
+        db.collection("newProducts")
+            .addSnapshotListener { results, e ->
+                products.clear()
+                results?.forEach { product -> products.add(product.toObject(Product::class.java)) }
             }
-            .addOnFailureListener { exception ->
-                Log.w("shops", "Error getting documents.", exception)
+
+    }
+
+    fun subscribeShoppingItems() {
+        db.collection("shoppingItems")
+            .addSnapshotListener { results, e ->
+                shoppingItems.clear()
+                results?.forEach { product -> shoppingItems.add(product.toObject(ShoppingItem::class.java)) }
+            }
+
+    }
+
+    fun subscribeMyShops() {
+        db.collection("myShops")
+            .whereEqualTo("uid", uid)
+            .addSnapshotListener { results, e ->
+                myShops.clear()
+                results?.forEach {
+                    var shopParameters = it["shop"] as HashMap<String, String>
+                    var shop = Shop(
+                        shopParameters["name"],
+                        shopParameters["postCode"],
+                        shopParameters["streetAddress"]
+                    )
+                    myShops.add(shop)
+                }
+            }
+
+    }
+
+    fun subscribeMyShoppingList() {
+        db.collection("shoppingLists")
+            .document(uid)
+            .collection("shoppingList")
+            .addSnapshotListener { results, e ->
+                myShoppingList.clear()
+                results?.forEach { product -> myShoppingList.add(product.toObject(Product::class.java)) }
+            }
+
+    }
+
+    fun subscribeMyShoppingItems() {
+        db.collection("user1Data")
+            .document(uid)
+            .collection("shoppingItems")
+            .addSnapshotListener { results, e ->
+                myShoppingItems.clear()
+                results?.forEach { item -> myShoppingItems.add(item.toObject(ShoppingItem::class.java)) }
+            }
+
+    }
+
+    fun saveMyCombo(combo: Combination) {
+        db.collection("userData")
+            .document(uid)
+            .set(combo)
+    }
+
+    fun getMyCombo(): Task<DocumentSnapshot> {
+        return db.collection("userData")
+            .document(uid)
+            .get()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun confirmPrice(shoppingItem: ShoppingItem) {
+        val docs = db.collection("shoppingItems")
+            .whereEqualTo("product.name", shoppingItem.product.name)
+            .whereEqualTo("shop.name", shoppingItem.shop.name)
+            .whereEqualTo("shop.postCode", shoppingItem.shop.postCode)
+            .whereEqualTo("shop.streetAddress", shoppingItem.shop.streetAddress)
+            .get()
+
+        docs.addOnCompleteListener { it ->
+            it.result?.documents?.forEach {
+                val updates = hashMapOf(
+                    "price.counter" to FieldValue.increment(1),
+                    "price.lastConfirmed" to LocalDateTime.now().toString()
+                )
+                it.reference.update(updates)
+            }
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun confirmPurchase(shoppingItem: ShoppingItem) {
+        var purchasedProduct = PurchasedProduct(Calendar.getInstance().time, shoppingItem)
+        db.collection("userData")
+            .document(uid)
+            .collection("confirmedPurchases")
+            .add(purchasedProduct)
+    }
+
+    fun subscribeShoppedProducts() {
+        db.collection("userData")
+            .document(uid)
+            .collection("confirmedPurchases")
+            .addSnapshotListener { results, e ->
+                myPurchasedProducts.clear()
+                results?.forEach { product ->
+                    myPurchasedProducts.add(
+                        product.toObject(
+                            PurchasedProduct::class.java
+                        )
+                    )
+                }
             }
     }
 
-    fun subscribeCategories() {
-        db.collection("Category")
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun requestPriceChange(shoppingItem: ShoppingItem, newPrice: Double) {
+        Firebase
+        val docs = db.collection("shoppingItems")
+            .whereEqualTo("product.name", shoppingItem.product.name)
+            .whereEqualTo("shop.name", shoppingItem.shop.name)
+            .whereEqualTo("shop.postCode", shoppingItem.shop.postCode)
+            .whereEqualTo("shop.streetAddress", shoppingItem.shop.streetAddress)
             .get()
-            .addOnSuccessListener { result ->
-                categories = result.documents
+
+        docs.addOnCompleteListener { it ->
+            it.result?.documents?.forEach { documentSnapshot ->
+                val shoppingItem = documentSnapshot.toObject(ShoppingItem::class.java)
+                if (shoppingItem != null) {
+
+                    // checks whether price is already suggested. if flag is false: suggestion doesn't exist and needs to be created
+                    var flag = false
+                    shoppingItem.priceSuggestions.forEach lit@{
+                        if (it.price == newPrice) {
+                            var currentCounter = it.counter
+                            val updatePrice =
+                                Price(LocalDateTime.now().toString(), newPrice, currentCounter)
+
+                            val remove: Map<String, Any> = hashMapOf(
+                                "priceSuggestions" to FieldValue.arrayRemove(it)
+                            )
+                            documentSnapshot.reference.update(remove)
+
+                            updatePrice.counter = currentCounter + 1
+
+                            if (updatePrice.counter >= 3) {
+                                updatePrice.counter = 3
+                                val updates: Map<String, Any> = hashMapOf(
+                                    "price" to updatePrice
+                                )
+                                documentSnapshot.reference.update(updates)
+                                flag = true
+                            } else {
+                                val updates: Map<String, Any> = hashMapOf(
+                                    "priceSuggestions" to FieldValue.arrayUnion(updatePrice)
+                                )
+                                documentSnapshot.reference.update(updates)
+                                flag = true
+                                return@lit
+                            }
+
+                        }
+                    }
+
+                    if (!flag) {
+                        val updatePrice = Price(LocalDateTime.now().toString(), newPrice, 1)
+                        val updates: Map<String, Any> = hashMapOf(
+                            "priceSuggestions" to FieldValue.arrayUnion(updatePrice)
+                        )
+                        documentSnapshot.reference.update(updates)
+
+                    }
+
+                }
             }
-            .addOnFailureListener { exception ->
-                Log.w("categories", "Error getting documents.", exception)
-            }
+        }
     }
 
-    fun getShops(): MutableList<DocumentSnapshot> {
+    fun deleteMyShop(shop: Shop) {
+        var shopsInDatabase = db.collection("myShops")
+            .whereEqualTo("shop.name", shop.name)
+            .whereEqualTo("shop.postCode", shop.postCode)
+            .whereEqualTo("shop.streetAddress", shop.streetAddress)
+            .whereEqualTo("uid", uid)
+            .get()
+        shopsInDatabase.addOnSuccessListener {
+            it.forEach {
+                db.collection("myShops").document(it.id).delete()
+            }
+        }
+    }
+
+    fun addMyShop(shop: Shop) {
+        val myShop: HashMap<String, Any> = hashMapOf(
+            "shop" to shop,
+            "uid" to uid
+        )
+        db.collection("myShops").document()
+            .set(myShop)
+            .addOnSuccessListener {
+                Log.d("add my shops", "DocumentSnapshot successfully written!")
+            }
+            .addOnFailureListener { e -> Log.w("add my shops", "Error writing document", e) }
+    }
+
+    override fun getMyShops(): ArrayList<Shop> {
+        return myShops
+    }
+
+    override fun getShops(): ArrayList<Shop> {
         return shops
     }
 
-    fun getProducts(): MutableList<DocumentSnapshot> {
+    override fun getProducts(): ArrayList<Product> {
         return products
     }
 
-    fun getCategories(): MutableList<DocumentSnapshot> {
-        return categories
+    override fun getShoppingItems(): ArrayList<ShoppingItem> {
+        return shoppingItems
     }
 
-    fun search(searchTerm: String, view: LinearLayout) {
-        view.removeAllViews()
-        var productResultsUnsorted: MutableList<DocumentSnapshot> = mutableListOf()
-        var productResults: List<DocumentSnapshot> = mutableListOf()
+    override fun addProductToMyShoppingList(product: Product) {
+        db.collection("shoppingLists")
+            .document(uid)
+            .collection("shoppingList")
+            .add(product)
+    }
 
-        products.forEach {
-            var shop = it.toObject(Shop::class.java)
-            if(shop?.Name?.toLowerCase()?.contains(searchTerm.toLowerCase())!!) {
-                productResultsUnsorted.add(it)
+    override fun deleteProductFormMyShoppingList(product: Product) {
+        var matchingShoppingListEntries = db.collection("shoppingLists")
+            .document(uid)
+            .collection("shoppingList")
+            .whereEqualTo("name", product.name)
+            .whereEqualTo("type.name", product.type.name)
+            .get()
+        matchingShoppingListEntries.addOnSuccessListener {
+            it.forEach {
+                db.collection("shoppingLists")
+                    .document(uid)
+                    .collection("shoppingList")
+                    .document(it.id)
+                    .delete()
             }
         }
-
-        productResults = productResultsUnsorted.sortedBy { it["Price"] as Double }
-
-        productResults.forEach {
-            val productDocument = it
-            val shopReference = it["ShopReference"] as DocumentReference
-            val categoryReference = it["Category"] as DocumentReference
-
-            var product = ProductOld()
-            product.Category = productDocument["Category"] as DocumentReference
-            product.Name = productDocument["Name"].toString()
-            product.Price = productDocument["Price"].toString().toDouble()
-            product.ShopReference = productDocument["ShopReference"] as DocumentReference
-            var shop: Shop? = Shop()
-            var category: Category? = Category()
-            shops.forEach {
-                if (it.id == shopReference.id) {
-                    shop = it.toObject(Shop::class.java)
-                }
-            }
-
-            categories.forEach {
-                if (it.id == categoryReference.id) {
-                    category = it.toObject(Category::class.java)
-                }
-            }
-
-            writeLine(view, product!!, shop!!, category!!)
-        }
     }
 
-    private fun writeLine(view: LinearLayout, product: ProductOld, shop: Shop, category: Category) {
-        val firstRowLayout = LinearLayout(view.context)
-        firstRowLayout.setHorizontalGravity(LinearLayout.HORIZONTAL)
-        val secondRowLayout = LinearLayout(view.context)
-        secondRowLayout.setHorizontalGravity(LinearLayout.HORIZONTAL)
-        val thirdRowLayout = LinearLayout(view.context)
-        thirdRowLayout.setHorizontalGravity(LinearLayout.HORIZONTAL)
-        val fourthRowLayout = LinearLayout(view.context)
-        fourthRowLayout.setHorizontalGravity(LinearLayout.HORIZONTAL)
-
-        val productNameLabel = TextView(view.context)
-        val productPriceLabel = TextView(view.context)
-        val shopNameLabel = TextView(view.context)
-        val shopAddressLabel = TextView(view.context)
-
-        productNameLabel.text = product.Name + " (" + category.Name + ")"
-        productPriceLabel.text = product.Price.toString() + "€"
-        shopNameLabel.text = shop.Name
-        shopAddressLabel.text = shop.Address
-
-        firstRowLayout.addView(productNameLabel)
-        firstRowLayout.addView(productPriceLabel)
-
-        secondRowLayout.addView(shopNameLabel)
-
-        thirdRowLayout.addView(shopAddressLabel)
-
-        fourthRowLayout.addView(TextView(view.context))
-
-        view.addView(firstRowLayout)
-        view.addView(secondRowLayout)
-        view.addView(thirdRowLayout)
-        view.addView(fourthRowLayout)
+    override fun getMyShoppingList(): ArrayList<Product> {
+        return myShoppingList
     }
-}
 
-class ProductOld {
-    var Name: String? = ""
-    lateinit var Category: DocumentReference
-    var Price: Double? = -1.0
-    // var LastConfirmed: Date = Date("01-01-2000"),
-    lateinit var ShopReference: DocumentReference
+    fun getPurchasedProducts(): ArrayList<PurchasedProduct> {
+        return myPurchasedProducts
+    }
 
-    constructor(){}
-}
 
-class Shop {
-    var Name: String? = ""
-    var Address: String? = ""
-
-    constructor() {}
-}
-
-class Category {
-    var Name: String? = ""
-
-    constructor() {}
 }

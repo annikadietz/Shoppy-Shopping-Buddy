@@ -1,20 +1,16 @@
 package com.annikadietz.shoppy_shoppingbuddy.ui.register
 
-import android.content.Intent
-import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.text.TextUtils
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
-import com.annikadietz.shoppy_shoppingbuddy.MainActivity
 import com.annikadietz.shoppy_shoppingbuddy.R
-import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
@@ -39,7 +35,6 @@ class RegisterFragment(var viewPager: ViewPager2) : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
     }
 
     private fun register() {
@@ -59,24 +54,42 @@ class RegisterFragment(var viewPager: ViewPager2) : Fragment() {
             return
         }
 
-        if (passwordLengthCheck("Password too short, enter minimum 6 characters", password.text.toString().length, 6)) {
+        if (passwordLengthCheck(
+                "Password too short, enter minimum 6 characters",
+                password.text.toString().length,
+                6
+            )
+        ) {
             return
         }
 
-        if (!passwordMatchCheck("Passwords must match, please enter password again", password.text.toString(), repassword.text.toString())) {
+        if (!passwordMatchCheck(
+                "Passwords must match, please enter password again",
+                password.text.toString(),
+                repassword.text.toString()
+            )
+        ) {
             return
         }
         progressBar.visibility = View.VISIBLE
         mAuth.createUserWithEmailAndPassword(email.text.toString(), password.text.toString())
             .addOnCompleteListener {
                 var task = it
-                if(task.isSuccessful){
+                if (task.isSuccessful) {
                     mAuth.currentUser?.sendEmailVerification()?.addOnCompleteListener {
-                        if (it.isSuccessful){
-                            Toast.makeText(activity, "User registered successfully!", Toast.LENGTH_SHORT).show()
-                            viewPager.setCurrentItem(0)
+                        if (it.isSuccessful) {
+                            Toast.makeText(
+                                activity,
+                                "User registered successfully!",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            viewPager.currentItem = 0
                         } else {
-                            Toast.makeText(activity, "User not registered - problem with you email.", Toast.LENGTH_LONG).show()
+                            Toast.makeText(
+                                activity,
+                                "User not registered - problem with you email.",
+                                Toast.LENGTH_LONG
+                            ).show()
                         }
                         progressBar.visibility = View.GONE
                     }
@@ -97,7 +110,10 @@ class RegisterFragment(var viewPager: ViewPager2) : Fragment() {
     }
 
     fun registerUser(email: EditText, password: EditText): Task<AuthResult>? {
-        return mAuth?.createUserWithEmailAndPassword(email.text.toString(), password.text.toString())
+        return mAuth.createUserWithEmailAndPassword(
+            email.text.toString(),
+            password.text.toString()
+        )
     }
 
 
