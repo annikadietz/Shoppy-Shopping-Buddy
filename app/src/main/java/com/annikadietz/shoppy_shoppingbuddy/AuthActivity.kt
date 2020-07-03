@@ -3,13 +3,10 @@ package com.annikadietz.shoppy_shoppingbuddy
 import android.os.Build
 import android.os.Bundle
 import androidx.annotation.RequiresApi
-import androidx.fragment.app.*
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
-import com.annikadietz.shoppy_shoppingbuddy.Model.Product
-import com.annikadietz.shoppy_shoppingbuddy.Model.ShoppingItem
-import com.annikadietz.shoppy_shoppingbuddy.Model.Type
-import com.annikadietz.shoppy_shoppingbuddy.Model.Shop
 import com.annikadietz.shoppy_shoppingbuddy.ui.login.LoginFragment
 import com.annikadietz.shoppy_shoppingbuddy.ui.register.RegisterFragment
 import java.util.*

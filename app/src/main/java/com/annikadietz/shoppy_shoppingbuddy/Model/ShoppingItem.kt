@@ -9,21 +9,23 @@ class ShoppingItem {
     var shop: Shop
     var priceSuggestions: ArrayList<Price>
 
-    constructor(product: Product, shop: Shop, price: Price, priceSuggestions: ArrayList<Price>){
+    constructor(product: Product, shop: Shop, price: Price, priceSuggestions: ArrayList<Price>) {
         this.product = product
         this.shop = shop
         this.price = price
         this.priceSuggestions = priceSuggestions
     }
+
     @RequiresApi(Build.VERSION_CODES.O)
-    constructor(product: Product, shop: Shop, price: Double){
+    constructor(product: Product, shop: Shop, price: Double) {
         this.product = product
         this.shop = shop
         this.price = Price(price)
         this.priceSuggestions = arrayListOf()
     }
+
     @RequiresApi(Build.VERSION_CODES.O)
-    constructor(){
+    constructor() {
         this.product = Product()
         this.shop = Shop()
         this.price = Price()

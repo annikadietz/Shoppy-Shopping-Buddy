@@ -15,19 +15,19 @@ class ShopDirectionsManager(
     var shopNameId: Int,
     var shopAddressId: Int,
     var shopDirectionsId: Int
-){
-   init {
-       val shopName = root.findViewById<TextView>(shopNameId)
-       val shopAddress = root.findViewById<TextView>(shopAddressId)
-       val shopDirectionsButton = root.findViewById<Button>(shopDirectionsId)
-       shopName.text = shop.name
-       shopAddress.text = shop.streetAddress
-       shopDirectionsButton.setOnClickListener {
-           val intent = Intent(
-               Intent.ACTION_VIEW,
-               Uri.parse("http://maps.google.com/maps?saddr=${startingLocation}&daddr=${shop.streetAddress}, ${shop.postCode}")
-           )
-           root.context.startActivity(intent)
-       }
-   }
+) {
+    init {
+        val shopName = root.findViewById<TextView>(shopNameId)
+        val shopAddress = root.findViewById<TextView>(shopAddressId)
+        val shopDirectionsButton = root.findViewById<Button>(shopDirectionsId)
+        shopName.text = shop.name
+        shopAddress.text = shop.streetAddress
+        shopDirectionsButton.setOnClickListener {
+            val intent = Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse("http://maps.google.com/maps?saddr=${startingLocation}&daddr=${shop.streetAddress}, ${shop.postCode}")
+            )
+            root.context.startActivity(intent)
+        }
+    }
 }

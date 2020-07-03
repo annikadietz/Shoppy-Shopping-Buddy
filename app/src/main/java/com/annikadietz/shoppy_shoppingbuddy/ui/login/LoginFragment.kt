@@ -20,10 +20,11 @@ import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.annikadietz.shoppy_shoppingbuddy.MainActivity
-import com.annikadietz.shoppy_shoppingbuddy.NewDatabaseHelper
+import com.annikadietz.shoppy_shoppingbuddy.DatabaseHelper
 import com.annikadietz.shoppy_shoppingbuddy.R
 import com.google.android.gms.tasks.Task
-import com.google.firebase.auth.*
+import com.google.firebase.auth.AuthResult
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.fragment_login.*
 
 
@@ -50,16 +51,9 @@ class LoginFragment : Fragment() {
             resetPassword()
         }
 
-
-        if (mAuth!!.currentUser != null) {
-//            startActivity(Intent(this, MainActivity::class.java))
-//            finish()
-        }
-
-
-
         return root
     }
+
     private fun resetPassword() {
         val builder: android.app.AlertDialog.Builder = android.app.AlertDialog.Builder(this.context)
 
@@ -74,11 +68,12 @@ class LoginFragment : Fragment() {
         input.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
         builder.setView(input)
 
-        builder.setPositiveButton("Reset password"
+        builder.setPositiveButton(
+            "Reset password"
         ) { dialog, which ->
             var email = input.text.toString()
-            mAuth?.sendPasswordResetEmail(email)?.addOnCompleteListener{
-                if (it.isSuccessful){
+            mAuth?.sendPasswordResetEmail(email)?.addOnCompleteListener {
+                if (it.isSuccessful) {
                     Toast.makeText(activity, "Success!", Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(activity, it.exception.toString(), Toast.LENGTH_SHORT).show()
@@ -92,11 +87,8 @@ class LoginFragment : Fragment() {
         val dialog: AlertDialog = builder.create()
 
         input.doOnTextChanged { text, start, count, after ->
-            if(Patterns.EMAIL_ADDRESS.matcher(text).matches()){
-                dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = true
-            } else {
-                dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = false
-            }
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled =
+                Patterns.EMAIL_ADDRESS.matcher(text).matches()
         }
         dialog.show()
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = false
@@ -114,14 +106,15 @@ class LoginFragment : Fragment() {
         progressBar.visibility = View.VISIBLE
         loginUser(email, password)?.addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                if(task.result?.user!!.isEmailVerified){
+                if (task.result?.user!!.isEmailVerified) {
                     Toast.makeText(activity, "Logged in!", Toast.LENGTH_SHORT).show()
-                    NewDatabaseHelper.uid = task.result?.user!!.uid
+                    DatabaseHelper.uid = task.result?.user!!.uid
                     val intent = Intent(this.requireContext(), MainActivity::class.java)
                     startActivity(intent)
                     activity?.finish()
                 } else {
-                    Toast.makeText(activity, "Verify your email and try again.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(activity, "Verify your email and try again.", Toast.LENGTH_SHORT)
+                        .show()
                 }
                 progressBar.visibility = View.GONE
 

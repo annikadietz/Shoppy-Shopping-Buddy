@@ -8,13 +8,13 @@ class PurchasedProduct {
     var boughtAt: Date
     var item: ShoppingItem
 
-    constructor(buyedAt: Date, item: ShoppingItem){
+    constructor(buyedAt: Date, item: ShoppingItem) {
         this.boughtAt = buyedAt
         this.item = item
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    constructor(){
+    constructor() {
         this.boughtAt = Date()
         this.item = ShoppingItem()
     }

@@ -4,12 +4,6 @@
     <color name="colorPrimaryDark">#118AB2</color>
     <color name="colorAccent">#FFD166</color>
     <color name="colorGrey">#C8C8C8</color>
-    <color name="colorLightGrey">#F0F0F0</color>
-    <color name="colorWhite">#FFF</color>
     <color name="colorBlack">#000000</color>
-    <color name="darkGrey">#1C1C1C</color>
-    <color name="darkerGrey">#101010</color>
 
-    <color name="white">#FFF</color>
-    <color name="black">#000000</color>
 </resources>

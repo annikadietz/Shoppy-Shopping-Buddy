@@ -3,22 +3,23 @@ package com.annikadietz.shoppy_shoppingbuddy.ui.your_list
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.annikadietz.shoppy_shoppingbuddy.Model.Combination
 import com.annikadietz.shoppy_shoppingbuddy.R
 
-public class ShopCombinationRecyclerAdapter(var listener: (Combination) -> Unit,
-                                            var combinations: ArrayList<Combination>): RecyclerView.Adapter<ShopCombinationRecyclerAdapter.ViewHolder>() {
+class ShopCombinationRecyclerAdapter(
+    var listener: (Combination) -> Unit,
+    var combinations: ArrayList<Combination>
+) : RecyclerView.Adapter<ShopCombinationRecyclerAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        var layoutInflater:LayoutInflater = LayoutInflater.from(parent.context)
+        var layoutInflater: LayoutInflater = LayoutInflater.from(parent.context)
         var view: View = layoutInflater.inflate(R.layout.fragment_combo, parent, false)
-        var viewHolder: ViewHolder = ViewHolder(view, combinations, listener);
+        var viewHolder: ViewHolder = ViewHolder(view, combinations, listener)
 
         return viewHolder
     }
-
 
 
     override fun getItemCount(): Int {
@@ -28,38 +29,32 @@ public class ShopCombinationRecyclerAdapter(var listener: (Combination) -> Unit,
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         var comboInPosition = combinations[position]
 
-        var name = when(comboInPosition.shops.size) {
+        var name = when (comboInPosition.shops.size) {
             1 -> "One Shop"
             2 -> "Two Shops"
             3 -> "Three Shops"
             else -> "No data"
         }
 
-        if(name == "No data"){
+        if (name == "No data") {
             holder.name.text = "-"
             holder.shops.text = "-"
             holder.price.text = "-"
             holder.distance.text = "-"
-        } else{
+        } else {
             var shops = ""
             comboInPosition.shops.forEachIndexed { index, shop ->
                 shops += shop.streetAddress
-                if (index < comboInPosition.shops.size - 1 ){
+                if (index < comboInPosition.shops.size - 1) {
                     shops += " > "
                 }
             }
 
-            var distancetoTravel = comboInPosition.
-            directions?.
-            distancetoTravel?.
-            div(1000)
+            var distancetoTravel = comboInPosition.directions.distancetoTravel.div(1000)
 
             var distancetoTravelString = "%.2f".format(distancetoTravel) + " km"
 
-            var timeToTravel = comboInPosition.
-            directions?.
-            timeToTravel?.
-            div(60)?.toInt()
+            var timeToTravel = comboInPosition.directions.timeToTravel.div(60).toInt()
             var timeToTravelString = "$name - $timeToTravel min"
 
             var price = 0.0
@@ -76,6 +71,7 @@ public class ShopCombinationRecyclerAdapter(var listener: (Combination) -> Unit,
         }
 
     }
+
     // Represents a single row in the RecyclerView
     class ViewHolder : RecyclerView.ViewHolder, View.OnClickListener {
         lateinit var name: TextView
@@ -84,7 +80,12 @@ public class ShopCombinationRecyclerAdapter(var listener: (Combination) -> Unit,
         lateinit var distance: TextView
         lateinit var combinations: ArrayList<Combination>
         lateinit var listener: (Combination) -> Unit
-        constructor(itemView: View, combinations: ArrayList<Combination>, listener: (Combination) -> Unit) : super(itemView) {
+
+        constructor(
+            itemView: View,
+            combinations: ArrayList<Combination>,
+            listener: (Combination) -> Unit
+        ) : super(itemView) {
             this.combinations = combinations
             this.listener = listener
             name = itemView.findViewById(R.id.name)

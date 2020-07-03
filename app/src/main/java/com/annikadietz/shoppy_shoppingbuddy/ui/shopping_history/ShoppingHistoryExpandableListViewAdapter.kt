@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseExpandableListAdapter
 import android.widget.LinearLayout
-import androidx.constraintlayout.widget.ConstraintLayout
 import com.annikadietz.shoppy_shoppingbuddy.Model.PurchasedProduct
 import com.annikadietz.shoppy_shoppingbuddy.R
 import kotlinx.android.synthetic.main.shopping_history_group_header.view.*
@@ -15,7 +14,11 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-class ShoppingHistoryExpandableListViewAdapter(val _context: Context, var _listDataHeader: ArrayList<ShoppingHistoryFragment.DatePurchasedCollection>, val _startDate: Date, val _endDate: Date
+class ShoppingHistoryExpandableListViewAdapter(
+    val _context: Context,
+    var _listDataHeader: ArrayList<ShoppingHistoryFragment.DatePurchasedCollection>,
+    val _startDate: Date,
+    val _endDate: Date
 ) : BaseExpandableListAdapter() {
 
 
@@ -27,10 +30,10 @@ class ShoppingHistoryExpandableListViewAdapter(val _context: Context, var _listD
         _listDataHeaderOriginal.addAll(_listDataHeader)
     }
 
-    fun filterData() : ArrayList<ShoppingHistoryFragment.DatePurchasedCollection> {
+    fun filterData(): ArrayList<ShoppingHistoryFragment.DatePurchasedCollection> {
         var filtered = arrayListOf<ShoppingHistoryFragment.DatePurchasedCollection>()
         _listDataHeader.forEach {
-            if(it.date > _startDate && it.date < _endDate) {
+            if (it.date > _startDate && it.date < _endDate) {
                 filtered.add(it)
             }
         }
@@ -45,8 +48,10 @@ class ShoppingHistoryExpandableListViewAdapter(val _context: Context, var _listD
         return childPosition.toLong()
     }
 
-    override fun getChildView(groupPosition: Int, childPosition: Int,
-                              isLastChild: Boolean, convertView: View?, parent: ViewGroup): View {
+    override fun getChildView(
+        groupPosition: Int, childPosition: Int,
+        isLastChild: Boolean, convertView: View?, parent: ViewGroup
+    ): View {
         var convertView = convertView
 
         val children = getChild(groupPosition, childPosition)
@@ -57,7 +62,8 @@ class ShoppingHistoryExpandableListViewAdapter(val _context: Context, var _listD
             convertView = infalInflater.inflate(R.layout.shopping_history_item, null)
         }
 
-        var product_list_layout: LinearLayout? = convertView?.findViewById(R.id.shopped_products_layout)
+        var product_list_layout: LinearLayout? =
+            convertView?.findViewById(R.id.shopped_products_layout)
         product_list_layout?.removeAllViews()
 
         children.forEach {
@@ -66,9 +72,10 @@ class ShoppingHistoryExpandableListViewAdapter(val _context: Context, var _listD
             val lineView = infalInflater.inflate(R.layout.shopping_history_line, null)
 
             lineView!!.product_name.text = it.item.product.name
-            lineView!!.product_price.text = it.item.price.price.toString() + "€"
-            lineView!!.product_type.text = it.item.product.type.name
-            lineView!!.purchased_in_shop.text = it.item.shop.name + " (" + it.item.shop.streetAddress + ")"
+            lineView.product_price.text = it.item.price.price.toString() + "€"
+            lineView.product_type.text = it.item.product.type.name
+            lineView.purchased_in_shop.text =
+                it.item.shop.name + " (" + it.item.shop.streetAddress + ")"
 
             product_list_layout?.addView(lineView)
         }
@@ -91,25 +98,28 @@ class ShoppingHistoryExpandableListViewAdapter(val _context: Context, var _listD
         return groupPosition.toLong()
     }
 
-    override fun getGroupView(groupPosition: Int, isExpanded: Boolean,
-                              convertView: View?, parent: ViewGroup): View {
+    override fun getGroupView(
+        groupPosition: Int, isExpanded: Boolean,
+        convertView: View?, parent: ViewGroup
+    ): View {
         var convertView = convertView
         val datePurchasedCollection = getGroup(groupPosition)
         if (convertView == null) {
             val infalInflater = this._context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             convertView = infalInflater.inflate(R.layout.shopping_history_group_header, null)
-            
+
         }
 
         val myFormat = "dd-MM-YYYY" //In which you need put here
         val sdf = SimpleDateFormat(myFormat, Locale.US)
 
         convertView!!.date_text_view.text = sdf.format(datePurchasedCollection.date)
-        convertView!!.total_items.text = "Items bought: " + datePurchasedCollection.purchased.size
-        convertView!!.total_amount.text = "Total price: " + datePurchasedCollection.purchased.sumByDouble { product -> product.item.price.price } + "€"
+        convertView.total_items.text = "Items bought: " + datePurchasedCollection.purchased.size
+        convertView.total_amount.text =
+            "Total price: " + datePurchasedCollection.purchased.sumByDouble { product -> product.item.price.price } + "€"
 
-        return convertView!!
+        return convertView
 
     }
 

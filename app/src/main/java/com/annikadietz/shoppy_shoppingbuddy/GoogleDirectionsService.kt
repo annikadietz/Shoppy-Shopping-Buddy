@@ -1,6 +1,5 @@
 package com.annikadietz.shoppy_shoppingbuddy
 
-import com.google.gson.JsonObject
 import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.InputStream
@@ -8,11 +7,11 @@ import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
 
-class GoogleDirectionsService : GoogleDirectionsAPI{
+class GoogleDirectionsService : GoogleDirectionsAPI {
     override fun getDirections(url: String): JSONObject {
         var urlConnection: HttpURLConnection? = null
         var reader: BufferedReader? = null
-        var result:String = ""
+        var result: String = ""
 
         val url = URL(url)
         urlConnection = url.openConnection() as HttpURLConnection
@@ -26,7 +25,7 @@ class GoogleDirectionsService : GoogleDirectionsAPI{
         reader = BufferedReader(InputStreamReader(inputStream))
         var line: String? = reader.readLine()
         while (line != null) {
-            buffer.append(line + "\n");
+            buffer.append(line + "\n")
             line = reader.readLine()
         }
         if (buffer.length == 0) {

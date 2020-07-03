@@ -4,14 +4,17 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.CheckBox
+import android.widget.Filter
+import android.widget.Filterable
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.annikadietz.shoppy_shoppingbuddy.DatabaseHelperInterface
 import com.annikadietz.shoppy_shoppingbuddy.Model.Product
-import com.annikadietz.shoppy_shoppingbuddy.NewDatabaseHelper
 import com.annikadietz.shoppy_shoppingbuddy.R
 
-public class RecyclerAdapter(var databaseHelper: DatabaseHelperInterface): RecyclerView.Adapter<RecyclerAdapter.ViewHolder>(), Filterable {
+class RecyclerAdapter(var databaseHelper: DatabaseHelperInterface) :
+    RecyclerView.Adapter<RecyclerAdapter.ViewHolder>(), Filterable {
     var logTag = "RecyclerAdapter.onCreateViewHolder"
     var count = 0
     lateinit var products: List<Product>
@@ -23,23 +26,25 @@ public class RecyclerAdapter(var databaseHelper: DatabaseHelperInterface): Recyc
         override fun performFiltering(constraint: CharSequence): Filter.FilterResults? {
             var searchResults = arrayListOf<Product>()
             var selectedItem = selectedType
-            if(constraint.isNotEmpty() && selectedType.isEmpty()){
+            if (constraint.isNotEmpty() && selectedType.isEmpty()) {
                 products.forEach {
-                    if(it.name!!.toLowerCase().contains( constraint.toString().toLowerCase())){
+                    if (it.name.toLowerCase().contains(constraint.toString().toLowerCase())) {
                         searchResults.add(it)
                     }
                 }
                 return FilterResults().apply { values = searchResults }
             } else if (constraint.isEmpty() && selectedType.isNotEmpty()) {
                 products.forEach {
-                    if(it.type?.name?.toLowerCase() == selectedType.toLowerCase()){
+                    if (it.type.name?.toLowerCase() == selectedType.toLowerCase()) {
                         searchResults.add(it)
                     }
                 }
                 return FilterResults().apply { values = searchResults }
             } else if (constraint.isNotEmpty() && selectedType.isNotEmpty()) {
                 products.forEach {
-                    if(it.type?.name?.toLowerCase() == selectedType.toLowerCase() && it.name!!.toLowerCase().contains( constraint.toString().toLowerCase())){
+                    if (it.type.name?.toLowerCase() == selectedType.toLowerCase() && it.name.toLowerCase()
+                            .contains(constraint.toString().toLowerCase())
+                    ) {
                         searchResults.add(it)
                     }
                 }
@@ -55,9 +60,11 @@ public class RecyclerAdapter(var databaseHelper: DatabaseHelperInterface): Recyc
             notifyDataSetChanged()
         }
     }
+
     override fun getFilter(): Filter {
         return productFilter
     }
+
     init {
         products = databaseHelper.getProducts()
         productsFiltered = ArrayList(products)
@@ -65,9 +72,9 @@ public class RecyclerAdapter(var databaseHelper: DatabaseHelperInterface): Recyc
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         Log.w(logTag, "onCreateViewHolder " + count++)
-        var layoutInflater:LayoutInflater = LayoutInflater.from(parent.context)
+        var layoutInflater: LayoutInflater = LayoutInflater.from(parent.context)
         var view: View = layoutInflater.inflate(R.layout.fragment_product_row_item, parent, false)
-        var viewHolder: ViewHolder = ViewHolder(view);
+        var viewHolder: ViewHolder = ViewHolder(view)
         return viewHolder
     }
 
@@ -78,25 +85,26 @@ public class RecyclerAdapter(var databaseHelper: DatabaseHelperInterface): Recyc
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         var productInPosition = productsFiltered[position]
         holder.nameText.text = productInPosition.name
-        holder.typeText.text = productInPosition.type!!.name
+        holder.typeText.text = productInPosition.type.name
 
-        if(myShoppingList.any{ product -> product.name == productInPosition.name && product.type?.name == productInPosition.type?.name }) {
+        if (myShoppingList.any { product -> product.name == productInPosition.name && product.type.name == productInPosition.type.name }) {
             holder.checkBox.isChecked = true
         }
         holder.checkBox.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
                 databaseHelper.addProductToMyShoppingList(productInPosition)
-            }
-            else {
+            } else {
                 databaseHelper.deleteProductFormMyShoppingList(productInPosition)
             }
         }
     }
+
     // Represents a single row in the RecyclerView
     class ViewHolder : RecyclerView.ViewHolder, View.OnClickListener {
         lateinit var checkBox: CheckBox
         lateinit var nameText: TextView
         lateinit var typeText: TextView
+
         constructor(itemView: View) : super(itemView) {
             checkBox = itemView.findViewById(R.id.is_in_list)
             nameText = itemView.findViewById(R.id.product_name)

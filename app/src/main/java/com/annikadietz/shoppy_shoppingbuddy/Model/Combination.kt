@@ -4,11 +4,13 @@ class Combination {
     var shops: ArrayList<Shop>
     var shoppingItems: ArrayList<ShoppingItem>
     var directions: Directions = Directions()
-    constructor(shop: ArrayList<Shop>, shoppingItems: ArrayList<ShoppingItem>){
+
+    constructor(shop: ArrayList<Shop>, shoppingItems: ArrayList<ShoppingItem>) {
         this.shops = shop
         this.shoppingItems = shoppingItems
     }
-    constructor(){
+
+    constructor() {
         this.shops = arrayListOf<Shop>()
         this.shoppingItems = arrayListOf<ShoppingItem>()
     }
