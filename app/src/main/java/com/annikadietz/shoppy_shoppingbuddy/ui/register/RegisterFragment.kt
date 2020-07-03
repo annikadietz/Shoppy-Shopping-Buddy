@@ -40,10 +40,6 @@ class RegisterFragment(var viewPager: ViewPager2) : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        if (mAuth!!.getCurrentUser() != null) {
-//            startActivity(Intent(this, MainActivity::class.java))
-//            finish()
-        }
     }
 
     private fun register() {
